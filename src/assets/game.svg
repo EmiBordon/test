@@ -1,0 +1,21 @@
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  viewBox="0 0 64 96"
+  width="64"
+  height="96"
+>
+  <!-- Cuerpo de la consola -->
+  <rect x="4" y="4" width="56" height="88" rx="8" fill="#d3d3d3" stroke="black" stroke-width="2" />
+  
+  <!-- Pantalla -->
+  <rect x="12" y="12" width="40" height="30" rx="4" fill="#2c3e50" />
+  <rect x="16" y="16" width="32" height="22" rx="2" fill="#16a085" />
+  
+  <!-- Botones -->
+  <circle cx="20" cy="64" r="4" fill="#c0392b" />
+  <circle cx="32" cy="64" r="4" fill="#c0392b" />
+  
+  <!-- Cruceta -->
+  <rect x="12" y="74" width="10" height="2" fill="black" />
+  <rect x="16" y="70" width="2" height="10" fill="black" />
+</svg>
