@@ -1,39 +1,54 @@
-import React, { useState } from 'react';
-import { View, StyleSheet, ImageBackground } from 'react-native';
-import MainButton from '../components/mainbutton'; // Ajusta la ruta según tu proyecto
-import MenuIcon from '../assets/menu.svg';
-import MenuButtons from '../components/menubuttons'; // Importa el archivo del menú
+import React from 'react';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { FountainIcon } from '../components/SvgExporter';
 
-export default function HomeScreen() {
-  const [menuVisible, setMenuVisible] = useState(false);
-
-  const toggleMenu = () => {
-    setMenuVisible((prev) => !prev);
-  };
-
+const HomeScreen = ({ navigation }) => {
   return (
-    <ImageBackground source={require('../images/habitacion.jpeg')} style={styles.backgroundImage}>
-      <MainButton style={styles.topLeftButton} onPress={toggleMenu}>
-        <MenuIcon width={35} height={35} />
-      </MainButton>
-      <MenuButtons visible={menuVisible} />
-    </ImageBackground>
-  );
-}
+    <View style={styles.container}>
+      <Text style={styles.title}>Maia y La Fuente</Text>
+      
+      <FountainIcon height={'25%'} />
+      
+      <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Tutorial')}>
+        <Text style={styles.buttonText}>Comenzar</Text>
+      </TouchableOpacity>
 
+      <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Logros')}>
+        <Text style={styles.buttonText}>Logros</Text>
+      </TouchableOpacity>
+    </View>
+  );
+};
 
 const styles = StyleSheet.create({
-  backgroundImage: {
+  container: {
     flex: 1,
-    resizeMode: 'cover', // Asegura que la imagen cubra todo el fondo
-  },
-  topLeftButton: {
-    position: 'absolute',
-    top: 10,
-    left: 10,
-    width: 55,
-    height: 55,
-    justifyContent: 'center',
+    //justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: '#fff',
+  },
+  title: {
+    fontSize: 30,
+    fontWeight: 'bold',
+    color: '#000',
+    marginBottom: '10%',
+    marginTop: '20%',
+    fontFamily: 'serif',
+  },
+  button: {
+    marginTop: '15%',
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderWidth: 3,
+    borderColor: '#000',
+    borderRadius: 10,
+    backgroundColor: 'transparent',
+  },
+  buttonText: {
+    color: '#000',
+    fontWeight: 'bold',
+    fontSize: 25,
   },
 });
+
+export default HomeScreen;

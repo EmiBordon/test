@@ -5,10 +5,7 @@ import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
 import { store, persistor } from './src/screens/redux/store';
 import HomeScreen from './src/screens/HomeScreen';
-import NotesScreen from './src/screens/NotesScreen';
-import NewNote from './src/screens/newNote';
-import SelectedNote from './src/screens/SelectedNote';
-import EditNote from './src/screens/EditNote';
+import TutorialScreen from './src/screens/levels/tutorial';
 
 const Stack = createNativeStackNavigator();
 
@@ -21,12 +18,12 @@ export default function App() {
             <Stack.Screen
               name="Home"
               component={HomeScreen}
-              options={{ headerShown: false }} // Ocultar la barra superior
+              options={{ headerShown: false }} 
             />
-            <Stack.Screen name="Notes" component={NotesScreen} />
-            <Stack.Screen name="NewNote" component={NewNote} />
-            <Stack.Screen name="SelectedNote" component={SelectedNote} />
-            <Stack.Screen name="EditNote" component={EditNote} />
+            <Stack.Screen
+              name="Tutorial"
+              component={TutorialScreen}
+            />
           </Stack.Navigator>
         </NavigationContainer>
       </PersistGate>
