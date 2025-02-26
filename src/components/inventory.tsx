@@ -1,11 +1,13 @@
 import React, { useState } from "react";
 import { View, TouchableOpacity, StyleSheet, Alert, Modal } from "react-native";
 import { 
-  MapIcon, Key2Icon, ChestOpenIcon, ChestCloseIcon, 
-  MapInv1Icon, MapInv2Icon, MapInv3Icon 
+  MapIcon, ChestOpenIcon, 
+  MapInv1Icon, MapInv2Icon, MapInv3Icon, BagPackIcon, NoteBookIcon 
 } from "../components/SvgExporter"; // Importa los íconos
 import Map1Modal from "../components/modal/map1modal"; // Importa el modal del mapa 1
 import Map2Modal from "../components/modal/map2modal"; // Importa el modal del mapa 2
+import BagPackModal from "../components/modal/bagpackmodal"; // Importa el modal de la mochila
+import NotesModal from "../components/modal/notesmodal"; // Importa el modal de las notas
 import { useNavigation } from "@react-navigation/native";
 
 const Inventory = () => {
@@ -19,9 +21,11 @@ const Inventory = () => {
     mapInv3: false,
   });
 
-  // Estado para manejar la visibilidad de los modales
+  // Estados para manejar la visibilidad de los modales
   const [map1ModalVisible, setMap1ModalVisible] = useState(false);
   const [map2ModalVisible, setMap2ModalVisible] = useState(false);
+  const [bagPackModalVisible, setBagPackModalVisible] = useState(false);
+  const [notesModalVisible, setNotesModalVisible] = useState(false);
 
   // Función para manejar el despliegue de los íconos
   const toggleMapOptions = () => {
@@ -49,15 +53,15 @@ const Inventory = () => {
         Alert.alert("Inventario", `Usaste el ${mapKey} 🗺️`);
       }
     } else {
-      
+      // Lógica para mapas bloqueados, si corresponde
     }
   };
 
   return (
     <View style={styles.inventoryContainer}>
-      {/* Casillero 1 - Llave 2 */}
-      <TouchableOpacity style={styles.slot} onPress={() => handleItemPress("key2")}>
-        <Key2Icon width={40} height={40} />
+      {/* Casillero 1 - BagPackIcon para abrir la mochila */}
+      <TouchableOpacity style={styles.slot} onPress={() => setBagPackModalVisible(true)}>
+        <BagPackIcon width={40} height={40} />
       </TouchableOpacity>
 
       {/* Casillero 2 - Mapa con opciones */}
@@ -80,9 +84,9 @@ const Inventory = () => {
         )}
       </View>
 
-      {/* Casillero 3 - Cofre cerrado */}
-      <TouchableOpacity style={styles.slot} onPress={() => handleItemPress("chestClosed")}>
-        <ChestCloseIcon width={40} height={40} />
+      {/* Casillero 3 - NoteBookIcon para abrir las notas */}
+      <TouchableOpacity style={styles.slot} onPress={() => setNotesModalVisible(true)}>
+        <NoteBookIcon width={40} height={40} />
       </TouchableOpacity>
 
       {/* Casillero 4 - Cofre abierto */}
@@ -97,9 +101,21 @@ const Inventory = () => {
         navigation={navigation} 
       />
       <Map2Modal 
-      visible={map2ModalVisible} 
-      onClose={() => setMap2ModalVisible(false)} 
-      navigation={navigation}
+        visible={map2ModalVisible} 
+        onClose={() => setMap2ModalVisible(false)} 
+        navigation={navigation}
+      />
+      
+      {/* Modal de la mochila */}
+      <BagPackModal 
+        visible={bagPackModalVisible} 
+        onClose={() => setBagPackModalVisible(false)} 
+      />
+
+      {/* Modal de las notas */}
+      <NotesModal 
+        visible={notesModalVisible} 
+        onClose={() => setNotesModalVisible(false)} 
       />
     </View>
   );

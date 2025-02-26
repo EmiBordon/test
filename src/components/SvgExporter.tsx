@@ -38,6 +38,11 @@ import Maia2HeadSvg from '../assets/maia2head.svg';
 import Maia3HeadSvg from '../assets/maia3head.svg';
 import Maia4HeadSvg from '../assets/maia4head.svg';
 import MattHeadSvg from '../assets/matthead.svg';
+import NoteBookSvg from '../assets/notebook.svg';
+import BagPackSvg from '../assets/bagpack.svg';
+import CrossSvg from '../assets/cross.svg';
+import PaperSvg from '../assets/paper.svg';
+import PaperBrokenSvg from '../assets/paperbroken.svg';
 
 const ArrowIcon = (props: any) => <ArrowSvg {...props} />;
 const ChestOpenIcon = (props: any) => <ChestOpenSvg {...props} />;
@@ -78,6 +83,11 @@ const Maia2HeadIcon = (props: any) => <Maia2HeadSvg {...props} />;
 const Maia3HeadIcon = (props: any) => <Maia3HeadSvg {...props} />;
 const Maia4HeadIcon = (props: any) => <Maia4HeadSvg {...props} />;
 const MattHeadIcon = (props: any) => <MattHeadSvg {...props} />;
+const NoteBookIcon = (props: any) => <NoteBookSvg {...props} />;
+const BagPackIcon = (props: any) => <BagPackSvg {...props} />;
+const CrossIcon = (props: any) => <CrossSvg {...props} />;
+const PaperIcon = (props: any) => <PaperSvg {...props} />;
+const PaperBrokenIcon = (props: any) => <PaperBrokenSvg {...props} />;
 
 export { 
   ArrowIcon, 
@@ -119,4 +129,9 @@ export {
   Maia3HeadIcon,
   Maia4HeadIcon,
   MattHeadIcon,
+  NoteBookIcon,
+  BagPackIcon,
+  CrossIcon,
+  PaperBrokenIcon,
+  PaperIcon,
 };

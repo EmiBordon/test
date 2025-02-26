@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Modal, View, TouchableOpacity, Text, StyleSheet, Dimensions, Alert } from "react-native";
 import { 
-  Map1Icon, HouseIcon, PrisionIcon, StoreIcon, RestaurantIcon, BigHouseIcon, CaveIcon 
+  Map1Icon, HouseIcon, PrisionIcon, StoreIcon, RestaurantIcon, BigHouseIcon, CaveIcon, CrossIcon
 } from "../SvgExporter"; 
 
 const Map1Modal = ({ visible, onClose, navigation }) => {
@@ -86,14 +86,9 @@ const Map1Modal = ({ visible, onClose, navigation }) => {
             </View>
           )}
 
-          {/* Botón de cierre */}
+          {/* Botón de cierre usando CrossIcon */}
           <TouchableOpacity style={styles.closeButton} onPress={onClose}>
-            <View style={styles.closeButtonInner}>
-              <View style={styles.closeButtonBox}>
-                <View style={styles.closeButtonX} />
-                <View style={[styles.closeButtonX, { transform: [{ rotate: "90deg" }] }]} />
-              </View>
-            </View>
+            <CrossIcon width={30} height={30} />
           </TouchableOpacity>
 
         </View>
@@ -176,9 +171,6 @@ const styles = StyleSheet.create({
   },
 
   closeButton: { position: "absolute", top: 10, right: 10, zIndex: 10 },
-  closeButtonInner: { backgroundColor: "rgba(255,255,255,0.8)", padding: 10, borderRadius: 5 },
-  closeButtonBox: { width: 25, height: 25, justifyContent: "center", alignItems: "center" },
-  closeButtonX: { position: "absolute", width: 30, height: 2, backgroundColor: "black", transform: [{ rotate: "45deg" }] },
 
   // Estilos para el tag con el nombre sobre cada ícono
   nameTag: { 
