@@ -11,7 +11,7 @@ const HomeScreen = ({ navigation }) => {
       <Text style={styles.title}>Maia y La Fuente</Text>
       <FountainIcon height={"25%"} />
 
-      <TouchableOpacity style={styles.button} onPress={() => navigation.replace("Tutorial")}>
+      <TouchableOpacity style={styles.button} onPress={() => navigation.navigate("Tutorial")}>
         <Text style={styles.buttonText}>Nueva Partida</Text>
       </TouchableOpacity>
 

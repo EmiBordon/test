@@ -148,7 +148,7 @@ const HandGame = () => {
           style={styles.resetButton}
         >
           <Text style={styles.resetButtonText}>
-            {gameOverPhase === 1 ? ">>" : "Reiniciar"}
+            {">>"}
           </Text>
         </TouchableOpacity>
       </View>
