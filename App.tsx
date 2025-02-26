@@ -3,9 +3,10 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
-import { store, persistor } from './src/screens/redux/store';
+import { store, persistor } from './src/redux/store';
 import HomeScreen from './src/screens/HomeScreen';
 import TutorialScreen from './src/screens/levels/tutorial';
+import HandGame from './src/components/functions/handgame';
 
 const Stack = createNativeStackNavigator();
 
@@ -23,6 +24,11 @@ export default function App() {
             <Stack.Screen
               name="Tutorial"
               component={TutorialScreen}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="HandGame"
+              component={HandGame}
             />
           </Stack.Navigator>
         </NavigationContainer>

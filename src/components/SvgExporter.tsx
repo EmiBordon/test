@@ -24,8 +24,20 @@ import PrisionSvg from '../assets/prision.svg';
 import CaveSvg from '../assets/cave.svg';
 import HouseSvg from '../assets/house.svg';
 import VolcanSvg from '../assets/volcan.svg';
+import MapSvg from '../assets/map.svg';
 import Map1Svg from '../assets/map1.svg';
 import Map2Svg from '../assets/map2.svg';
+import MapInv1Svg from '../assets/mapinv1.svg';
+import MapInv2Svg from '../assets/mapinv2.svg';
+import MapInv3Svg from '../assets/mapinv3.svg';
+import RockHandSvg from '../assets/rockhand.svg';
+import PaperHandSvg from '../assets/paperhand.svg';
+import ScissorsHandSvg from '../assets/scissorshand.svg';
+import MaiaHeadSvg from '../assets/maiahead.svg';
+import Maia2HeadSvg from '../assets/maia2head.svg';
+import Maia3HeadSvg from '../assets/maia3head.svg';
+import Maia4HeadSvg from '../assets/maia4head.svg';
+import MattHeadSvg from '../assets/matthead.svg';
 
 const ArrowIcon = (props: any) => <ArrowSvg {...props} />;
 const ChestOpenIcon = (props: any) => <ChestOpenSvg {...props} />;
@@ -52,8 +64,20 @@ const PrisionIcon = (props: any) => <PrisionSvg {...props} />;
 const CaveIcon = (props: any) => <CaveSvg {...props} />;
 const HouseIcon = (props: any) => <HouseSvg {...props} />;
 const VolcanIcon = (props: any) => <VolcanSvg {...props} />;
+const MapIcon = (props: any) => <MapSvg {...props} />;
 const Map1Icon = (props: any) => <Map1Svg {...props} />;
 const Map2Icon = (props: any) => <Map2Svg {...props} />;
+const MapInv1Icon = (props: any) => <MapInv1Svg {...props} />;
+const MapInv2Icon = (props: any) => <MapInv2Svg {...props} />;
+const MapInv3Icon = (props: any) => <MapInv3Svg {...props} />;
+const RockHandIcon = (props: any) => <RockHandSvg {...props} />;
+const PaperHandIcon = (props: any) => <PaperHandSvg {...props} />;
+const ScissorsHandIcon = (props: any) => <ScissorsHandSvg {...props} />;
+const MaiaHeadIcon = (props: any) => <MaiaHeadSvg {...props} />;
+const Maia2HeadIcon = (props: any) => <Maia2HeadSvg {...props} />;
+const Maia3HeadIcon = (props: any) => <Maia3HeadSvg {...props} />;
+const Maia4HeadIcon = (props: any) => <Maia4HeadSvg {...props} />;
+const MattHeadIcon = (props: any) => <MattHeadSvg {...props} />;
 
 export { 
   ArrowIcon, 
@@ -81,6 +105,18 @@ export {
   CaveIcon,
   HouseIcon,
   VolcanIcon,
+  MapIcon,
   Map1Icon,
   Map2Icon,
+  MapInv1Icon,
+  MapInv2Icon,
+  MapInv3Icon,
+  RockHandIcon,
+  PaperHandIcon,
+  ScissorsHandIcon,
+  MaiaHeadIcon,
+  Maia2HeadIcon,
+  Maia3HeadIcon,
+  Maia4HeadIcon,
+  MattHeadIcon,
 };

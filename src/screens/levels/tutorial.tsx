@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { View, StyleSheet, Pressable, Animated, Alert } from 'react-native';
 import { DoorIcon, Key1Icon, ChestCloseIcon, ArrowIcon, MaiaIcon } from '../../components/SvgExporter';
+import Inventory from '../../components/inventory';
 
 const icons = [
   { component: DoorIcon, height: 150, width: 150 },
@@ -12,6 +13,7 @@ const TutorialScreen = () => {
   const [currentIconIndex, setCurrentIconIndex] = useState(0);
   const [maiaPosition] = useState(new Animated.Value(0));
   const [isNear, setIsNear] = useState(false);
+  
 
   const handleNextIcon = () => {
     setCurrentIconIndex((prevIndex) => (prevIndex + 1) % icons.length);
@@ -65,12 +67,13 @@ const TutorialScreen = () => {
       <Animated.View style={[styles.maiaContainer, {
         transform: [{ translateY: maiaPosition.interpolate({
           inputRange: [0, 1],
-          outputRange: [0, -400], // Ajusta la distancia de movimiento
+          outputRange: [0, -360], // Ajusta la distancia de movimiento
         }) }]
       }]}
       >
         <MaiaIcon height={160} width={160} />
       </Animated.View>
+      <Inventory />
     </View>
   );
 };
@@ -103,7 +106,7 @@ const styles = StyleSheet.create({
   },
   maiaContainer: {
     position: 'absolute',
-    bottom: '5%',
+    bottom: '10%',
   },
 });
 

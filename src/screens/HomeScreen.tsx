@@ -1,31 +1,25 @@
 import React, { useState } from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { FountainIcon } from "../components/SvgExporter";
-import Map1Modal from "../components/modal/map1modal"; // Importamos el modal
+
 
 const HomeScreen = ({ navigation }) => {
-  const [modalVisible, setModalVisible] = useState(false);
+  
 
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Maia y La Fuente</Text>
       <FountainIcon height={"25%"} />
 
-      <TouchableOpacity style={styles.button} onPress={() => navigation.navigate("Tutorial")}>
-        <Text style={styles.buttonText}>Comenzar</Text>
+      <TouchableOpacity style={styles.button} onPress={() => navigation.replace("Tutorial")}>
+        <Text style={styles.buttonText}>Nueva Partida</Text>
       </TouchableOpacity>
 
       {/* Botón para abrir el modal */}
-      <TouchableOpacity style={styles.button} onPress={() => setModalVisible(true)}>
-        <Text style={styles.buttonText}>Mapa</Text>
+      <TouchableOpacity style={styles.button} onPress={() => navigation.navigate("HandGame")}>
+        <Text style={styles.buttonText}>Pruebas</Text>
       </TouchableOpacity>
 
-      {/* Modal del Mapa */}
-      <Map1Modal 
-        visible={modalVisible} 
-        onClose={() => setModalVisible(false)} 
-        navigation={navigation} 
-      />
     </View>
   );
 };
