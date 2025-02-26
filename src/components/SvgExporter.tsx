@@ -15,6 +15,17 @@ import MattSvg from '../assets/matt.svg';
 import TextBubbleRightSvg from '../assets/text-bubble-right.svg';
 import TextBubbleLeftSvg from '../assets/text-bubble-left.svg';
 import FountainSvg from '../assets/fountain.svg';
+import RestaurantSvg from '../assets/restaurant.svg';
+import StoreSvg from '../assets/store.svg';
+import BigHouseSvg from '../assets/bighouse.svg';
+import PalaceSvg from '../assets/palace.svg';
+import MansionSvg from '../assets/mansion.svg';
+import PrisionSvg from '../assets/prision.svg';
+import CaveSvg from '../assets/cave.svg';
+import HouseSvg from '../assets/house.svg';
+import VolcanSvg from '../assets/volcan.svg';
+import Map1Svg from '../assets/map1.svg';
+import Map2Svg from '../assets/map2.svg';
 
 const ArrowIcon = (props: any) => <ArrowSvg {...props} />;
 const ChestOpenIcon = (props: any) => <ChestOpenSvg {...props} />;
@@ -32,6 +43,17 @@ const MattIcon = (props: any) => <MattSvg {...props} />;
 const TextBubbleRightIcon = (props: any) => <TextBubbleRightSvg {...props} />;
 const TextBubbleLeftIcon = (props: any) => <TextBubbleLeftSvg {...props} />;
 const FountainIcon = (props: any) => <FountainSvg {...props} />;
+const RestaurantIcon = (props: any) => <RestaurantSvg {...props} />;
+const StoreIcon = (props: any) => <StoreSvg {...props} />;
+const BigHouseIcon = (props: any) => <BigHouseSvg {...props} />;
+const PalaceIcon = (props: any) => <PalaceSvg {...props} />;
+const MansionIcon = (props: any) => <MansionSvg {...props} />;
+const PrisionIcon = (props: any) => <PrisionSvg {...props} />;
+const CaveIcon = (props: any) => <CaveSvg {...props} />;
+const HouseIcon = (props: any) => <HouseSvg {...props} />;
+const VolcanIcon = (props: any) => <VolcanSvg {...props} />;
+const Map1Icon = (props: any) => <Map1Svg {...props} />;
+const Map2Icon = (props: any) => <Map2Svg {...props} />;
 
 export { 
   ArrowIcon, 
@@ -50,4 +72,15 @@ export {
   TextBubbleRightIcon, 
   TextBubbleLeftIcon,
   FountainIcon,
+  RestaurantIcon,
+  StoreIcon,
+  BigHouseIcon,
+  PalaceIcon,
+  MansionIcon,
+  PrisionIcon,
+  CaveIcon,
+  HouseIcon,
+  VolcanIcon,
+  Map1Icon,
+  Map2Icon,
 };
