@@ -43,6 +43,7 @@ import BagPackSvg from '../assets/bagpack.svg';
 import CrossSvg from '../assets/cross.svg';
 import PaperSvg from '../assets/paper.svg';
 import PaperBrokenSvg from '../assets/paperbroken.svg';
+import DoubleArrowSvg from '../assets/doublearrow.svg';
 
 const ArrowIcon = (props: any) => <ArrowSvg {...props} />;
 const ChestOpenIcon = (props: any) => <ChestOpenSvg {...props} />;
@@ -88,6 +89,7 @@ const BagPackIcon = (props: any) => <BagPackSvg {...props} />;
 const CrossIcon = (props: any) => <CrossSvg {...props} />;
 const PaperIcon = (props: any) => <PaperSvg {...props} />;
 const PaperBrokenIcon = (props: any) => <PaperBrokenSvg {...props} />;
+const DoubleArrowIcon = (props: any) => <DoubleArrowSvg {...props} />;
 
 export { 
   ArrowIcon, 
@@ -134,4 +136,5 @@ export {
   CrossIcon,
   PaperBrokenIcon,
   PaperIcon,
+  DoubleArrowIcon,
 };

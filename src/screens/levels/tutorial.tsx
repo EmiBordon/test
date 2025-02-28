@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, StyleSheet, Pressable, Animated, Alert } from 'react-native';
+import { View, StyleSheet, Pressable, Animated, Alert, Image } from 'react-native';
 import { DoorIcon, Key1Icon, ChestCloseIcon, ArrowIcon, MaiaIcon } from '../../components/SvgExporter';
 import Inventory from '../../components/inventory';
 
@@ -13,7 +13,6 @@ const TutorialScreen = () => {
   const [currentIconIndex, setCurrentIconIndex] = useState(0);
   const [maiaPosition] = useState(new Animated.Value(0));
   const [isNear, setIsNear] = useState(false);
-  
 
   const handleNextIcon = () => {
     setCurrentIconIndex((prevIndex) => (prevIndex + 1) % icons.length);
@@ -26,7 +25,7 @@ const TutorialScreen = () => {
   const resetMaiaPosition = () => {
     Animated.timing(maiaPosition, {
       toValue: 0,
-      duration: 1000, // Ajusta la velocidad del regreso
+      duration: 1000,
       useNativeDriver: true,
     }).start(() => setIsNear(false));
   };
@@ -34,7 +33,7 @@ const TutorialScreen = () => {
   const moveMaiaToIcon = () => {
     Animated.timing(maiaPosition, {
       toValue: 1,
-      duration: 1000, // Ajusta la velocidad de acercamiento
+      duration: 1000,
       useNativeDriver: true,
     }).start(() => setIsNear(true));
   };
@@ -51,6 +50,9 @@ const TutorialScreen = () => {
 
   return (
     <View style={styles.container}>
+      {/* Imagen de fondo */}
+      <Image source={require('../../images/floor2.jpg')} style={styles.backgroundImage} />
+
       <Pressable style={styles.doorButton} onPress={handleIconPress}>
         <CurrentIcon height={height} width={width} />
       </Pressable>
@@ -64,13 +66,17 @@ const TutorialScreen = () => {
         </Pressable>
       </View>
       
-      <Animated.View style={[styles.maiaContainer, {
-        transform: [{ translateY: maiaPosition.interpolate({
-          inputRange: [0, 1],
-          outputRange: [0, -360], // Ajusta la distancia de movimiento
-        }) }]
-      }]}
-      >
+      <Animated.View style={[
+        styles.maiaContainer,
+        {
+          transform: [{
+            translateY: maiaPosition.interpolate({
+              inputRange: [0, 1],
+              outputRange: [0, -360],
+            })
+          }]
+        }
+      ]}>
         <MaiaIcon height={160} width={160} />
       </Animated.View>
       <Inventory />
@@ -83,11 +89,16 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#fff',
+  },
+  backgroundImage: {
+    ...StyleSheet.absoluteFillObject,
+    //resizeMode: 'cover',
+    width: '100%',
+    height:'30%',
   },
   doorButton: {
     position: 'absolute',
-    top: '7%',
+    top: '12%',
   },
   sideIcons: {
     flexDirection: 'row',
