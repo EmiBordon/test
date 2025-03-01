@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import ConversationModal from "../components/modal/conversationmodal"; // Asegúrate de que la ruta sea la correcta
 import { conversations } from "../components/functions/conversations"; // Ajusta la ruta según tu estructura
 import { FountainIcon } from "../components/SvgExporter";
+import ResetButton from "../components/functions/resetbutton"; // Importa el botón de reset
 
 const HomeScreen = ({ navigation }) => {
   const [modalVisible, setModalVisible] = useState(false);
@@ -27,11 +28,14 @@ const HomeScreen = ({ navigation }) => {
         <Text style={styles.buttonText}>Pruebas</Text>
       </TouchableOpacity>
 
+      {/* Nuevo botón para resetear estados */}
+      <ResetButton />
+
       {/* Modal para mostrar la conversación "historia1" */}
       <ConversationModal
         visible={modalVisible}
         onClose={() => setModalVisible(false)}
-        conversation={conversations.historia1}
+        conversation={conversations.mattconv1}
       />
     </View>
   );

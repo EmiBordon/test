@@ -1,18 +1,41 @@
 import React, { useState } from 'react';
-import { View, StyleSheet, Pressable, Animated, Alert, Image } from 'react-native';
-import { DoorIcon, Key1Icon, ChestCloseIcon, ArrowIcon, MaiaIcon } from '../../components/SvgExporter';
+import { View, StyleSheet, Pressable, Alert, Image } from 'react-native';
+import { DoorIcon, MattIcon, ChestCloseIcon, ArrowIcon, MaiaIcon } from '../../components/SvgExporter';
 import Inventory from '../../components/inventory';
+import Location from '../../components/functions/location';
+import ConversationModal from "../../components/modal/conversationmodal"; // Asegúrate de que la ruta sea correcta
+import { conversations } from "../../components/functions/conversations";
+import { useSelector, useDispatch } from 'react-redux';
+import { setMattState } from '../../redux/mattSlice';
 
 const icons = [
-  { component: DoorIcon, height: 150, width: 150 },
-  { component: Key1Icon, height: 60, width: 60 },
-  { component: ChestCloseIcon, height: 100, width: 100 }
+  { 
+    component: MattIcon, 
+    height: 150, 
+    width: 150, 
+    style: { top: '30%', left: '10%' } 
+  },
+  { 
+    component: DoorIcon, 
+    height: 150, 
+    width: 150, 
+    style: { top: '8%', left: '30%' } 
+  },
+  { 
+    component: ChestCloseIcon, 
+    height: 100, 
+    width: 100, 
+    style: { top: '30%', left: '70%' } 
+  }
 ];
 
 const TutorialScreen = () => {
   const [currentIconIndex, setCurrentIconIndex] = useState(0);
-  const [maiaPosition] = useState(new Animated.Value(0));
-  const [isNear, setIsNear] = useState(false);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [conversationContent, setConversationContent] = useState(null);
+  
+  const dispatch = useDispatch();
+  const mattState = useSelector(state => state.matt.value);
 
   const handleNextIcon = () => {
     setCurrentIconIndex((prevIndex) => (prevIndex + 1) % icons.length);
@@ -22,64 +45,63 @@ const TutorialScreen = () => {
     setCurrentIconIndex((prevIndex) => (prevIndex - 1 + icons.length) % icons.length);
   };
 
-  const resetMaiaPosition = () => {
-    Animated.timing(maiaPosition, {
-      toValue: 0,
-      duration: 1000,
-      useNativeDriver: true,
-    }).start(() => setIsNear(false));
-  };
-
-  const moveMaiaToIcon = () => {
-    Animated.timing(maiaPosition, {
-      toValue: 1,
-      duration: 1000,
-      useNativeDriver: true,
-    }).start(() => setIsNear(true));
-  };
-
   const handleIconPress = () => {
-    if (!isNear) {
-      moveMaiaToIcon();
+    // Verificamos si el ícono actual es el MattIcon
+    const { component: CurrentIcon } = icons[currentIconIndex];
+    if (CurrentIcon === MattIcon) {
+      if (mattState === 0) {
+        // Si el estado es 0, se muestra la conversación 1 y se cambia el estado a 1
+        setConversationContent(conversations.mattconv1);
+        dispatch(setMattState(1));
+        setModalVisible(true);
+      } else if (mattState === 1) {
+        // Si el estado ya es 1, se muestra la conversación 2 sin cambiar el estado
+        setConversationContent(conversations.mattconv2);
+        setModalVisible(true);
+      }
     } else {
       Alert.alert('Item seleccionado');
     }
   };
 
-  const { component: CurrentIcon, height, width } = icons[currentIconIndex];
+  const { component: CurrentIcon, height, width, style: iconStyle } = icons[currentIconIndex];
 
   return (
     <View style={styles.container}>
       {/* Imagen de fondo */}
       <Image source={require('../../images/floor2.jpg')} style={styles.backgroundImage} />
 
-      <Pressable style={styles.doorButton} onPress={handleIconPress}>
+      {/* Ícono principal configurable */}
+      <Pressable style={[styles.iconButton, iconStyle]} onPress={handleIconPress}>
         <CurrentIcon height={height} width={width} />
       </Pressable>
-      
+
+      {/* Botones para navegar entre íconos */}
       <View style={styles.sideIcons}>
-        <Pressable style={styles.arrowButton} onPress={handlePrevIcon} onLongPress={resetMaiaPosition}>
+        <Pressable style={styles.arrowButton} onPress={handlePrevIcon}>
           <ArrowIcon style={styles.leftArrow} height={50} width={50} />
         </Pressable>
-        <Pressable style={styles.arrowButton} onPress={handleNextIcon} onLongPress={resetMaiaPosition}>
+        <Pressable style={styles.arrowButton} onPress={handleNextIcon}>
           <ArrowIcon height={50} width={50} />
         </Pressable>
       </View>
-      
-      <Animated.View style={[
-        styles.maiaContainer,
-        {
-          transform: [{
-            translateY: maiaPosition.interpolate({
-              inputRange: [0, 1],
-              outputRange: [0, -360],
-            })
-          }]
-        }
-      ]}>
+
+      {/* MaiaIcon se muestra de forma estática */}
+      <View style={styles.maiaContainer}>
         <MaiaIcon height={160} width={160} />
-      </Animated.View>
+      </View>
+
       <Inventory />
+      <Location text="Casa de los River" />
+
+      {/* Modal de conversación */}
+      {modalVisible && (
+        <ConversationModal 
+          visible={modalVisible}  
+          conversation={conversationContent}
+          onClose={() => setModalVisible(false)}
+        />
+      )}
     </View>
   );
 };
@@ -87,18 +109,14 @@ const TutorialScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
   },
   backgroundImage: {
     ...StyleSheet.absoluteFillObject,
-    //resizeMode: 'cover',
     width: '100%',
-    height:'30%',
+    height: '25%',
   },
-  doorButton: {
+  iconButton: {
     position: 'absolute',
-    top: '12%',
   },
   sideIcons: {
     flexDirection: 'row',
@@ -118,6 +136,8 @@ const styles = StyleSheet.create({
   maiaContainer: {
     position: 'absolute',
     bottom: '10%',
+    left: '50%',
+    transform: [{ translateX: -80 }],
   },
 });
 

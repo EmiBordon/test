@@ -1,28 +1,29 @@
 // src/redux/store.js
-import { configureStore, getDefaultMiddleware } from '@reduxjs/toolkit';
+import { configureStore } from '@reduxjs/toolkit';
+import { combineReducers } from 'redux';
 import { persistStore, persistReducer } from 'redux-persist';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import levelReducer from './levelSlice';
+import mattReducer from './mattSlice';
 
-// Configuración de redux-persist
+const rootReducer = combineReducers({
+  levels: levelReducer,
+  matt: mattReducer,
+});
+
 const persistConfig = {
   key: 'root',
   storage: AsyncStorage,
+  whitelist: ['levels', 'matt'],
 };
 
-// Aplicar persistencia al reducer de niveles
-const persistedReducer = persistReducer(persistConfig, levelReducer);
+const persistedReducer = persistReducer(persistConfig, rootReducer);
 
 export const store = configureStore({
-  reducer: {
-    levels: persistedReducer,
-  },
+  reducer: persistedReducer,
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
-      serializableCheck: {
-        // Ignorar las acciones relacionadas con redux-persist
-        ignoredActions: ['persist/PERSIST', 'persist/REHYDRATE'],
-      },
+      serializableCheck: false, // Deshabilita la verificación de valores no serializables
     }),
 });
 

@@ -44,6 +44,8 @@ import CrossSvg from '../assets/cross.svg';
 import PaperSvg from '../assets/paper.svg';
 import PaperBrokenSvg from '../assets/paperbroken.svg';
 import DoubleArrowSvg from '../assets/doublearrow.svg';
+import DianaSvg from '../assets/diana.svg';
+import DianaHeadSvg from '../assets/dianahead.svg';
 
 const ArrowIcon = (props: any) => <ArrowSvg {...props} />;
 const ChestOpenIcon = (props: any) => <ChestOpenSvg {...props} />;
@@ -90,6 +92,8 @@ const CrossIcon = (props: any) => <CrossSvg {...props} />;
 const PaperIcon = (props: any) => <PaperSvg {...props} />;
 const PaperBrokenIcon = (props: any) => <PaperBrokenSvg {...props} />;
 const DoubleArrowIcon = (props: any) => <DoubleArrowSvg {...props} />;
+const DianaIcon = (props: any) => <DianaSvg {...props} />;
+const DianaHeadIcon = (props: any) => <DianaHeadSvg {...props} />;
 
 export { 
   ArrowIcon, 
@@ -137,4 +141,6 @@ export {
   PaperBrokenIcon,
   PaperIcon,
   DoubleArrowIcon,
+  DianaIcon,
+  DianaHeadIcon
 };

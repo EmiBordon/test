@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { View, TouchableOpacity, StyleSheet, Alert, Modal } from "react-native";
 import { 
   MapIcon, ChestOpenIcon, 
-  MapInv1Icon, MapInv2Icon, MapInv3Icon, BagPackIcon, NoteBookIcon 
+  MapInv1Icon, MapInv2Icon, MapInv3Icon, BagPackIcon, NoteBookIcon, DianaIcon
 } from "../components/SvgExporter"; // Importa los íconos
 import Map1Modal from "../components/modal/map1modal"; // Importa el modal del mapa 1
 import Map2Modal from "../components/modal/map2modal"; // Importa el modal del mapa 2
@@ -91,7 +91,7 @@ const Inventory = () => {
 
       {/* Casillero 4 - Cofre abierto */}
       <TouchableOpacity style={styles.slot} onPress={() => handleItemPress("chestOpen")}>
-        <ChestOpenIcon width={40} height={40} />
+        <DianaIcon width={40} height={40} />
       </TouchableOpacity>
 
       {/* Modales de los mapas */}
