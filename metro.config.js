@@ -7,6 +7,9 @@ const { getDefaultConfig, mergeConfig } = require('@react-native/metro-config');
  * @type {import('metro-config').MetroConfig}
  */
 const defaultConfig = getDefaultConfig(__dirname);
+const {
+  wrapWithReanimatedMetroConfig,
+} = require('react-native-reanimated/metro-config');
 
 const config = {
   transformer: {
@@ -18,4 +21,5 @@ const config = {
   },
 };
 
+module.exports = wrapWithReanimatedMetroConfig(config);
 module.exports = mergeConfig(defaultConfig, config);

@@ -23,7 +23,7 @@ const HomeScreen = ({ navigation }) => {
       {/* Botón para abrir el modal de pruebas */}
       <TouchableOpacity
         style={styles.button}
-        onPress={() => setModalVisible(true)}
+        onPress={() => navigation.navigate("BattleScreen")}
       >
         <Text style={styles.buttonText}>Pruebas</Text>
       </TouchableOpacity>

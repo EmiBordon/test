@@ -7,6 +7,7 @@ import { store, persistor } from './src/redux/store';
 import HomeScreen from './src/screens/HomeScreen';
 import TutorialScreen from './src/screens/levels/tutorial';
 import HandGame from './src/components/functions/handgame';
+import BattleScreen from './src/components/battlescreen';
 
 
 const Stack = createNativeStackNavigator();
@@ -30,6 +31,11 @@ export default function App() {
             <Stack.Screen
               name="HandGame"
               component={HandGame}
+            />
+            <Stack.Screen
+              name="BattleScreen"
+              component={BattleScreen}
+              options={{ headerShown: false }}
             />
           </Stack.Navigator>
         </NavigationContainer>

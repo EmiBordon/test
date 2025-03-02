@@ -1,10 +1,17 @@
 import React, { useState } from 'react';
 import { View, StyleSheet, Pressable, Alert, Image } from 'react-native';
-import { DoorIcon, MattIcon, ChestCloseIcon, ArrowIcon, MaiaIcon } from '../../components/SvgExporter';
+import Animated from 'react-native-reanimated';
+import {
+  DoorIcon,
+  MattIcon,
+  ChestCloseIcon,
+  ArrowIcon,
+  MaiaIcon,
+} from '../../components/SvgExporter';
 import Inventory from '../../components/inventory';
 import Location from '../../components/functions/location';
-import ConversationModal from "../../components/modal/conversationmodal"; // Asegúrate de que la ruta sea correcta
-import { conversations } from "../../components/functions/conversations";
+import ConversationModal from "../../components/modal/conversationmodal";
+import { conversations, Conversation } from "../../components/functions/conversations";
 import { useSelector, useDispatch } from 'react-redux';
 import { setMattState } from '../../redux/mattSlice';
 
@@ -32,10 +39,11 @@ const icons = [
 const TutorialScreen = () => {
   const [currentIconIndex, setCurrentIconIndex] = useState(0);
   const [modalVisible, setModalVisible] = useState(false);
-  const [conversationContent, setConversationContent] = useState(null);
+  // Declaramos el estado de conversación permitiendo null o el objeto Conversation
+  const [conversationContent, setConversationContent] = useState<Conversation | null>(null);
   
   const dispatch = useDispatch();
-  const mattState = useSelector(state => state.matt.value);
+  const mattState = useSelector((state: any) => state.matt.value);
 
   const handleNextIcon = () => {
     setCurrentIconIndex((prevIndex) => (prevIndex + 1) % icons.length);
@@ -46,16 +54,13 @@ const TutorialScreen = () => {
   };
 
   const handleIconPress = () => {
-    // Verificamos si el ícono actual es el MattIcon
     const { component: CurrentIcon } = icons[currentIconIndex];
     if (CurrentIcon === MattIcon) {
       if (mattState === 0) {
-        // Si el estado es 0, se muestra la conversación 1 y se cambia el estado a 1
         setConversationContent(conversations.mattconv1);
         dispatch(setMattState(1));
         setModalVisible(true);
       } else if (mattState === 1) {
-        // Si el estado ya es 1, se muestra la conversación 2 sin cambiar el estado
         setConversationContent(conversations.mattconv2);
         setModalVisible(true);
       }

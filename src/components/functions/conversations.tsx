@@ -1,7 +1,17 @@
-// conversations.js
-import { MaiaHeadIcon, MattHeadIcon, Maia4HeadIcon,DianaHeadIcon, Maia2HeadIcon, Maia3HeadIcon } from "../SvgExporter";
+import React from 'react';
+import { MaiaHeadIcon, MattHeadIcon, Maia4HeadIcon, DianaHeadIcon, Maia2HeadIcon, Maia3HeadIcon } from "../SvgExporter";
 
-export const conversations = {
+export interface Conversation {
+  dialogos: {
+    text: string;
+    svg: (props: any) => JSX.Element;
+  }[];
+}
+
+export const conversations: {
+  mattconv1: Conversation;
+  mattconv2: Conversation;
+} = {
   mattconv1: {
     dialogos: [
       { 
@@ -17,22 +27,21 @@ export const conversations = {
         svg: MaiaHeadIcon 
       }
     ],
-},
-mattconv2: {
-  dialogos: [
-    { 
-      text: "Quizas esta funcionando", 
-      svg: MattHeadIcon 
-    },
-    { 
-      text: "...", 
-      svg: MaiaHeadIcon
-    },
-    { 
-      text: "Genial", 
-      svg: MattHeadIcon 
-    }
-  ],
-},
-  // Puedes agregar más historias aquí...
+  },
+  mattconv2: {
+    dialogos: [
+      { 
+        text: "Quizas esta funcionando", 
+        svg: MattHeadIcon 
+      },
+      { 
+        text: "...", 
+        svg: MaiaHeadIcon
+      },
+      { 
+        text: "Genial", 
+        svg: MattHeadIcon 
+      }
+    ],
+  },
 };
