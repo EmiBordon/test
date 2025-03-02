@@ -95,7 +95,7 @@ const DrawBar: React.FC<DrawBarProps> = ({ levels, duration, onResult }) => {
   return (
     <View style={styles.container}>
       <Text style={styles.levelText}>
-        Nivel {currentLevel} de {levels}
+        {currentLevel} / {levels}
       </Text>
       <View style={styles.bar}>
         {/* Zona objetivo con posición determinada */}
@@ -103,7 +103,7 @@ const DrawBar: React.FC<DrawBarProps> = ({ levels, duration, onResult }) => {
         <Animated.View style={[styles.ball, animatedStyle]} />
       </View>
       <TouchableOpacity onPress={handleStop} style={styles.button}>
-        <Text style={styles.buttonText}>Detener</Text>
+        <Text style={styles.buttonText}>ATAQUE</Text>
       </TouchableOpacity>
     </View>
   );
@@ -150,6 +150,7 @@ const styles = StyleSheet.create({
   buttonText: {
     color: '#fff',
     fontWeight: 'bold',
+    fontSize: 20,
   },
 });
 

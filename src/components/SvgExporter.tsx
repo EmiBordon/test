@@ -11,6 +11,7 @@ import MaiaSvg from '../assets/maia.svg';
 import Maia2Svg from '../assets/maia2.svg';
 import Maia3Svg from '../assets/maia3.svg';
 import Maia4Svg from '../assets/maia4.svg';
+import Maia5Svg from '../assets/maia5.svg';
 import MattSvg from '../assets/matt.svg';
 import TextBubbleRightSvg from '../assets/text-bubble-right.svg';
 import TextBubbleLeftSvg from '../assets/text-bubble-left.svg';
@@ -46,6 +47,12 @@ import PaperBrokenSvg from '../assets/paperbroken.svg';
 import DoubleArrowSvg from '../assets/doublearrow.svg';
 import DianaSvg from '../assets/diana.svg';
 import DianaHeadSvg from '../assets/dianahead.svg';
+import SwordSvg from '../assets/sword.svg';
+import DoubleSwordSvg from '../assets/doublesword.svg';
+import PirateSwordSvg from '../assets/piratesword.svg';
+import SuperSwordSvg from '../assets/supersword.svg';
+import DaggersSvg from '../assets/daggers.svg';
+
 
 const ArrowIcon = (props: any) => <ArrowSvg {...props} />;
 const ChestOpenIcon = (props: any) => <ChestOpenSvg {...props} />;
@@ -59,6 +66,7 @@ const MaiaIcon = (props: any) => <MaiaSvg {...props} />;
 const Maia2Icon = (props: any) => <Maia2Svg {...props} />;
 const Maia3Icon = (props: any) => <Maia3Svg {...props} />;
 const Maia4Icon = (props: any) => <Maia4Svg {...props} />;
+const Maia5Icon = (props: any) => <Maia5Svg {...props} />;
 const MattIcon = (props: any) => <MattSvg {...props} />;
 const TextBubbleRightIcon = (props: any) => <TextBubbleRightSvg {...props} />;
 const TextBubbleLeftIcon = (props: any) => <TextBubbleLeftSvg {...props} />;
@@ -94,6 +102,11 @@ const PaperBrokenIcon = (props: any) => <PaperBrokenSvg {...props} />;
 const DoubleArrowIcon = (props: any) => <DoubleArrowSvg {...props} />;
 const DianaIcon = (props: any) => <DianaSvg {...props} />;
 const DianaHeadIcon = (props: any) => <DianaHeadSvg {...props} />;
+const SwordIcon = (props: any) => <SwordSvg {...props} />;
+const DoubleSwordIcon = (props: any) => <DoubleSwordSvg {...props} />;
+const PirateSwordIcon = (props: any) => <PirateSwordSvg {...props} />;
+const SuperSwordIcon = (props: any) => <SuperSwordSvg {...props} />;
+const DaggersIcon = (props: any) => <DaggersSvg {...props} />;
 
 export { 
   ArrowIcon, 
@@ -107,7 +120,8 @@ export {
   MaiaIcon, 
   Maia2Icon, 
   Maia3Icon, 
-  Maia4Icon, 
+  Maia4Icon,
+  Maia5Icon, 
   MattIcon, 
   TextBubbleRightIcon, 
   TextBubbleLeftIcon,
@@ -142,5 +156,10 @@ export {
   PaperIcon,
   DoubleArrowIcon,
   DianaIcon,
-  DianaHeadIcon
+  DianaHeadIcon,
+  SwordIcon,
+  SuperSwordIcon,
+  DoubleSwordIcon,
+  PirateSwordIcon,
+  DaggersIcon,
 };

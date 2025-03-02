@@ -1,11 +1,16 @@
 import React, { useState } from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
-import ConversationModal from "../components/modal/conversationmodal"; // Asegúrate de que la ruta sea la correcta
-import { conversations } from "../components/functions/conversations"; // Ajusta la ruta según tu estructura
+import { useDispatch, useSelector } from "react-redux";
+import { incrementWeapon, decrementWeapon } from "../redux/weaponsSlice";
+import ConversationModal from "../components/modal/conversationmodal"; 
+import { conversations } from "../components/functions/conversations"; 
 import { FountainIcon } from "../components/SvgExporter";
-import ResetButton from "../components/functions/resetbutton"; // Importa el botón de reset
+import ResetButton from "../components/functions/resetbutton";
 
 const HomeScreen = ({ navigation }) => {
+  const dispatch = useDispatch();
+  const currentWeapon = useSelector((state: any) => state.weapons.currentWeapon);
+
   const [modalVisible, setModalVisible] = useState(false);
 
   return (
@@ -20,7 +25,6 @@ const HomeScreen = ({ navigation }) => {
         <Text style={styles.buttonText}>Nueva Partida</Text>
       </TouchableOpacity>
 
-      {/* Botón para abrir el modal de pruebas */}
       <TouchableOpacity
         style={styles.button}
         onPress={() => navigation.navigate("BattleScreen")}
@@ -28,7 +32,20 @@ const HomeScreen = ({ navigation }) => {
         <Text style={styles.buttonText}>Pruebas</Text>
       </TouchableOpacity>
 
-      {/* Nuevo botón para resetear estados */}
+      {/* Mostrar el valor actual de currentWeapon */}
+      <Text style={styles.weaponText}>Arma actual: {currentWeapon}</Text>
+
+      {/* Botón para aumentar el arma */}
+      <TouchableOpacity style={styles.button} onPress={() => dispatch(incrementWeapon())}>
+        <Text style={styles.buttonText}>Aumentar Arma</Text>
+      </TouchableOpacity>
+
+      {/* Botón para disminuir el arma */}
+      <TouchableOpacity style={styles.button} onPress={() => dispatch(decrementWeapon())}>
+        <Text style={styles.buttonText}>Disminuir Arma</Text>
+      </TouchableOpacity>
+
+      {/* Botón para resetear estados */}
       <ResetButton />
 
       {/* Modal para mostrar la conversación "historia1" */}
@@ -56,7 +73,7 @@ const styles = StyleSheet.create({
     fontFamily: "serif",
   },
   button: {
-    marginTop: "15%",
+    marginTop: "5%",
     paddingVertical: 10,
     paddingHorizontal: 20,
     borderWidth: 3,
@@ -67,7 +84,13 @@ const styles = StyleSheet.create({
   buttonText: {
     color: "#000",
     fontWeight: "bold",
-    fontSize: 25,
+    fontSize: 20,
+  },
+  weaponText: {
+    fontSize: 22,
+    fontWeight: "bold",
+    color: "#000",
+    marginTop: 15,
   },
 });
 

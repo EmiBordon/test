@@ -6,18 +6,18 @@ import Animated, {
   withSequence,
   withTiming,
 } from 'react-native-reanimated';
-import { Maia5Icon } from '../SvgExporter';
+import { MattIcon } from '../SvgExporter';
 
-export interface ShakyMaiaIconRef {
+export interface ShakyMattIconRef {
   triggerShake: () => void;
 }
 
-interface ShakyMaiaIconProps {
+interface ShakyMattIconProps {
   height: number;
   width: number;
 }
 
-const ShakyMaiaIcon = forwardRef<ShakyMaiaIconRef, ShakyMaiaIconProps>(
+const ShakyMattIcon = forwardRef<ShakyMaiaIconRef, ShakyMattIconProps>(
   ({ height, width }, ref) => {
     const shake = useSharedValue({ x: 0, y: 0 });
 
@@ -44,10 +44,10 @@ const ShakyMaiaIcon = forwardRef<ShakyMaiaIconRef, ShakyMaiaIconProps>(
 
     return (
       <Animated.View style={[animatedStyle, { pointerEvents: 'none' }]}>
-        <Maia5Icon height={height} width={width} />
+        <MattIcon height={height} width={width} />
       </Animated.View>
     );
   }
 );
 
-export default ShakyMaiaIcon;
+export default ShakyMattIcon;

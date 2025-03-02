@@ -1,26 +1,31 @@
 // src/redux/store.js
-import { configureStore } from '@reduxjs/toolkit';
-import { combineReducers } from 'redux';
+import { configureStore, combineReducers } from '@reduxjs/toolkit';
 import { persistStore, persistReducer } from 'redux-persist';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import levelReducer from './levelSlice';
 import mattReducer from './mattSlice';
-import maiaReducer from './maiaSlice'; // Importamos el nuevo slice
+import maiaReducer from './maiaSlice';
+import weaponsReducer from './weaponsSlice'; // Importamos weaponsSlice
 
-const rootReducer = combineReducers({
-  levels: levelReducer,
-  matt: mattReducer,
-  maia: maiaReducer,  // Agregamos el reducer de maia
-});
-
+// Configuración del persist
 const persistConfig = {
   key: 'root',
   storage: AsyncStorage,
-  whitelist: ['levels', 'matt', 'maia'], // Asegúrate de persistir los slices que desees
+  whitelist: ['levels', 'matt', 'maia', 'weapons'], // Agregamos 'weapons' a la lista de persistencia
 };
 
+// Reducer combinado
+const rootReducer = combineReducers({
+  levels: levelReducer,
+  matt: mattReducer,
+  maia: maiaReducer,
+  weapons: weaponsReducer, // Agregamos el reducer de weapons
+});
+
+// Reducer persistente
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 
+// Configuración del store
 export const store = configureStore({
   reducer: persistedReducer,
   middleware: (getDefaultMiddleware) =>
@@ -29,4 +34,5 @@ export const store = configureStore({
     }),
 });
 
+// Persistor para mantener el estado guardado
 export const persistor = persistStore(store);

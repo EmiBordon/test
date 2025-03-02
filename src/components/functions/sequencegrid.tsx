@@ -57,7 +57,7 @@ const RandomSequenceGrid: React.FC<RandomSequenceGridProps> = ({ sequenceLength,
     // Al finalizar la secuencia, se oculta la cuadrícula animada y se habilita la interactiva.
     const finalTimeout = setTimeout(() => {
       setSequenceComplete(true);
-    }, arr.length * delay * 2);
+    }, arr.length * delay * 1.5);
     timeouts.push(finalTimeout);
   };
 
@@ -94,7 +94,7 @@ const RandomSequenceGrid: React.FC<RandomSequenceGridProps> = ({ sequenceLength,
       {/* Cuadrícula animada: se muestra solo si la secuencia no ha finalizado */}
       {!sequenceComplete && (
           <View style={styles.grid}>
-            <Text style={styles.title}>RECUERDA EL PATRON</Text>
+            <Text style={styles.title}>   PATRON DE ATAQUE</Text>
           {squares.map(num => {
             const isLit = currentLit === num;
             return (

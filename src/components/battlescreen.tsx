@@ -1,62 +1,94 @@
 // BattleScreen.tsx
-import React, { useState, useEffect } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { View, Text, StyleSheet, Pressable } from 'react-native';
 import { MaiaIcon, MattIcon } from '../components/SvgExporter';
+import ShakyMaiaIcon, { ShakyMaiaIconRef } from '../components/characters/shakymaiaicon';
+import ShakyMattIcon, { ShakyMattIconRef } from '../components/characters/shakymatticon';
 import { useSelector } from 'react-redux';
-import DrawBar from '../components/functions/drawbar'; // Ruta al componente de ataque
-import RandomSequenceGrid from '../components/functions/secuencegrid'; // Ruta al componente de defensa
+import DrawBar from '../components/functions/drawbar'; // Componente de ataque
+import RandomSequenceGrid from '../components/functions/sequencegrid'; // Componente de defensa
 
 const BattleScreen: React.FC = () => {
   // Obtenemos el tope de salud de Maia desde Redux
   const maiaHealth = useSelector((state: any) => state.maia.maiahealth);
   // La salud actual de Maia se maneja localmente (inicialmente igual al tope)
   const [maiaCurrentHealth, setMaiaCurrentHealth] = useState(maiaHealth);
-
   // Salud de Matt (local)
   const [mattCurrentHealth, setMattCurrentHealth] = useState(10);
   const [mattMaxHealth, setMattMaxHealth] = useState(10);
 
-  // Estados para mostrar los overlays y controlar la visibilidad de botones
+  // Estados para mostrar los overlays y botones
   const [showDrawBar, setShowDrawBar] = useState(false);
   const [showRandomSequence, setShowRandomSequence] = useState(false);
   const [showAttackButton, setShowAttackButton] = useState(true);
   const [showDefenderButton, setShowDefenderButton] = useState(false);
+  // Estados para mostrar los efectos de daño
+  const [showDamagedMaia, setShowDamagedMaia] = useState(false);
+  const [showDamagedMatt, setShowDamagedMatt] = useState(false);
 
-  // Actualizamos la salud actual de Maia si el tope cambia en Redux
+  // Refs para los componentes ShakyMaiaIcon y ShakyMattIcon
+  const maiaIconRef = useRef<ShakyMaiaIconRef>(null);
+  const mattIconRef = useRef<ShakyMattIconRef>(null);
+
+  // Actualizamos la salud actual de Maia si cambia el tope en Redux
   useEffect(() => {
     setMaiaCurrentHealth(maiaHealth);
   }, [maiaHealth]);
 
+  // useEffect para activar la animación de daño en Maia
+  useEffect(() => {
+    if (showDamagedMaia) {
+      setTimeout(() => {
+        maiaIconRef.current?.triggerShake();
+      }, 100);
+      setTimeout(() => {
+        setShowDamagedMaia(false);
+      }, 1000);
+    }
+  }, [showDamagedMaia]);
+
+  // useEffect para activar la animación de daño en Matt
+  useEffect(() => {
+    if (showDamagedMatt) {
+      setTimeout(() => {
+        mattIconRef.current?.triggerShake();
+      }, 100);
+      setTimeout(() => {
+        setShowDamagedMatt(false);
+      }, 1000);
+    }
+  }, [showDamagedMatt]);
+
   // Callback para el mini-juego de ATACAR (DrawBar)
   const handleAttackResult = (result: boolean) => {
     setShowDrawBar(false);
-    // Tras el ataque, mostramos el botón DEFENDER
     setShowDefenderButton(true);
     if (result) {
-      // Si el ataque es exitoso, Matt pierde 1 de salud
+      // Si el ataque es exitoso, Matt pierde 1 de salud y se activa el efecto de daño
       setMattCurrentHealth(prev => prev - 1);
+      setShowDamagedMatt(true);
     }
   };
 
   // Callback para el mini-juego de DEFENDER (RandomSequenceGrid)
   const handleDefenseResult = (result: boolean) => {
     setShowRandomSequence(false);
-    // Tras defender, volvemos a mostrar el botón ATACAR
     setShowAttackButton(true);
     if (!result) {
-      // Si la defensa falla, Maia pierde 1 de salud
+      // Si la defensa falla, Maia pierde 1 de salud y se activa el efecto de daño
       setMaiaCurrentHealth(prev => prev - 1);
+      setShowDamagedMaia(true);
     }
   };
 
-  // Al presionar ATACAR: se oculta el botón y se muestra DrawBar
+  // Al presionar ATACAR, se oculta ese botón y se muestra DrawBar
   const handleAttackPress = () => {
     setShowAttackButton(false);
     setShowDefenderButton(false);
     setShowDrawBar(true);
   };
 
-  // Al presionar DEFENDER: se oculta el botón y se muestra RandomSequenceGrid
+  // Al presionar DEFENDER, se oculta ese botón y se muestra RandomSequenceGrid
   const handleDefensePress = () => {
     setShowDefenderButton(false);
     setShowRandomSequence(true);
@@ -66,7 +98,11 @@ const BattleScreen: React.FC = () => {
     <View style={styles.container}>
       {/* Parte superior: Matt */}
       <View style={styles.topContainer}>
-        <MattIcon height={150} width={150} />
+        {showDamagedMatt ? (
+          <ShakyMattIcon ref={mattIconRef} height={150} width={150} />
+        ) : (
+          <MattIcon height={150} width={150} />
+        )}
         <Text style={styles.healthText}>
           {mattCurrentHealth}/{mattMaxHealth}
         </Text>
@@ -84,7 +120,11 @@ const BattleScreen: React.FC = () => {
             <Text style={styles.defenderButtonText}>DEFENDER</Text>
           </Pressable>
         )}
-        <MaiaIcon height={150} width={150} />
+        {showDamagedMaia ? (
+          <ShakyMaiaIcon ref={maiaIconRef} height={150} width={150} />
+        ) : (
+          <MaiaIcon height={150} width={150} />
+        )}
         <Text style={styles.healthText}>
           {maiaCurrentHealth}/{maiaHealth}
         </Text>

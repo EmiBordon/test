@@ -1,17 +1,11 @@
 import React, { useState } from 'react';
 import { View, StyleSheet, Pressable, Alert, Image } from 'react-native';
-import Animated from 'react-native-reanimated';
-import {
-  DoorIcon,
-  MattIcon,
-  ChestCloseIcon,
-  ArrowIcon,
-  MaiaIcon,
-} from '../../components/SvgExporter';
+import { useNavigation } from '@react-navigation/native';
+import { MaiaIcon, MattIcon, DoorIcon, ChestCloseIcon, ArrowIcon } from '../../components/SvgExporter';
 import Inventory from '../../components/inventory';
 import Location from '../../components/functions/location';
-import ConversationModal from "../../components/modal/conversationmodal";
-import { conversations, Conversation } from "../../components/functions/conversations";
+import ConversationChoiceModal from '../../components/modal/conversationchoicemodal';
+import { conversations, Conversation } from '../../components/functions/conversations';
 import { useSelector, useDispatch } from 'react-redux';
 import { setMattState } from '../../redux/mattSlice';
 
@@ -37,9 +31,9 @@ const icons = [
 ];
 
 const TutorialScreen = () => {
+  const navigation = useNavigation();
   const [currentIconIndex, setCurrentIconIndex] = useState(0);
   const [modalVisible, setModalVisible] = useState(false);
-  // Declaramos el estado de conversación permitiendo null o el objeto Conversation
   const [conversationContent, setConversationContent] = useState<Conversation | null>(null);
   
   const dispatch = useDispatch();
@@ -51,6 +45,12 @@ const TutorialScreen = () => {
 
   const handlePrevIcon = () => {
     setCurrentIconIndex((prevIndex) => (prevIndex - 1 + icons.length) % icons.length);
+  };
+
+  // handleAccept navega a BattleScreen y despacha setMattState(2)
+  const handleAccept = () => {
+    dispatch(setMattState(2));
+    navigation.replace('BattleScreen');
   };
 
   const handleIconPress = () => {
@@ -73,15 +73,12 @@ const TutorialScreen = () => {
 
   return (
     <View style={styles.container}>
-      {/* Imagen de fondo */}
       <Image source={require('../../images/floor2.jpg')} style={styles.backgroundImage} />
 
-      {/* Ícono principal configurable */}
       <Pressable style={[styles.iconButton, iconStyle]} onPress={handleIconPress}>
         <CurrentIcon height={height} width={width} />
       </Pressable>
 
-      {/* Botones para navegar entre íconos */}
       <View style={styles.sideIcons}>
         <Pressable style={styles.arrowButton} onPress={handlePrevIcon}>
           <ArrowIcon style={styles.leftArrow} height={50} width={50} />
@@ -91,7 +88,6 @@ const TutorialScreen = () => {
         </Pressable>
       </View>
 
-      {/* MaiaIcon se muestra de forma estática */}
       <View style={styles.maiaContainer}>
         <MaiaIcon height={160} width={160} />
       </View>
@@ -99,12 +95,12 @@ const TutorialScreen = () => {
       <Inventory />
       <Location text="Casa de los River" />
 
-      {/* Modal de conversación */}
       {modalVisible && (
-        <ConversationModal 
+        <ConversationChoiceModal 
           visible={modalVisible}  
           conversation={conversationContent}
           onClose={() => setModalVisible(false)}
+          onAccept={handleAccept}
         />
       )}
     </View>
