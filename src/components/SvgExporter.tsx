@@ -52,6 +52,9 @@ import DoubleSwordSvg from '../assets/doublesword.svg';
 import PirateSwordSvg from '../assets/piratesword.svg';
 import SuperSwordSvg from '../assets/supersword.svg';
 import DaggersSvg from '../assets/daggers.svg';
+import CrossBowSvg from '../assets/crossbow.svg';
+import QuiverSvg from '../assets/quiver.svg';
+import BowArrowSvg from '../assets/bowarrow.svg';
 
 
 const ArrowIcon = (props: any) => <ArrowSvg {...props} />;
@@ -107,6 +110,9 @@ const DoubleSwordIcon = (props: any) => <DoubleSwordSvg {...props} />;
 const PirateSwordIcon = (props: any) => <PirateSwordSvg {...props} />;
 const SuperSwordIcon = (props: any) => <SuperSwordSvg {...props} />;
 const DaggersIcon = (props: any) => <DaggersSvg {...props} />;
+const CrossBowIcon = (props: any) => <CrossBowSvg {...props} />;
+const BowArrowIcon = (props: any) => <BowArrowSvg {...props} />;
+const QuiverArrowIcon = (props: any) => <QuiverSvg {...props} />;
 
 export { 
   ArrowIcon, 
@@ -162,4 +168,7 @@ export {
   DoubleSwordIcon,
   PirateSwordIcon,
   DaggersIcon,
+  CrossBowIcon,
+  BowArrowIcon,
+  QuiverArrowIcon,
 };

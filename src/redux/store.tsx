@@ -2,7 +2,6 @@
 import { configureStore, combineReducers } from '@reduxjs/toolkit';
 import { persistStore, persistReducer } from 'redux-persist';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import levelReducer from './levelSlice';
 import mattReducer from './mattSlice';
 import maiaReducer from './maiaSlice';
 import weaponsReducer from './weaponsSlice'; // Importamos weaponsSlice
@@ -16,7 +15,6 @@ const persistConfig = {
 
 // Reducer combinado
 const rootReducer = combineReducers({
-  levels: levelReducer,
   matt: mattReducer,
   maia: maiaReducer,
   weapons: weaponsReducer, // Agregamos el reducer de weapons

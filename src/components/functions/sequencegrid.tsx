@@ -44,7 +44,7 @@ const RandomSequenceGrid: React.FC<RandomSequenceGridProps> = ({ sequenceLength,
     const timeouts: NodeJS.Timeout[] = [];
     // Para cada número de la secuencia se programa su encendido y apagado.
     arr.forEach((num, index) => {
-      const onTime = index * delay * 2; // momento para encender
+      const onTime = index * delay * 1.8; // momento para encender
       const offTime = onTime + delay;   // momento para apagar
       const t1 = setTimeout(() => {
         setCurrentLit(num);
