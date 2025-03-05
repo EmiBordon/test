@@ -110,8 +110,8 @@ const RandomSequenceGrid: React.FC<RandomSequenceGridProps> = ({ sequenceLength,
       {/* Cuadrícula interactiva: se muestra cuando la animación ha finalizado */}
       {sequenceComplete && (
         <View style={styles.container}>
-          <Text style={styles.title}>REPRODUCE EL PATRON</Text>
           <View style={styles.grid}>
+          <Text style={styles.title}>REPRODUCE EL PATRON</Text>
             {squares.map(num => (
               <TouchableOpacity
                 key={num}
@@ -131,6 +131,7 @@ const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
     padding: 20,
+    
   },
   title: {
     fontSize: 20,
@@ -140,6 +141,7 @@ const styles = StyleSheet.create({
     width: CONTAINER_WIDTH,
     flexDirection: 'row',
     flexWrap: 'wrap',
+    top:"15%",
   },
   square: {
     width: SQUARE_SIZE,

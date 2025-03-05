@@ -1,47 +1,47 @@
 import React, { useState } from 'react';
 import { Modal, View, TouchableOpacity, Text, StyleSheet, Dimensions } from 'react-native';
 import CurrentWeaponIcon from '../currentweapon';
-import QuiverIcon from '../quiver'; // Importamos QuiverIcon
+import QuiverIcon from '../quiver';
 import { CrossBowIcon } from '../SvgExporter';
 
-// Definir el tipo de las props
 interface BagPackModalProps {
   visible: boolean;
   onClose: () => void;
 }
 
 const BagPackModal: React.FC<BagPackModalProps> = ({ visible, onClose }) => {
-  const { width, height } = Dimensions.get('window');
-
-  // Estado para mostrar la info de la ballesta
   const [showCrossbowInfo, setShowCrossbowInfo] = useState(false);
 
-  // Simulación de objetos divididos en categorías
+  // Objetos divididos en categorías (misma lógica)
   const sections = {
-    ARMAS: [], // Quitamos "Daga", ya que ahora usamos QuiverIcon
-    CURACIÓN: ['Poción', 'Hierba', 'Antídoto'],
+    ARMAS: [], // Daga removida; ahora se muestran iconos de CurrentWeapon, Ballesta y Quiver
+    SALUD: ['Poción', 'Hierba', 'Antídoto'],
     OBJETOS: ['Llave', 'Mapa', 'Gema'],
   };
 
   return (
     <Modal visible={visible} animationType="slide" transparent>
       <View style={styles.overlay}>
-        <View style={[styles.modalContainer, { width: '90%', height: '60%' }]}>
-          <Text style={styles.headerText}>Mochila</Text>
+        <View style={styles.modalContainer}>
+          {/* Cabecera tipo pixel-art */}
+          <Text style={styles.headerText}>ITEMS</Text>
 
           {/* Renderizado de cada sección */}
           {Object.entries(sections).map(([section, items]) => (
             <View key={section} style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}></Text>
+              {/* En este caso no mostramos el nombre de la sección, 
+                  pero podrías ponerlo en estilo pixelado si lo deseas */}
+              {/* <Text style={styles.sectionTitle}>{section}</Text> */}
+
               <View style={styles.itemsContainer}>
-                {/* Primer casillero: Icono del arma actual */}
                 {section === 'ARMAS' && (
                   <>
+                    {/* Primer casillero: Arma actual */}
                     <View style={styles.itemTouchable}>
                       <CurrentWeaponIcon />
                     </View>
 
-                    {/* Segundo casillero: CrossBowIcon */}
+                    {/* Segundo casillero: Ballesta */}
                     <TouchableOpacity
                       style={styles.itemTouchable}
                       onPress={() => setShowCrossbowInfo(!showCrossbowInfo)}
@@ -49,21 +49,21 @@ const BagPackModal: React.FC<BagPackModalProps> = ({ visible, onClose }) => {
                       <CrossBowIcon width={'70%'} height={'70%'} />
                     </TouchableOpacity>
 
-                    {/* Mostrar info flotante de la ballesta */}
+                    {/* Info flotante de la ballesta */}
                     {showCrossbowInfo && (
                       <View style={styles.infoContainer}>
                         <Text style={styles.infoText}>Ballesta</Text>
                       </View>
                     )}
 
-                    {/* Tercer casillero: QuiverIcon */}
+                    {/* Tercer casillero: Carcaj (Quiver) */}
                     <View style={styles.itemTouchable}>
                       <QuiverIcon />
                     </View>
                   </>
                 )}
 
-                {/* Renderizamos el resto de los objetos normalmente */}
+                {/* Resto de ítems en cada sección */}
                 {items.map((item, index) => (
                   <TouchableOpacity key={index} style={styles.itemTouchable}>
                     <Text style={styles.itemText}>{item}</Text>
@@ -73,6 +73,7 @@ const BagPackModal: React.FC<BagPackModalProps> = ({ visible, onClose }) => {
             </View>
           ))}
 
+          {/* Botón de cierre */}
           <TouchableOpacity style={styles.closeButton} onPress={onClose}>
             <Text style={styles.closeButtonText}>Cerrar</Text>
           </TouchableOpacity>
@@ -87,88 +88,102 @@ export default BagPackModal;
 const styles = StyleSheet.create({
   overlay: {
     flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.6)',
+    // Fondo semitransparente oscuro
+    backgroundColor: 'rgba(0,0,0,0.7)',
     justifyContent: 'center',
     alignItems: 'center',
   },
   modalContainer: {
-    backgroundColor: 'gray',
-    borderRadius: 15,
-    padding: '5%',
-    borderWidth: 3,
-    borderColor: '#fff',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.8,
-    shadowRadius: 4,
-    elevation: 5,
+    // Para simular un fondo tipo “ventana” pixel-art
+    backgroundColor: 'gray', // Un tono verde-azulado oscuro
+    borderWidth: 2,
+    borderColor: 'black', // Un tono más claro para el borde
+    // Sin bordes redondeados para lucir más "retro"
+    borderRadius: 0,
+    width: '90%',
+    // Ajusta la altura según te convenga
+    height: '60%',
+    padding: 10,
   },
   headerText: {
     fontSize: 24,
-    color: '#fff',
-    fontWeight: 'bold',
-    marginBottom: '3%',
-    alignSelf: 'center',
-    textShadowColor: '#000',
-    textShadowOffset: { width: 1, height: 1 },
-    textShadowRadius: 2,
+    // Si tienes una fuente pixelada, úsala aquí. De lo contrario,
+    // utiliza un fallback con letra monoespaciada o parecida
+    // fontFamily: 'PressStart2P',
+    color: 'white',
+    textAlign: 'center',
+    marginBottom: 10,
+    // Para simular un estilo “pixel”
+    letterSpacing: 2,
   },
   sectionContainer: {
-    marginBottom: '2%',
+    marginVertical: 5,
   },
   sectionTitle: {
-    fontSize: 20,
-    color: '#fff',
-    fontWeight: 'bold',
-    marginBottom: '2%',
+    fontSize: 14,
+    // fontFamily: 'PressStart2P',
+    color: 'white',
     textAlign: 'center',
+    marginBottom: 5,
+    letterSpacing: 1,
   },
   itemsContainer: {
+    // Distribución en cuadrícula
     flexDirection: 'row',
     flexWrap: 'wrap',
-    justifyContent: 'space-between',
+    justifyContent: 'center',
   },
   itemTouchable: {
-    width: '30%',
+    // Para un grid de 4 columnas, cada item ocupa ~25%
+    width: '25%',
     aspectRatio: 1,
-    backgroundColor: '#fff',
+    backgroundColor: 'gray', // Color de fondo para los ítems
+    borderWidth: 2,
+    borderColor: 'white',
+    // Quitar bordes redondeados para pixel-art
+    borderRadius: 0,
+    margin: 5,
     justifyContent: 'center',
     alignItems: 'center',
-    borderRadius: 10,
-    borderWidth: 1,
-    borderColor: '#000',
+  },
+  itemText: {
+    color: 'white',
+    // fontFamily: 'PressStart2P',
+    fontSize: 10,
+    textAlign: 'center',
   },
   infoContainer: {
     position: 'absolute',
-    top: '-35%',
+    bottom: '110%',
+    // Ajusta la posición horizontal según necesites
+    left: '10%',
     backgroundColor: 'rgba(0, 0, 0, 0.8)',
-    padding: '2%',
-    borderRadius: 5,
-    alignItems: 'center',
-    left: '40%',
+    padding: 5,
+    borderWidth: 1,
+    borderColor: 'white',
+    // Sin bordes redondeados
+    borderRadius: 0,
+    zIndex: 999,
   },
   infoText: {
-    color: '#fff',
-    fontWeight: 'bold',
-    fontSize: 14,
-  },
-  itemText: {
-    color: '#000',
-    fontWeight: 'bold',
-    textAlign: 'center',
+    color: '#F2D5BD',
+    // fontFamily: 'PressStart2P',
     fontSize: 10,
   },
   closeButton: {
-    backgroundColor: '#fff',
-    paddingVertical: '3%',
-    paddingHorizontal: '5%',
-    borderRadius: 10,
+    backgroundColor: 'black',
+    borderWidth: 2,
+    borderColor: 'gray',
+    borderRadius: 0,
+    paddingHorizontal: 20,
+    paddingVertical: 8,
     alignSelf: 'center',
-    marginTop: '1%',
+    marginTop: 10,
   },
   closeButtonText: {
-    color: '#000',
-    fontSize: 18,
-    fontWeight: 'bold',
+    color: 'white',
+    // fontFamily: 'PressStart2P',
+    fontSize: 14,
+    textAlign: 'center',
   },
 });

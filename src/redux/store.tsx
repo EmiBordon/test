@@ -10,7 +10,7 @@ import weaponsReducer from './weaponsSlice'; // Importamos weaponsSlice
 const persistConfig = {
   key: 'root',
   storage: AsyncStorage,
-  whitelist: ['levels', 'matt', 'maia', 'weapons'], // Agregamos 'weapons' a la lista de persistencia
+  whitelist: ['matt', 'maia', 'weapons'], // Agregamos 'weapons' a la lista de persistencia
 };
 
 // Reducer combinado

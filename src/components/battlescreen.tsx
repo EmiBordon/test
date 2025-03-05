@@ -1,53 +1,45 @@
 // BattleScreen.tsx
 import React, { useState, useRef, useEffect } from 'react';
 import { View, Text, StyleSheet, Pressable } from 'react-native';
-import { MaiaIcon, MattIcon } from '../components/SvgExporter';
-import ShakyMaiaIcon, { ShakyMaiaIconRef } from '../components/characters/shakymaiaicon';
+import { MaiaIcon, MattIcon, MaiaHeadIcon, HearthIcon, BrokenHearthIcon } from '../components/SvgExporter';
 import ShakyMattIcon, { ShakyMattIconRef } from '../components/characters/shakymatticon';
 import { useSelector } from 'react-redux';
 import DrawBar from '../components/functions/drawbar'; // Componente de ataque
 import RandomSequenceGrid from '../components/functions/sequencegrid'; // Componente de defensa
+import ShakyMaiaHeadIcon, { ShakyMaiaHeadIconRef } from './characters/shakymaiaheadicon';
 
 const BattleScreen: React.FC = () => {
-  // Obtenemos el tope de salud de Maia desde Redux
+  // Salud de Maia desde Redux
   const maiaHealth = useSelector((state: any) => state.maia.maiahealth);
-  // La salud actual de Maia se maneja localmente (inicialmente igual al tope)
   const [maiaCurrentHealth, setMaiaCurrentHealth] = useState(maiaHealth);
   // Salud de Matt (local)
   const [mattCurrentHealth, setMattCurrentHealth] = useState(10);
   const [mattMaxHealth, setMattMaxHealth] = useState(10);
 
-  // Estados para mostrar los overlays y botones
+  // Estados para overlays y botones
   const [showDrawBar, setShowDrawBar] = useState(false);
   const [showRandomSequence, setShowRandomSequence] = useState(false);
   const [showAttackButton, setShowAttackButton] = useState(true);
   const [showDefenderButton, setShowDefenderButton] = useState(false);
-  // Estados para mostrar los efectos de daño
-  const [showDamagedMaia, setShowDamagedMaia] = useState(false);
+  // Estado para efecto de daño en Matt
   const [showDamagedMatt, setShowDamagedMatt] = useState(false);
+  // Estado para efecto shaky en Maia
+  const [showDamagedMaia, setShowDamagedMaia] = useState(false);
+  // Estados para mostrar el icono de vida roto temporalmente
+  const [showBrokenHearthMatt, setShowBrokenHearthMatt] = useState(false);
+  const [showBrokenHearthMaia, setShowBrokenHearthMaia] = useState(false);
 
-  // Refs para los componentes ShakyMaiaIcon y ShakyMattIcon
-  const maiaIconRef = useRef<ShakyMaiaIconRef>(null);
+  // Ref para el componente ShakyMattIcon
   const mattIconRef = useRef<ShakyMattIconRef>(null);
+  // Ref para el componente ShakyMaiaHeadIcon
+  const maiaHeadIconRef = useRef<ShakyMaiaHeadIconRef>(null);
 
-  // Actualizamos la salud actual de Maia si cambia el tope en Redux
+  // Actualiza la salud de Maia si cambia en Redux
   useEffect(() => {
     setMaiaCurrentHealth(maiaHealth);
   }, [maiaHealth]);
 
-  // useEffect para activar la animación de daño en Maia
-  useEffect(() => {
-    if (showDamagedMaia) {
-      setTimeout(() => {
-        maiaIconRef.current?.triggerShake();
-      }, 100);
-      setTimeout(() => {
-        setShowDamagedMaia(false);
-      }, 1000);
-    }
-  }, [showDamagedMaia]);
-
-  // useEffect para activar la animación de daño en Matt
+  // Efecto de daño para Matt
   useEffect(() => {
     if (showDamagedMatt) {
       setTimeout(() => {
@@ -59,14 +51,27 @@ const BattleScreen: React.FC = () => {
     }
   }, [showDamagedMatt]);
 
+  // Efecto de daño para Maia (shake)
+  useEffect(() => {
+    if (showDamagedMaia) {
+      setTimeout(() => {
+        maiaHeadIconRef.current?.triggerShake();
+      }, 100);
+      setTimeout(() => {
+        setShowDamagedMaia(false);
+      }, 1000);
+    }
+  }, [showDamagedMaia]);
+
   // Callback para el mini-juego de ATACAR (DrawBar)
   const handleAttackResult = (result: boolean) => {
     setShowDrawBar(false);
     setShowDefenderButton(true);
     if (result) {
-      // Si el ataque es exitoso, Matt pierde 1 de salud y se activa el efecto de daño
       setMattCurrentHealth(prev => prev - 1);
       setShowDamagedMatt(true);
+      setShowBrokenHearthMatt(true);
+      setTimeout(() => setShowBrokenHearthMatt(false), 1000);
     }
   };
 
@@ -75,20 +80,21 @@ const BattleScreen: React.FC = () => {
     setShowRandomSequence(false);
     setShowAttackButton(true);
     if (!result) {
-      // Si la defensa falla, Maia pierde 1 de salud y se activa el efecto de daño
       setMaiaCurrentHealth(prev => prev - 1);
+      setShowBrokenHearthMaia(true);
       setShowDamagedMaia(true);
+      setTimeout(() => setShowBrokenHearthMaia(false), 1000);
     }
   };
 
-  // Al presionar ATACAR, se oculta ese botón y se muestra DrawBar
+  // Al presionar ATACAR se ocultan los botones y se muestra DrawBar
   const handleAttackPress = () => {
     setShowAttackButton(false);
     setShowDefenderButton(false);
     setShowDrawBar(true);
   };
 
-  // Al presionar DEFENDER, se oculta ese botón y se muestra RandomSequenceGrid
+  // Al presionar DEFENDER se oculta el botón y se muestra RandomSequenceGrid
   const handleDefensePress = () => {
     setShowDefenderButton(false);
     setShowRandomSequence(true);
@@ -98,36 +104,56 @@ const BattleScreen: React.FC = () => {
     <View style={styles.container}>
       {/* Parte superior: Matt */}
       <View style={styles.topContainer}>
+        <View style={styles.healthContainer}>
+          {showBrokenHearthMatt ? (
+            <BrokenHearthIcon height={20} width={20} />
+          ) : (
+            <HearthIcon height={20} width={20} />
+          )}
+          <Text style={styles.healthText}>
+            {mattCurrentHealth}/{mattMaxHealth}
+          </Text>
+        </View>
         {showDamagedMatt ? (
-          <ShakyMattIcon ref={mattIconRef} height={150} width={150} />
+          <ShakyMattIcon ref={mattIconRef} height={220} width={220} />
         ) : (
-          <MattIcon height={150} width={150} />
+          <MattIcon height={220} width={220} />
         )}
-        <Text style={styles.healthText}>
-          {mattCurrentHealth}/{mattMaxHealth}
-        </Text>
       </View>
 
-      {/* Parte inferior: Maia */}
-      <View style={styles.bottomContainer}>
-        {showAttackButton && (
-          <Pressable style={styles.attackButton} onPress={handleAttackPress}>
-            <Text style={styles.attackButtonText}>ATACAR</Text>
-          </Pressable>
-        )}
-        {showDefenderButton && (
-          <Pressable style={styles.defenderButton} onPress={handleDefensePress}>
-            <Text style={styles.defenderButtonText}>DEFENDER</Text>
-          </Pressable>
-        )}
-        {showDamagedMaia ? (
-          <ShakyMaiaIcon ref={maiaIconRef} height={150} width={150} />
-        ) : (
-          <MaiaIcon height={150} width={150} />
-        )}
-        <Text style={styles.healthText}>
-          {maiaCurrentHealth}/{maiaHealth}
-        </Text>
+      {/* Botón de defender en la esquina inferior izquierda, si aplica */}
+      {showDefenderButton && (
+        <Pressable style={styles.actionButton} onPress={handleDefensePress}>
+          <Text style={styles.actionButtonText}>DEFENDER</Text>
+        </Pressable>
+      )}
+
+      {/* Botón de atacar en la esquina inferior izquierda */}
+      {showAttackButton && (
+        <Pressable style={styles.actionButton} onPress={handleAttackPress}>
+          <Text style={styles.actionButtonText}>ATACAR</Text>
+        </Pressable>
+      )}
+
+      {/* Contenedor de Maia en la esquina inferior derecha */}
+      <View style={styles.maiaContainer}>
+        <View style={styles.healthContainer}>
+          {showBrokenHearthMaia ? (
+            <BrokenHearthIcon height={20} width={20} />
+          ) : (
+            <HearthIcon height={20} width={20} />
+          )}
+          <Text style={styles.healthText}>
+            {maiaCurrentHealth}/{maiaHealth}
+          </Text>
+        </View>
+        <View style={styles.maiaIconBox}>
+          {showDamagedMaia ? (
+            <ShakyMaiaHeadIcon ref={maiaHeadIconRef} height={100} width={100} />
+          ) : (
+            <MaiaHeadIcon height={100} width={100} />
+          )}
+        </View>
       </View>
 
       {/* Overlay para DrawBar (ataque) */}
@@ -150,43 +176,47 @@ const BattleScreen: React.FC = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingVertical: "5%",
   },
   topContainer: {
     alignItems: 'center',
     marginTop: "10%",
   },
-  bottomContainer: {
+  actionButton: {
+    position: 'absolute',
+    bottom: "5%",
+    left: "5%",
+    backgroundColor: 'black',
+    padding: 10,
+    borderRadius: 5,
+  },
+  actionButtonText: {
+    color: 'white',
+    fontSize: 17,
+    fontWeight: 'bold',
+  },
+  maiaContainer: {
+    position: 'absolute',
+    bottom: "5%",
+    right: "5%",
     alignItems: 'center',
-    marginBottom: "10%",
+  },
+  maiaIconBox: {
+    width: "110%",
+    height: "90%",
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 5,
+    borderColor: 'black',
+    borderWidth: 3,
+  },
+  healthContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 5,
   },
   healthText: {
     fontSize: 20,
-    marginTop: "2%",
-  },
-  attackButton: {
-    backgroundColor: 'black',
-    padding: 10,
-    borderRadius: 5,
-    marginBottom: "2%",
-  },
-  attackButtonText: {
-    color: 'white',
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
-  defenderButton: {
-    backgroundColor: 'black',
-    padding: 10,
-    borderRadius: 5,
-    marginBottom: "2%",
-  },
-  defenderButtonText: {
-    color: 'white',
-    fontSize: 16,
-    fontWeight: 'bold',
+    marginLeft: 5,
   },
   overlay: {
     position: 'absolute',
@@ -194,7 +224,7 @@ const styles = StyleSheet.create({
     left: "0%",
     right: "0%",
     bottom: "0%",
-    backgroundColor: 'rgba(0, 0, 0, 0)', // Fondo transparente
+    backgroundColor: 'rgba(0, 0, 0, 0)',
     justifyContent: 'center',
     alignItems: 'center',
   },

@@ -38,6 +38,7 @@ import MaiaHeadSvg from '../assets/maiahead.svg';
 import Maia2HeadSvg from '../assets/maia2head.svg';
 import Maia3HeadSvg from '../assets/maia3head.svg';
 import Maia4HeadSvg from '../assets/maia4head.svg';
+import Maia5HeadSvg from '../assets/maia5head.svg';
 import MattHeadSvg from '../assets/matthead.svg';
 import NoteBookSvg from '../assets/notebook.svg';
 import BagPackSvg from '../assets/bagpack.svg';
@@ -55,7 +56,9 @@ import DaggersSvg from '../assets/daggers.svg';
 import CrossBowSvg from '../assets/crossbow.svg';
 import QuiverSvg from '../assets/quiver.svg';
 import BowArrowSvg from '../assets/bowarrow.svg';
-
+import HearthSvg from '../assets/hearth.svg';
+import BrokenHearthSvg from '../assets/brokenhearth.svg';
+import TearSvg from '../assets/tear.svg';
 
 const ArrowIcon = (props: any) => <ArrowSvg {...props} />;
 const ChestOpenIcon = (props: any) => <ChestOpenSvg {...props} />;
@@ -96,6 +99,7 @@ const MaiaHeadIcon = (props: any) => <MaiaHeadSvg {...props} />;
 const Maia2HeadIcon = (props: any) => <Maia2HeadSvg {...props} />;
 const Maia3HeadIcon = (props: any) => <Maia3HeadSvg {...props} />;
 const Maia4HeadIcon = (props: any) => <Maia4HeadSvg {...props} />;
+const Maia5HeadIcon = (props: any) => <Maia5HeadSvg {...props} />;
 const MattHeadIcon = (props: any) => <MattHeadSvg {...props} />;
 const NoteBookIcon = (props: any) => <NoteBookSvg {...props} />;
 const BagPackIcon = (props: any) => <BagPackSvg {...props} />;
@@ -113,6 +117,9 @@ const DaggersIcon = (props: any) => <DaggersSvg {...props} />;
 const CrossBowIcon = (props: any) => <CrossBowSvg {...props} />;
 const BowArrowIcon = (props: any) => <BowArrowSvg {...props} />;
 const QuiverArrowIcon = (props: any) => <QuiverSvg {...props} />;
+const HearthIcon = (props: any) => <HearthSvg {...props} />;
+const BrokenHearthIcon = (props: any) => <BrokenHearthSvg {...props} />;
+const TearIcon = (props: any) => <TearSvg {...props} />;
 
 export { 
   ArrowIcon, 
@@ -154,6 +161,7 @@ export {
   Maia2HeadIcon,
   Maia3HeadIcon,
   Maia4HeadIcon,
+  Maia5HeadIcon,
   MattHeadIcon,
   NoteBookIcon,
   BagPackIcon,
@@ -171,4 +179,7 @@ export {
   CrossBowIcon,
   BowArrowIcon,
   QuiverArrowIcon,
+  HearthIcon,
+  BrokenHearthIcon,
+  TearIcon,
 };
