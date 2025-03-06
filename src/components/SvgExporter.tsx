@@ -59,6 +59,7 @@ import BowArrowSvg from '../assets/bowarrow.svg';
 import HearthSvg from '../assets/hearth.svg';
 import BrokenHearthSvg from '../assets/brokenhearth.svg';
 import TearSvg from '../assets/tear.svg';
+import MoonSvg from '../assets/moon.svg';
 
 const ArrowIcon = (props: any) => <ArrowSvg {...props} />;
 const ChestOpenIcon = (props: any) => <ChestOpenSvg {...props} />;
@@ -120,6 +121,7 @@ const QuiverArrowIcon = (props: any) => <QuiverSvg {...props} />;
 const HearthIcon = (props: any) => <HearthSvg {...props} />;
 const BrokenHearthIcon = (props: any) => <BrokenHearthSvg {...props} />;
 const TearIcon = (props: any) => <TearSvg {...props} />;
+const MoonIcon = (props: any) => <MoonSvg {...props} />;
 
 export { 
   ArrowIcon, 
@@ -182,4 +184,5 @@ export {
   HearthIcon,
   BrokenHearthIcon,
   TearIcon,
+  MoonIcon,
 };

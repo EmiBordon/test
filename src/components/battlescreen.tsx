@@ -7,6 +7,9 @@ import { useSelector } from 'react-redux';
 import DrawBar from '../components/functions/drawbar'; // Componente de ataque
 import RandomSequenceGrid from '../components/functions/sequencegrid'; // Componente de defensa
 import ShakyMaiaHeadIcon, { ShakyMaiaHeadIconRef } from './characters/shakymaiaheadicon';
+import ShootingCircle from './functions/shootingcircle';
+import MoonTear from './functions/moontear';
+import { MoonIcon, TearIcon } from '../components/SvgExporter';
 
 const BattleScreen: React.FC = () => {
   // Salud de Maia desde Redux
@@ -159,14 +162,14 @@ const BattleScreen: React.FC = () => {
       {/* Overlay para DrawBar (ataque) */}
       {showDrawBar && (
         <View style={styles.overlay}>
-          <DrawBar levels={2} duration={2000} onResult={handleAttackResult} />
+          <ShootingCircle rotationDuration={1800} shrinkDuration={8000} minDiameter={150} onResult={handleAttackResult} />
         </View>
       )}
 
       {/* Overlay para RandomSequenceGrid (defensa) */}
       {showRandomSequence && (
         <View style={styles.overlay}>
-          <RandomSequenceGrid sequenceLength={3} onResult={handleDefenseResult} />
+          <MoonTear moonIcon={MoonIcon} tearIcon={TearIcon} difficulty={3} patternLength={3} onResult={handleDefenseResult} />
         </View>
       )}
     </View>
