@@ -5,19 +5,21 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import mattReducer from './mattSlice';
 import maiaReducer from './maiaSlice';
 import weaponsReducer from './weaponsSlice'; // Importamos weaponsSlice
+import healingReducer from './healingSlice'; 
 
 // Configuración del persist
 const persistConfig = {
   key: 'root',
   storage: AsyncStorage,
-  whitelist: ['matt', 'maia', 'weapons'], // Agregamos 'weapons' a la lista de persistencia
+  whitelist: ['matt', 'maia', 'weapons','healing'], // Agregamos 'weapons' a la lista de persistencia
 };
 
 // Reducer combinado
 const rootReducer = combineReducers({
   matt: mattReducer,
   maia: maiaReducer,
-  weapons: weaponsReducer, // Agregamos el reducer de weapons
+  weapons: weaponsReducer,
+  healing: healingReducer, // Agregamos el reducer de weapons
 });
 
 // Reducer persistente

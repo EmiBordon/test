@@ -1,11 +1,12 @@
 import React, { useState } from "react";
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity} from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { incrementArrows, decrementArrows } from "../redux/weaponsSlice";
 import ConversationModal from "../components/modal/conversationmodal"; 
 import { conversations } from "../components/functions/conversations"; 
 import { FountainIcon } from "../components/SvgExporter";
 import ResetButton from "../components/functions/resetbutton";
+import { playSound } from "../sounds/soundexporter"; // Importamos el sonido
 
 const HomeScreen = ({ navigation }) => {
   const dispatch = useDispatch();
@@ -20,14 +21,20 @@ const HomeScreen = ({ navigation }) => {
 
       <TouchableOpacity
         style={styles.button}
-        onPress={() => navigation.navigate("Tutorial")}
+        onPress={() => {
+          playSound("click");
+          navigation.navigate("Tutorial");
+        }}
       >
         <Text style={styles.buttonText}>Nueva Partida</Text>
       </TouchableOpacity>
 
       <TouchableOpacity
         style={styles.button}
-        onPress={() => navigation.navigate("BattleScreen")}
+        onPress={() => {
+          playSound("click");
+          navigation.navigate("BattleScreen");
+        }}
       >
         <Text style={styles.buttonText}>Pruebas</Text>
       </TouchableOpacity>
@@ -36,12 +43,24 @@ const HomeScreen = ({ navigation }) => {
       <Text style={styles.weaponText}>Flechas: {arrows}</Text>
 
       {/* Botón para aumentar las flechas */}
-      <TouchableOpacity style={styles.button} onPress={() => dispatch(incrementArrows())}>
+      <TouchableOpacity
+        style={styles.button}
+        onPress={() => {
+          playSound("click");
+          dispatch(incrementArrows());
+        }}
+      >
         <Text style={styles.buttonText}>Aumentar Flechas</Text>
       </TouchableOpacity>
 
       {/* Botón para disminuir las flechas */}
-      <TouchableOpacity style={styles.button} onPress={() => dispatch(decrementArrows())}>
+      <TouchableOpacity
+        style={styles.button}
+        onPress={() => {
+          playSound("click");
+          dispatch(decrementArrows());
+        }}
+      >
         <Text style={styles.buttonText}>Disminuir Flechas</Text>
       </TouchableOpacity>
 

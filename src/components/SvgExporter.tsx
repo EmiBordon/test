@@ -60,6 +60,10 @@ import HearthSvg from '../assets/hearth.svg';
 import BrokenHearthSvg from '../assets/brokenhearth.svg';
 import TearSvg from '../assets/tear.svg';
 import MoonSvg from '../assets/moon.svg';
+import ShieldSvg from '../assets/shield.svg';
+import BrokenShieldSvg from '../assets/brokenshield.svg';
+import GarbageSvg from '../assets/garbage.svg';
+import WhiteSwordSvg from '../assets/whitesword.svg';
 
 const ArrowIcon = (props: any) => <ArrowSvg {...props} />;
 const ChestOpenIcon = (props: any) => <ChestOpenSvg {...props} />;
@@ -122,6 +126,10 @@ const HearthIcon = (props: any) => <HearthSvg {...props} />;
 const BrokenHearthIcon = (props: any) => <BrokenHearthSvg {...props} />;
 const TearIcon = (props: any) => <TearSvg {...props} />;
 const MoonIcon = (props: any) => <MoonSvg {...props} />;
+const ShieldIcon = (props: any) => <ShieldSvg {...props} />;
+const BrokenShieldIcon = (props: any) => <BrokenShieldSvg {...props} />;
+const GarbageIcon = (props: any) => <GarbageSvg {...props} />;
+const WhiteSwordIcon = (props: any) => <WhiteSwordSvg {...props} />;
 
 export { 
   ArrowIcon, 
@@ -185,4 +193,8 @@ export {
   BrokenHearthIcon,
   TearIcon,
   MoonIcon,
+  ShieldIcon,
+  BrokenShieldIcon,
+  WhiteSwordIcon,
+  GarbageIcon,
 };

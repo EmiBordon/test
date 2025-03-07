@@ -1,20 +1,22 @@
 // BattleScreen.tsx
 import React, { useState, useRef, useEffect } from 'react';
-import { View, Text, StyleSheet, Pressable } from 'react-native';
-import { MaiaIcon, MattIcon, MaiaHeadIcon, HearthIcon, BrokenHearthIcon } from '../components/SvgExporter';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { MaiaIcon, MattIcon, MaiaHeadIcon, HearthIcon, BrokenHearthIcon, MoonIcon, TearIcon, GarbageIcon, ShieldIcon, WhiteSwordIcon } from '../components/SvgExporter';
 import ShakyMattIcon, { ShakyMattIconRef } from '../components/characters/shakymatticon';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import DrawBar from '../components/functions/drawbar'; // Componente de ataque
 import RandomSequenceGrid from '../components/functions/sequencegrid'; // Componente de defensa
 import ShakyMaiaHeadIcon, { ShakyMaiaHeadIconRef } from './characters/shakymaiaheadicon';
 import ShootingCircle from './functions/shootingcircle';
 import MoonTear from './functions/moontear';
-import { MoonIcon, TearIcon } from '../components/SvgExporter';
+import { decrementMaiaCurrentHealth, incrementMaiaCurrentHealth } from '../redux/maiaSlice';
 
 const BattleScreen: React.FC = () => {
-  // Salud de Maia desde Redux
+  // Obtenemos la salud actual y la salud máxima de Maia desde Redux
+  const dispatch = useDispatch();
   const maiaHealth = useSelector((state: any) => state.maia.maiahealth);
-  const [maiaCurrentHealth, setMaiaCurrentHealth] = useState(maiaHealth);
+  const maiaCurrentHealth = useSelector((state: any) => state.maia.maiacurrenthealth);
+
   // Salud de Matt (local)
   const [mattCurrentHealth, setMattCurrentHealth] = useState(10);
   const [mattMaxHealth, setMattMaxHealth] = useState(10);
@@ -36,11 +38,6 @@ const BattleScreen: React.FC = () => {
   const mattIconRef = useRef<ShakyMattIconRef>(null);
   // Ref para el componente ShakyMaiaHeadIcon
   const maiaHeadIconRef = useRef<ShakyMaiaHeadIconRef>(null);
-
-  // Actualiza la salud de Maia si cambia en Redux
-  useEffect(() => {
-    setMaiaCurrentHealth(maiaHealth);
-  }, [maiaHealth]);
 
   // Efecto de daño para Matt
   useEffect(() => {
@@ -83,7 +80,8 @@ const BattleScreen: React.FC = () => {
     setShowRandomSequence(false);
     setShowAttackButton(true);
     if (!result) {
-      setMaiaCurrentHealth(prev => prev - 1);
+      // Despachamos la acción para reducir la salud de Maia en Redux
+      dispatch(decrementMaiaCurrentHealth(1));
       setShowBrokenHearthMaia(true);
       setShowDamagedMaia(true);
       setTimeout(() => setShowBrokenHearthMaia(false), 1000);
@@ -124,18 +122,39 @@ const BattleScreen: React.FC = () => {
         )}
       </View>
 
-      {/* Botón de defender en la esquina inferior izquierda, si aplica */}
-      {showDefenderButton && (
-        <Pressable style={styles.actionButton} onPress={handleDefensePress}>
-          <Text style={styles.actionButtonText}>DEFENDER</Text>
-        </Pressable>
+      {/* Botones de acción en la esquina inferior izquierda */}
+      {showAttackButton && (
+        <View style={styles.actionButtonsContainer}>
+          <TouchableOpacity style={styles.actionButton} onPress={handleAttackPress}>
+            <View style={styles.buttonContent}>
+              <WhiteSwordIcon width={25} height={25} />
+              <Text style={styles.actionButtonText}>ATAQUE</Text>
+            </View>
+          </TouchableOpacity>
+          <TouchableOpacity style={[styles.actionButton, { marginLeft: 10 }]} onPress={() => {}}>
+            <View style={styles.buttonContent}>
+              <GarbageIcon width={25} height={25} />
+              <Text style={styles.actionButtonText}>OBJETO</Text>
+            </View>
+          </TouchableOpacity>
+        </View>
       )}
 
-      {/* Botón de atacar en la esquina inferior izquierda */}
-      {showAttackButton && (
-        <Pressable style={styles.actionButton} onPress={handleAttackPress}>
-          <Text style={styles.actionButtonText}>ATACAR</Text>
-        </Pressable>
+      {showDefenderButton && (
+        <View style={styles.actionButtonsContainer}>
+          <TouchableOpacity style={styles.actionButton} onPress={handleDefensePress}>
+            <View style={styles.buttonContent}>
+              <ShieldIcon width={25} height={25} />
+              <Text style={styles.actionButtonText}>DEFENSA</Text>
+            </View>
+          </TouchableOpacity>
+          <TouchableOpacity style={[styles.actionButton, { marginLeft: 10 }]} onPress={() => {}}>
+            <View style={styles.buttonContent}>
+              <GarbageIcon width={25} height={25} />
+              <Text style={styles.actionButtonText}>OBJETO</Text>
+            </View>
+          </TouchableOpacity>
+        </View>
       )}
 
       {/* Contenedor de Maia en la esquina inferior derecha */}
@@ -169,7 +188,7 @@ const BattleScreen: React.FC = () => {
       {/* Overlay para RandomSequenceGrid (defensa) */}
       {showRandomSequence && (
         <View style={styles.overlay}>
-          <MoonTear moonIcon={MoonIcon} tearIcon={TearIcon} difficulty={3} patternLength={3} onResult={handleDefenseResult} />
+          <MoonTear moonIcon={MoonIcon} tearIcon={TearIcon} difficulty={4} patternLength={3} onResult={handleDefenseResult} />
         </View>
       )}
     </View>
@@ -184,18 +203,27 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginTop: "10%",
   },
-  actionButton: {
+  actionButtonsContainer: {
     position: 'absolute',
     bottom: "5%",
     left: "5%",
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  actionButton: {
     backgroundColor: 'black',
     padding: 10,
     borderRadius: 5,
+  },
+  buttonContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   actionButtonText: {
     color: 'white',
     fontSize: 17,
     fontWeight: 'bold',
+    marginLeft: 5,
   },
   maiaContainer: {
     position: 'absolute',

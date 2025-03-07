@@ -15,10 +15,12 @@ export const loadMaiaState = createAsyncThunk(
 
 interface MaiaState {
   maiahealth: number;
+  maiacurrenthealth: number;
 }
 
 const initialState: MaiaState = {
   maiahealth: 10,
+  maiacurrenthealth: 10,
 };
 
 const maiaSlice = createSlice({
@@ -27,14 +29,25 @@ const maiaSlice = createSlice({
   reducers: {
     incrementMaiaHealth: (state, action: PayloadAction<number>) => {
       state.maiahealth += action.payload;
+      state.maiacurrenthealth = Math.min(state.maiacurrenthealth, state.maiahealth);
       saveState(state);
     },
     decrementMaiaHealth: (state, action: PayloadAction<number>) => {
       state.maiahealth = Math.max(state.maiahealth - action.payload, 0);
+      state.maiacurrenthealth = Math.min(state.maiacurrenthealth, state.maiahealth);
       saveState(state);
     },
     resetMaiaHealth: (state) => {
       state.maiahealth = initialState.maiahealth;
+      state.maiacurrenthealth = initialState.maiacurrenthealth;
+      saveState(state);
+    },
+    incrementMaiaCurrentHealth: (state, action: PayloadAction<number>) => {
+      state.maiacurrenthealth = Math.min(state.maiacurrenthealth + action.payload, state.maiahealth);
+      saveState(state);
+    },
+    decrementMaiaCurrentHealth: (state, action: PayloadAction<number>) => {
+      state.maiacurrenthealth = Math.max(state.maiacurrenthealth - action.payload, 0);
       saveState(state);
     },
   },
@@ -56,5 +69,5 @@ const saveState = async (state: MaiaState) => {
   }
 };
 
-export const { incrementMaiaHealth, decrementMaiaHealth, resetMaiaHealth } = maiaSlice.actions;
+export const { incrementMaiaHealth, decrementMaiaHealth, resetMaiaHealth, incrementMaiaCurrentHealth, decrementMaiaCurrentHealth } = maiaSlice.actions;
 export default maiaSlice.reducer;
