@@ -17,6 +17,9 @@ const QuiverIcon: React.FC = () => {
   // Estado local para mostrar/ocultar la información
   const [showInfo, setShowInfo] = useState(false);
 
+  // Definir color según la cantidad de flechas
+  const fillColor = arrows === 0 ? 'gray' : 'black';
+
   return (
     <View style={styles.container}>
       {/* Ícono del carcaj (Touchable) */}
@@ -24,7 +27,7 @@ const QuiverIcon: React.FC = () => {
         style={styles.touchable}
         onPress={() => setShowInfo(!showInfo)}
       >
-        <QuiverArrowIcon width="300%" height="300%" />
+        <QuiverArrowIcon width="300%" height="300%" fill={fillColor} />
       </TouchableOpacity>
 
       {/* Mostrar información flotante si está activo */}
@@ -55,7 +58,7 @@ const styles = StyleSheet.create({
   },
   infoContainer: {
     position: 'absolute',
-    top: '-400%',
+    bottom: '300%',
     backgroundColor: 'rgba(0, 0, 0, 0.8)',
     padding: '3%',
     borderRadius: 5,

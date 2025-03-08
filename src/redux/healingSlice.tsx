@@ -20,9 +20,9 @@ interface HealingState {
 }
 
 const initialState: HealingState = {
-  grapes: 0,
-  healthpotion: 0,
-  bighealthpotion: 0,
+  grapes: 3,
+  healthpotion: 1,
+  bighealthpotion: 1,
 };
 
 const healingSlice = createSlice({

@@ -64,6 +64,9 @@ import ShieldSvg from '../assets/shield.svg';
 import BrokenShieldSvg from '../assets/brokenshield.svg';
 import GarbageSvg from '../assets/garbage.svg';
 import WhiteSwordSvg from '../assets/whitesword.svg';
+import GrapesSvg from '../assets/grapes.svg';
+import HealthPotionSvg from '../assets/health-potion.svg';
+import BigHealthPotionSvg from '../assets/big-health-potion.svg';
 
 const ArrowIcon = (props: any) => <ArrowSvg {...props} />;
 const ChestOpenIcon = (props: any) => <ChestOpenSvg {...props} />;
@@ -130,6 +133,9 @@ const ShieldIcon = (props: any) => <ShieldSvg {...props} />;
 const BrokenShieldIcon = (props: any) => <BrokenShieldSvg {...props} />;
 const GarbageIcon = (props: any) => <GarbageSvg {...props} />;
 const WhiteSwordIcon = (props: any) => <WhiteSwordSvg {...props} />;
+const GrapesIcon = (props: any) => <GrapesSvg {...props} />;
+const HealthPotionIcon = (props: any) => <HealthPotionSvg {...props} />;
+const BigHealthPotionIcon = (props: any) => <BigHealthPotionSvg {...props} />;
 
 export { 
   ArrowIcon, 
@@ -197,4 +203,7 @@ export {
   BrokenShieldIcon,
   WhiteSwordIcon,
   GarbageIcon,
+  GrapesIcon,
+  HealthPotionIcon,
+  BigHealthPotionIcon,
 };

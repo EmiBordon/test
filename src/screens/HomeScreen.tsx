@@ -1,7 +1,9 @@
 import React, { useState } from "react";
 import { View, Text, StyleSheet, TouchableOpacity} from "react-native";
 import { useDispatch, useSelector } from "react-redux";
-import { incrementArrows, decrementArrows } from "../redux/weaponsSlice";
+import { incrementArrows, decrementArrows, incrementWeapon, decrementWeapon } from "../redux/weaponsSlice";
+import { incrementGrapes, decrementGrapes, incrementHealthPotion, decrementHealthPotion, 
+  incrementBigHealthPotion, decrementBigHealthPotion, resetHealing } from "../redux/healingSlice";
 import ConversationModal from "../components/modal/conversationmodal"; 
 import { conversations } from "../components/functions/conversations"; 
 import { FountainIcon } from "../components/SvgExporter";
@@ -10,7 +12,6 @@ import { playSound } from "../sounds/soundexporter"; // Importamos el sonido
 
 const HomeScreen = ({ navigation }) => {
   const dispatch = useDispatch();
-  const arrows = useSelector((state: any) => state.weapons.arrows);
 
   const [modalVisible, setModalVisible] = useState(false);
 
@@ -39,15 +40,14 @@ const HomeScreen = ({ navigation }) => {
         <Text style={styles.buttonText}>Pruebas</Text>
       </TouchableOpacity>
 
-      {/* Mostrar el valor actual de arrows */}
-      <Text style={styles.weaponText}>Flechas: {arrows}</Text>
+  
 
       {/* Botón para aumentar las flechas */}
       <TouchableOpacity
         style={styles.button}
         onPress={() => {
           playSound("click");
-          dispatch(incrementArrows());
+          dispatch(incrementArrows(1));
         }}
       >
         <Text style={styles.buttonText}>Aumentar Flechas</Text>
@@ -58,7 +58,7 @@ const HomeScreen = ({ navigation }) => {
         style={styles.button}
         onPress={() => {
           playSound("click");
-          dispatch(decrementArrows());
+          dispatch(decrementArrows(1));
         }}
       >
         <Text style={styles.buttonText}>Disminuir Flechas</Text>

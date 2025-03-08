@@ -3,7 +3,9 @@ import React from 'react';
 import { TouchableOpacity, Text, StyleSheet } from 'react-native';
 import { useDispatch } from 'react-redux';
 import { resetMattState } from '../../redux/mattSlice';
-import { resetMaiaHealth } from '../../redux/maiaSlice'; // Ajusta la ruta según tu estructura
+import { resetMaiaHealth } from '../../redux/maiaSlice';
+import { resetHealing } from '../../redux/healingSlice';
+import { resetState } from '../../redux/weaponsSlice'; // Ajusta la ruta según tu estructura
 
 const ResetButton = () => {
   const dispatch = useDispatch();
@@ -11,6 +13,8 @@ const ResetButton = () => {
   const handleReset = () => {
     dispatch(resetMattState());
     dispatch(resetMaiaHealth());
+    dispatch(resetHealing());
+    dispatch(resetState());
     // Aquí puedes agregar otros dispatch para resetear otros slices en el futuro
   };
 

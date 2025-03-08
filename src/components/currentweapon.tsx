@@ -59,7 +59,7 @@ const styles = StyleSheet.create({
   },
   infoContainer: {
     position: 'absolute',
-    top: '-90%', // Mueve la vista flotante arriba del icono
+    bottom: '115%', // Mueve la vista flotante arriba del icono
     backgroundColor: 'rgba(0, 0, 0, 0.8)',
     padding: 5,
     borderRadius: 5,

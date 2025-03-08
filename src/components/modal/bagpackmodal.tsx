@@ -1,79 +1,123 @@
 import React, { useState } from 'react';
 import { Modal, View, TouchableOpacity, Text, StyleSheet, Dimensions } from 'react-native';
 import CurrentWeaponIcon from '../currentweapon';
-import QuiverIcon from '../quiver';
+import QuiverIcon from '../quiver'; // Importamos QuiverIcon
 import { CrossBowIcon } from '../SvgExporter';
+import HealingIcon from '../healingicon'; // Importamos HealingIcon
+import { decrementBigHealthPotion, decrementGrapes, decrementHealthPotion } from '../../redux/healingSlice';
+import { useDispatch } from "react-redux";
+import { incrementMaiaCurrentHealth } from '../../redux/maiaSlice';
 
+// Definir el tipo de las props
 interface BagPackModalProps {
   visible: boolean;
   onClose: () => void;
 }
 
 const BagPackModal: React.FC<BagPackModalProps> = ({ visible, onClose }) => {
+  const { width, height } = Dimensions.get('window');
   const [showCrossbowInfo, setShowCrossbowInfo] = useState(false);
+  // Estado para saber qué HealingIcon fue presionado ('G', 'H', 'B' o null si ninguno)
+  const [selectedHealing, setSelectedHealing] = useState<'G' | 'H' | 'B' | null>(null);
+  const dispatch = useDispatch();
 
-  // Objetos divididos en categorías (misma lógica)
+  // Callback que alterna la selección: si se presiona el mismo, se deselecciona.
+  const handleHealingIconSelect = (type: 'G' | 'H' | 'B') => {
+    if (selectedHealing === type) {
+      setSelectedHealing(null);
+    } else {
+      setSelectedHealing(type);
+    }
+  };
+
+  // Despacha la acción correspondiente según el HealingIcon seleccionado
+  const handleUseHealing = () => {
+    if (selectedHealing === 'G') {
+      dispatch(decrementGrapes(1));
+      dispatch(incrementMaiaCurrentHealth(2));
+    } else if (selectedHealing === 'H') {
+      dispatch(decrementHealthPotion(1));
+      dispatch(incrementMaiaCurrentHealth(5));
+    } else if (selectedHealing === 'B') {
+      dispatch(decrementBigHealthPotion(1));
+      dispatch(incrementMaiaCurrentHealth(1000));
+    }
+    setSelectedHealing(null);
+  };
+
+  // Solo tenemos dos categorías: ARMAS y CURACIÓN
   const sections = {
-    ARMAS: [], // Daga removida; ahora se muestran iconos de CurrentWeapon, Ballesta y Quiver
-    SALUD: ['Poción', 'Hierba', 'Antídoto'],
-    OBJETOS: ['Llave', 'Mapa', 'Gema'],
+    ARMAS: [],
+    CURACIÓN: [],
   };
 
   return (
     <Modal visible={visible} animationType="slide" transparent>
       <View style={styles.overlay}>
-        <View style={styles.modalContainer}>
-          {/* Cabecera tipo pixel-art */}
-          <Text style={styles.headerText}>ITEMS</Text>
+        <View style={[styles.modalContainer, { width: '90%', height: '60%' }]}>
+          <Text style={styles.headerText}>Mochila</Text>
 
           {/* Renderizado de cada sección */}
-          {Object.entries(sections).map(([section, items]) => (
+          {Object.entries(sections).map(([section]) => (
             <View key={section} style={styles.sectionContainer}>
-              {/* En este caso no mostramos el nombre de la sección, 
-                  pero podrías ponerlo en estilo pixelado si lo deseas */}
-              {/* <Text style={styles.sectionTitle}>{section}</Text> */}
-
               <View style={styles.itemsContainer}>
+                {/* Sección ARMAS */}
                 {section === 'ARMAS' && (
                   <>
-                    {/* Primer casillero: Arma actual */}
                     <View style={styles.itemTouchable}>
                       <CurrentWeaponIcon />
                     </View>
-
-                    {/* Segundo casillero: Ballesta */}
                     <TouchableOpacity
                       style={styles.itemTouchable}
                       onPress={() => setShowCrossbowInfo(!showCrossbowInfo)}
                     >
                       <CrossBowIcon width={'70%'} height={'70%'} />
                     </TouchableOpacity>
-
-                    {/* Info flotante de la ballesta */}
                     {showCrossbowInfo && (
                       <View style={styles.infoContainer}>
                         <Text style={styles.infoText}>Ballesta</Text>
                       </View>
                     )}
-
-                    {/* Tercer casillero: Carcaj (Quiver) */}
                     <View style={styles.itemTouchable}>
                       <QuiverIcon />
                     </View>
                   </>
                 )}
 
-                {/* Resto de ítems en cada sección */}
-                {items.map((item, index) => (
-                  <TouchableOpacity key={index} style={styles.itemTouchable}>
-                    <Text style={styles.itemText}>{item}</Text>
-                  </TouchableOpacity>
-                ))}
+                {/* Sección CURACIÓN */}
+                {section === 'CURACIÓN' && (
+                  <>
+                    <View style={styles.itemTouchable}>
+                      <HealingIcon 
+                        iconType="G" 
+                        onSelect={handleHealingIconSelect}
+                      />
+                    </View>
+                    <View style={styles.itemTouchable}>
+                      <HealingIcon 
+                        iconType="H" 
+                        onSelect={handleHealingIconSelect}
+                      />
+                    </View>
+                    <View style={styles.itemTouchable}>
+                      <HealingIcon 
+                        iconType="B" 
+                        onSelect={handleHealingIconSelect}
+                      />
+                    </View>
+                  </>
+                )}
               </View>
             </View>
           ))}
 
-          {/* Botón de cierre */}
+          {/* Botón "Usar" que se muestra si hay un HealingIcon seleccionado */}
+          {selectedHealing && (
+            <TouchableOpacity style={styles.useButton} onPress={handleUseHealing}>
+              <Text style={styles.useButtonText}>Usar {selectedHealing}</Text>
+            </TouchableOpacity>
+          )}
+
           <TouchableOpacity style={styles.closeButton} onPress={onClose}>
             <Text style={styles.closeButtonText}>Cerrar</Text>
           </TouchableOpacity>
@@ -88,102 +132,92 @@ export default BagPackModal;
 const styles = StyleSheet.create({
   overlay: {
     flex: 1,
-    // Fondo semitransparente oscuro
-    backgroundColor: 'rgba(0,0,0,0.7)',
+    backgroundColor: 'rgba(0,0,0,0.6)',
     justifyContent: 'center',
     alignItems: 'center',
   },
   modalContainer: {
-    // Para simular un fondo tipo “ventana” pixel-art
-    backgroundColor: 'gray', // Un tono verde-azulado oscuro
-    borderWidth: 2,
-    borderColor: 'black', // Un tono más claro para el borde
-    // Sin bordes redondeados para lucir más "retro"
-    borderRadius: 0,
-    width: '90%',
-    // Ajusta la altura según te convenga
-    height: '60%',
-    padding: 10,
+    backgroundColor: 'gray',
+    borderRadius: 15,
+    padding: '5%',
+    borderWidth: 3,
+    borderColor: '#fff',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.8,
+    shadowRadius: 4,
+    elevation: 5,
   },
   headerText: {
     fontSize: 24,
-    // Si tienes una fuente pixelada, úsala aquí. De lo contrario,
-    // utiliza un fallback con letra monoespaciada o parecida
-    // fontFamily: 'PressStart2P',
-    color: 'white',
-    textAlign: 'center',
-    marginBottom: 10,
-    // Para simular un estilo “pixel”
-    letterSpacing: 2,
+    color: '#fff',
+    fontWeight: 'bold',
+    marginBottom: '3%',
+    alignSelf: 'center',
+    textShadowColor: '#000',
+    textShadowOffset: { width: 1, height: 1 },
+    textShadowRadius: 2,
   },
   sectionContainer: {
-    marginVertical: 5,
-  },
-  sectionTitle: {
-    fontSize: 14,
-    // fontFamily: 'PressStart2P',
-    color: 'white',
-    textAlign: 'center',
-    marginBottom: 5,
-    letterSpacing: 1,
+    marginBottom: 10,
   },
   itemsContainer: {
-    // Distribución en cuadrícula
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'center',
   },
   itemTouchable: {
-    // Para un grid de 4 columnas, cada item ocupa ~25%
-    width: '25%',
-    aspectRatio: 1,
-    backgroundColor: 'gray', // Color de fondo para los ítems
-    borderWidth: 2,
-    borderColor: 'white',
-    // Quitar bordes redondeados para pixel-art
-    borderRadius: 0,
-    margin: 5,
+    width: 90,
+    height: 90,
+    backgroundColor: '#fff',
     justifyContent: 'center',
     alignItems: 'center',
-  },
-  itemText: {
-    color: 'white',
-    // fontFamily: 'PressStart2P',
-    fontSize: 10,
-    textAlign: 'center',
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: '#000',
+    margin: '2%',
+    marginTop: '15%',
   },
   infoContainer: {
     position: 'absolute',
-    bottom: '110%',
-    // Ajusta la posición horizontal según necesites
-    left: '10%',
+    top: -30,
     backgroundColor: 'rgba(0, 0, 0, 0.8)',
     padding: 5,
-    borderWidth: 1,
-    borderColor: 'white',
-    // Sin bordes redondeados
-    borderRadius: 0,
-    zIndex: 999,
+    borderRadius: 5,
+    alignItems: 'center',
+    left: '55%',
+    transform: [{ translateX: -50 }],
+    marginTop: '13%',
   },
   infoText: {
-    color: '#F2D5BD',
-    // fontFamily: 'PressStart2P',
-    fontSize: 10,
+    color: '#fff',
+    fontWeight: 'bold',
+    fontSize: 14,
+  },
+  useButton: {
+    position: 'absolute',
+    bottom: '5%',
+    left: '5%',
+    backgroundColor: '#fff',
+    padding: '3%',
+    borderRadius: 10,
+  },
+  useButtonText: {
+    color: '#000',
+    fontSize: 18,
+    fontWeight: 'bold',
   },
   closeButton: {
-    backgroundColor: 'black',
-    borderWidth: 2,
-    borderColor: 'gray',
-    borderRadius: 0,
-    paddingHorizontal: 20,
-    paddingVertical: 8,
+    backgroundColor: '#fff',
+    paddingVertical: '3%',
+    paddingHorizontal: '5%',
+    borderRadius: 10,
     alignSelf: 'center',
-    marginTop: 10,
+    marginTop: '22%',
   },
   closeButtonText: {
-    color: 'white',
-    // fontFamily: 'PressStart2P',
-    fontSize: 14,
-    textAlign: 'center',
+    color: '#000',
+    fontSize: 18,
+    fontWeight: 'bold',
   },
 });

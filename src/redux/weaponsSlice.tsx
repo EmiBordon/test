@@ -16,7 +16,7 @@ export const loadWeaponsState = createAsyncThunk(
 const initialState = {
   currentWeapon: 0,
   crossbow: false,
-  arrows: 0,
+  arrows: 5,
 };
 
 const weaponsSlice = createSlice({
@@ -31,12 +31,12 @@ const weaponsSlice = createSlice({
       if (state.currentWeapon > 0) state.currentWeapon -= 1;
       saveState(state);
     },
-    incrementArrows: (state) => {
-      state.arrows += 1;
+    incrementArrows: (state, action) => {
+      state.arrows += action.payload;
       saveState(state);
     },
-    decrementArrows: (state) => {
-      if (state.arrows > 0) state.arrows -= 1;
+    decrementArrows: (state, action) => {
+      state.arrows = Math.max(0, state.arrows - action.payload);
       saveState(state);
     },
     activateCrossbow: (state) => {
