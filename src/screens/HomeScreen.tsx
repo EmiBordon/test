@@ -10,6 +10,7 @@ import { FountainIcon, PillsIcon } from "../components/SvgExporter";
 import ResetButton from "../components/functions/resetbutton";
 import { playSound } from "../sounds/soundexporter"; // Importamos el sonido
 import NewItemModal from "../components/modal/newitemmodal";
+import { setNotaTrue, resetNotas } from "../redux/agendaSlice";
 
 const HomeScreen = ({ navigation }) => {
   const dispatch = useDispatch();
@@ -48,7 +49,7 @@ const HomeScreen = ({ navigation }) => {
         style={styles.button}
         onPress={() => {
           playSound("click");
-          dispatch(incrementWeapon());
+          dispatch(setNotaTrue(6));
         }}
       >
         <Text style={styles.buttonText}>Aumentar Flechas</Text>
