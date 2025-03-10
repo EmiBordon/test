@@ -8,7 +8,9 @@ import HomeScreen from './src/screens/HomeScreen';
 import TutorialScreen from './src/screens/levels/tutorial';
 import HandGame from './src/components/functions/handgame';
 import BattleScreen from './src/components/battlescreen';
-
+import CaveScreen from './src/screens/levels/cave';
+import BarScreen from './src/screens/levels/bar';
+import ShopScreen from './src/screens/levels/shop';
 
 const Stack = createNativeStackNavigator();
 
@@ -35,6 +37,21 @@ export default function App() {
             <Stack.Screen
               name="BattleScreen"
               component={BattleScreen}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="Cave"
+              component={CaveScreen}
+              options={{ headerShown: false }}
+            />
+             <Stack.Screen
+              name="Bar"
+              component={BarScreen}
+              options={{ headerShown: false }}
+            />
+             <Stack.Screen
+              name="Shop"
+              component={ShopScreen}
               options={{ headerShown: false }}
             />
           </Stack.Navigator>

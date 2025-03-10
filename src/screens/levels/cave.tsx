@@ -30,7 +30,7 @@ const icons = [
   }
 ];
 
-const TutorialScreen = () => {
+const CaveScreen = () => {
   const navigation = useNavigation();
   const [currentIconIndex, setCurrentIconIndex] = useState(0);
   const [modalVisible, setModalVisible] = useState(false);
@@ -73,7 +73,7 @@ const TutorialScreen = () => {
 
   return (
     <View style={styles.container}>
-      <Image source={require('../../images/floor2.jpg')} style={styles.backgroundImage} />
+      <Image source={require('../../images/cave1.jpg')} style={styles.backgroundImage} />
 
       <Pressable style={[styles.iconButton, iconStyle]} onPress={handleIconPress}>
         <CurrentIcon height={height} width={width} />
@@ -92,8 +92,8 @@ const TutorialScreen = () => {
         <MaiaIcon height={160} width={160} />
       </View>
 
-      <Inventory/>
-      <Location text="Casa de los River" />
+      <Inventory />
+      <Location text="Entrada de la cueva" />
 
       {modalVisible && (
         <ConversationChoiceModal 
@@ -114,7 +114,7 @@ const styles = StyleSheet.create({
   backgroundImage: {
     ...StyleSheet.absoluteFillObject,
     width: '100%',
-    height: '25%',
+    height: '35%',
   },
   iconButton: {
     position: 'absolute',
@@ -142,4 +142,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default TutorialScreen;
+export default CaveScreen;

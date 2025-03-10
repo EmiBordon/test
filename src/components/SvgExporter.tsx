@@ -67,6 +67,11 @@ import WhiteSwordSvg from '../assets/whitesword.svg';
 import GrapesSvg from '../assets/grapes.svg';
 import HealthPotionSvg from '../assets/health-potion.svg';
 import BigHealthPotionSvg from '../assets/big-health-potion.svg';
+import BowSvg from '../assets/bow.svg';
+import BarisSvg from '../assets/baris.svg';
+import ShopGirlSvg from '../assets/shopgirl.svg';
+import CoinsSvg from '../assets/coins.svg';
+import PillsSvg from '../assets/pills.svg';
 
 const ArrowIcon = (props: any) => <ArrowSvg {...props} />;
 const ChestOpenIcon = (props: any) => <ChestOpenSvg {...props} />;
@@ -136,6 +141,11 @@ const WhiteSwordIcon = (props: any) => <WhiteSwordSvg {...props} />;
 const GrapesIcon = (props: any) => <GrapesSvg {...props} />;
 const HealthPotionIcon = (props: any) => <HealthPotionSvg {...props} />;
 const BigHealthPotionIcon = (props: any) => <BigHealthPotionSvg {...props} />;
+const BowIcon = (props: any) => <BowSvg {...props} />;
+const BarisIcon = (props: any) => <BarisSvg {...props} />;
+const ShopGirlIcon = (props: any) => <ShopGirlSvg {...props} />;
+const CoinsIcon = (props: any) => <CoinsSvg {...props} />;
+const PillsIcon = (props: any) => <PillsSvg {...props} />;
 
 export { 
   ArrowIcon, 
@@ -206,4 +216,9 @@ export {
   GrapesIcon,
   HealthPotionIcon,
   BigHealthPotionIcon,
+  BowIcon,
+  BarisIcon,
+  ShopGirlIcon,
+  CoinsIcon,
+  PillsIcon,
 };

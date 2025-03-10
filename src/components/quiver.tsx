@@ -33,8 +33,7 @@ const QuiverIcon: React.FC = () => {
       {/* Mostrar información flotante si está activo */}
       {showInfo && (
         <View style={styles.infoContainer}>
-          <Text style={styles.infoText}>Flechas</Text>
-          <Text style={styles.infoText}>{arrows}</Text>
+          <Text style={styles.infoText}>Flechas({arrows})</Text>
         </View>
       )}
     </View>
@@ -58,7 +57,7 @@ const styles = StyleSheet.create({
   },
   infoContainer: {
     position: 'absolute',
-    bottom: '300%',
+    bottom: '320%',
     backgroundColor: 'rgba(0, 0, 0, 0.8)',
     padding: '3%',
     borderRadius: 5,

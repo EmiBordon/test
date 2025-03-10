@@ -15,10 +15,10 @@ const Map1Modal = ({ visible, onClose, navigation }) => {
   const iconsConfig = [
     { key: "house", icon: <HouseIcon width={70} height={70} />, text: "Casa", style: styles.iconHouse, action: () => { onClose(); navigation.replace("Home"); } },
     { key: "prison", icon: <PrisionIcon width={70} height={70} />, text: "Prisión", style: styles.iconPrison, action: () => Alert.alert("Prisión", "Este es el ícono de la prisión") },
-    { key: "store", icon: <StoreIcon width={70} height={70} />, text: "Tienda", style: styles.iconStore, action: () => Alert.alert("Tienda", "Este es el ícono de la tienda") },
-    { key: "restaurant", icon: <RestaurantIcon width={70} height={70} />, text: "Bar", style: styles.iconRestaurant, action: () => Alert.alert("Restaurante", "Este es el ícono del restaurante") },
+    { key: "store", icon: <StoreIcon width={70} height={70} />, text: "Tienda", style: styles.iconStore, action: () => { onClose(); navigation.replace("Shop"); } },
+    { key: "restaurant", icon: <RestaurantIcon width={70} height={70} />, text: "Bar", style: styles.iconRestaurant, action: () => { onClose(); navigation.replace("Bar"); } },
     { key: "bigHouse", icon: <BigHouseIcon width={80} height={80} />, text: "Mansión", style: styles.iconBigHouse, action: () => Alert.alert("Mansión", "Este es el ícono de la mansión") },
-    { key: "cave", icon: <CaveIcon width={70} height={70} />, text: "Cueva", style: styles.iconCave, action: () => Alert.alert("Cueva", "Este es el ícono de la cueva") },
+    { key: "cave", icon: <CaveIcon width={70} height={70} />, text: "Cueva", style: styles.iconCave, action: () => { onClose(); navigation.replace("Cave"); } },
   ];
 
   // Al presionar un ícono se guarda su key como seleccionado

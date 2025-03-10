@@ -1,19 +1,21 @@
 import React, { useState } from "react";
-import { View, Text, StyleSheet, TouchableOpacity} from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { incrementArrows, decrementArrows, incrementWeapon, decrementWeapon } from "../redux/weaponsSlice";
 import { incrementGrapes, decrementGrapes, incrementHealthPotion, decrementHealthPotion, 
   incrementBigHealthPotion, decrementBigHealthPotion, resetHealing } from "../redux/healingSlice";
 import ConversationModal from "../components/modal/conversationmodal"; 
 import { conversations } from "../components/functions/conversations"; 
-import { FountainIcon } from "../components/SvgExporter";
+import { FountainIcon, PillsIcon } from "../components/SvgExporter";
 import ResetButton from "../components/functions/resetbutton";
 import { playSound } from "../sounds/soundexporter"; // Importamos el sonido
+import NewItemModal from "../components/modal/newitemmodal";
 
 const HomeScreen = ({ navigation }) => {
   const dispatch = useDispatch();
 
   const [modalVisible, setModalVisible] = useState(false);
+  const [newItemModalVisible, setNewItemModalVisible] = useState(false);
 
   return (
     <View style={styles.container}>
@@ -30,48 +32,54 @@ const HomeScreen = ({ navigation }) => {
         <Text style={styles.buttonText}>Nueva Partida</Text>
       </TouchableOpacity>
 
+      {/* Botón "Pruebas" que muestra el NewItemModal */}
       <TouchableOpacity
         style={styles.button}
         onPress={() => {
           playSound("click");
-          navigation.navigate("BattleScreen");
+          setNewItemModalVisible(true);
         }}
       >
         <Text style={styles.buttonText}>Pruebas</Text>
       </TouchableOpacity>
 
-  
-
-      {/* Botón para aumentar las flechas */}
+      {/* Otros botones de ejemplo */}
       <TouchableOpacity
         style={styles.button}
         onPress={() => {
           playSound("click");
-          dispatch(incrementArrows(1));
+          dispatch(incrementWeapon());
         }}
       >
         <Text style={styles.buttonText}>Aumentar Flechas</Text>
       </TouchableOpacity>
 
-      {/* Botón para disminuir las flechas */}
       <TouchableOpacity
         style={styles.button}
         onPress={() => {
           playSound("click");
-          dispatch(decrementArrows(1));
+          dispatch(decrementWeapon());
         }}
       >
         <Text style={styles.buttonText}>Disminuir Flechas</Text>
       </TouchableOpacity>
 
-      {/* Botón para resetear estados */}
       <ResetButton />
 
-      {/* Modal para mostrar la conversación "historia1" */}
+      {/* Modal de conversación (se mantiene como ejemplo) */}
       <ConversationModal
         visible={modalVisible}
         onClose={() => setModalVisible(false)}
         conversation={conversations.mattconv1}
+      />
+
+      {/* NewItemModal para mostrar el nuevo item */}
+      <NewItemModal
+        visible={newItemModalVisible}
+        onClose={() => setNewItemModalVisible(false)}
+        icon={<PillsIcon height={"50"} width={"50"} />}
+        name="Pildoras"
+        description="Aumentan 5 puntos de vida"
       />
     </View>
   );

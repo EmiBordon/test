@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View, StyleSheet, Pressable, Alert, Image } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { MaiaIcon, MattIcon, DoorIcon, ChestCloseIcon, ArrowIcon } from '../../components/SvgExporter';
+import { MaiaIcon, MattIcon, DoorIcon, ChestCloseIcon, ArrowIcon, BarisIcon } from '../../components/SvgExporter';
 import Inventory from '../../components/inventory';
 import Location from '../../components/functions/location';
 import ConversationChoiceModal from '../../components/modal/conversationchoicemodal';
@@ -11,10 +11,10 @@ import { setMattState } from '../../redux/mattSlice';
 
 const icons = [
   { 
-    component: MattIcon, 
+    component: BarisIcon, 
     height: 150, 
     width: 150, 
-    style: { top: '30%', left: '10%' } 
+    style: { top: '40%', left: '40%' } 
   },
   { 
     component: DoorIcon, 
@@ -30,7 +30,7 @@ const icons = [
   }
 ];
 
-const TutorialScreen = () => {
+const BarScreen = () => {
   const navigation = useNavigation();
   const [currentIconIndex, setCurrentIconIndex] = useState(0);
   const [modalVisible, setModalVisible] = useState(false);
@@ -73,7 +73,7 @@ const TutorialScreen = () => {
 
   return (
     <View style={styles.container}>
-      <Image source={require('../../images/floor2.jpg')} style={styles.backgroundImage} />
+      <Image source={require('../../images/bar.jpg')} style={styles.backgroundImage} />
 
       <Pressable style={[styles.iconButton, iconStyle]} onPress={handleIconPress}>
         <CurrentIcon height={height} width={width} />
@@ -92,8 +92,8 @@ const TutorialScreen = () => {
         <MaiaIcon height={160} width={160} />
       </View>
 
-      <Inventory/>
-      <Location text="Casa de los River" />
+      <Inventory />
+      <Location text="Bar" />
 
       {modalVisible && (
         <ConversationChoiceModal 
@@ -114,7 +114,7 @@ const styles = StyleSheet.create({
   backgroundImage: {
     ...StyleSheet.absoluteFillObject,
     width: '100%',
-    height: '25%',
+    height: '40%',
   },
   iconButton: {
     position: 'absolute',
@@ -142,4 +142,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default TutorialScreen;
+export default BarScreen;
