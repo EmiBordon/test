@@ -7,6 +7,7 @@ import { resetMaiaHealth } from '../../redux/maiaSlice';
 import { resetHealing } from '../../redux/healingSlice';
 import { resetState } from '../../redux/weaponsSlice'; // Ajusta la ruta según tu estructura
 import { resetNotas } from '../../redux/agendaSlice';
+import { resetCoins } from '../../redux/coinsSlice';
 
 const ResetButton = () => {
   const dispatch = useDispatch();
@@ -17,6 +18,7 @@ const ResetButton = () => {
     dispatch(resetHealing());
     dispatch(resetState());
     dispatch(resetNotas());
+    dispatch(resetCoins());
     };
 
   return (

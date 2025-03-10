@@ -39,13 +39,7 @@ const ShopScreen = () => {
   const dispatch = useDispatch();
   const mattState = useSelector((state: any) => state.matt.value);
 
-  const handleNextIcon = () => {
-    setCurrentIconIndex((prevIndex) => (prevIndex + 1) % icons.length);
-  };
 
-  const handlePrevIcon = () => {
-    setCurrentIconIndex((prevIndex) => (prevIndex - 1 + icons.length) % icons.length);
-  };
 
   // handleAccept navega a BattleScreen y despacha setMattState(2)
   const handleAccept = () => {
@@ -55,7 +49,7 @@ const ShopScreen = () => {
 
   const handleIconPress = () => {
     const { component: CurrentIcon } = icons[currentIconIndex];
-    if (CurrentIcon === MattIcon) {
+    if (CurrentIcon === ShopGirlIcon) {
       if (mattState === 0) {
         setConversationContent(conversations.mattconv1);
         dispatch(setMattState(1));
@@ -65,7 +59,7 @@ const ShopScreen = () => {
         setModalVisible(true);
       }
     } else {
-      Alert.alert('Item seleccionado');
+        setConversationContent(conversations.mattconv2);
     }
   };
 
@@ -78,15 +72,6 @@ const ShopScreen = () => {
       <Pressable style={[styles.iconButton, iconStyle]} onPress={handleIconPress}>
         <CurrentIcon height={height} width={width} />
       </Pressable>
-
-      <View style={styles.sideIcons}>
-        <Pressable style={styles.arrowButton} onPress={handlePrevIcon}>
-          <ArrowIcon style={styles.leftArrow} height={50} width={50} />
-        </Pressable>
-        <Pressable style={styles.arrowButton} onPress={handleNextIcon}>
-          <ArrowIcon height={50} width={50} />
-        </Pressable>
-      </View>
 
       <View style={styles.maiaContainer}>
         <MaiaIcon height={160} width={160} />

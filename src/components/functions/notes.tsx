@@ -6,7 +6,7 @@ export interface Note {
   }
   
   export const NOTES: Note[] = [
-    { id: 1, title: "Título 1", content: "Este es el contenido de la nota 1." },
+    { id: 1, title: "Tutorial de Matt", content: "Este es el contenido de la nota 1." },
     { id: 2, title: "Título 2", content: "Este es el contenido de la nota 2." },
     { id: 3, title: "Título 3", content: "Este es el contenido de la nota 3." },
     { id: 4, title: "Título 4", content: "Este es el contenido de la nota 4." },

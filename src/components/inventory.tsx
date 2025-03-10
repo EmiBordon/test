@@ -18,6 +18,7 @@ import {
   NoteBookIcon,
   DianaIcon,
   HearthIcon,
+  CoinsIcon,
 } from "../components/SvgExporter";
 import Map1Modal from "../components/modal/map1modal";
 import Map2Modal from "../components/modal/map2modal";
@@ -30,9 +31,12 @@ interface MaiaState {
   maiahealth: number;
   maiacurrenthealth: number;
 }
-
+interface CoinsState{
+  coins: number;
+}
 interface RootState {
   maia: MaiaState;
+  coins:CoinsState;
 }
 
 // Tipado para las acciones del inventario
@@ -54,6 +58,7 @@ const Inventory: React.FC = () => {
   const maiaCurrentHealth = useSelector(
     (state: RootState) => state.maia.maiacurrenthealth
   );
+  const coins = useSelector((state: RootState) => state.coins.coins);
 
   // Estado para mostrar/ocultar las opciones del mapa
   const [showMapOptions, setShowMapOptions] = useState<boolean>(false);
@@ -104,6 +109,15 @@ const Inventory: React.FC = () => {
 
   return (
     <View style={styles.inventoryContainer}>
+       {/* Barra de vida en la parte superior derecha */}
+       <View style={styles.coinsBar}>
+        <View style={styles.healthContainer}>
+          <CoinsIcon height={18} width={18} style={styles.hearthIcon} />
+          <Text style={styles.healthBarText}>
+            {coins}
+          </Text>
+        </View>
+      </View>
       {/* Barra de vida en la parte superior derecha */}
       <View style={styles.healthBar}>
         <View style={styles.healthContainer}>
@@ -234,8 +248,6 @@ const styles = StyleSheet.create({
     top: '-40%',
     right: '5%',
     padding: '-3%',
-    
-  
   },
   healthContainer: {
     flexDirection: "row",
@@ -248,6 +260,12 @@ const styles = StyleSheet.create({
     color: "black",
     fontSize: 20,
     fontWeight: "bold",
+  },
+  coinsBar: {
+    position: "absolute",
+    top: '-70%',
+    right: '5%',
+    padding: '-3%',
   },
 });
 
