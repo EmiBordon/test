@@ -72,6 +72,9 @@ import BarisSvg from '../assets/baris.svg';
 import ShopGirlSvg from '../assets/shopgirl.svg';
 import CoinsSvg from '../assets/coins.svg';
 import PillsSvg from '../assets/pills.svg';
+import GermisSvg from '../assets/germis.svg';
+import JoxSvg from '../assets/jox.svg';
+import GorjoxSvg from '../assets/gorjox.svg';
 
 const ArrowIcon = (props: any) => <ArrowSvg {...props} />;
 const ChestOpenIcon = (props: any) => <ChestOpenSvg {...props} />;
@@ -146,6 +149,9 @@ const BarisIcon = (props: any) => <BarisSvg {...props} />;
 const ShopGirlIcon = (props: any) => <ShopGirlSvg {...props} />;
 const CoinsIcon = (props: any) => <CoinsSvg {...props} />;
 const PillsIcon = (props: any) => <PillsSvg {...props} />;
+const GermisIcon = (props: any) => <GermisSvg {...props} />;
+const JoxIcon = (props: any) => <JoxSvg {...props} />;
+const GorjoxIcon = (props: any) => <GorjoxSvg {...props} />;
 
 export { 
   ArrowIcon, 
@@ -221,4 +227,7 @@ export {
   ShopGirlIcon,
   CoinsIcon,
   PillsIcon,
+  GermisIcon,
+  JoxIcon,
+  GorjoxIcon,
 };

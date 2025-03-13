@@ -18,8 +18,8 @@ const styles = StyleSheet.create({
   container: {
     position: 'absolute',
     top: '1%',
-    right: '5%',
-    backgroundColor: 'rgba(241, 241, 241, 0.89)',
+    right: '2%',
+    backgroundColor: 'black',
     padding: '2%',
     borderRadius: 5,
     elevation: 3, // sombra en Android
@@ -29,8 +29,8 @@ const styles = StyleSheet.create({
     shadowRadius: 3,
   },
   locationText: {
-    color: '#000', // texto en negro
-    fontSize: 20,
+    color: 'white', // texto en negro
+    fontSize: 15,
     fontWeight: 'bold',
   },
 });

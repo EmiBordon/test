@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
-import { View, StyleSheet, Pressable, Alert, Image } from 'react-native';
+import { View, StyleSheet, Pressable, Image } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { MaiaIcon, MattIcon, DoorIcon, ChestCloseIcon, ArrowIcon,ShopGirlIcon } from '../../components/SvgExporter';
+import { MaiaIcon, MattIcon, DoorIcon, ChestCloseIcon, ArrowIcon, ShopGirlIcon } from '../../components/SvgExporter';
 import Inventory from '../../components/inventory';
 import Location from '../../components/functions/location';
 import ConversationChoiceModal from '../../components/modal/conversationchoicemodal';
+import ShopModal from '../../components/modal/shopmodal';
 import { conversations, Conversation } from '../../components/functions/conversations';
 import { useSelector, useDispatch } from 'react-redux';
 import { setMattState } from '../../redux/mattSlice';
@@ -34,14 +35,14 @@ const ShopScreen = () => {
   const navigation = useNavigation();
   const [currentIconIndex, setCurrentIconIndex] = useState(0);
   const [modalVisible, setModalVisible] = useState(false);
+  // Variable para distinguir el modal: true para ShopModal, false para ConversationChoiceModal
+  const [isShopModal, setIsShopModal] = useState(false);
   const [conversationContent, setConversationContent] = useState<Conversation | null>(null);
   
   const dispatch = useDispatch();
   const mattState = useSelector((state: any) => state.matt.value);
 
-
-
-  // handleAccept navega a BattleScreen y despacha setMattState(2)
+  // Función para navegar a BattleScreen y actualizar el estado
   const handleAccept = () => {
     dispatch(setMattState(2));
     navigation.replace('BattleScreen');
@@ -50,16 +51,14 @@ const ShopScreen = () => {
   const handleIconPress = () => {
     const { component: CurrentIcon } = icons[currentIconIndex];
     if (CurrentIcon === ShopGirlIcon) {
-      if (mattState === 0) {
-        setConversationContent(conversations.mattconv1);
-        dispatch(setMattState(1));
-        setModalVisible(true);
-      } else if (mattState === 1) {
-        setConversationContent(conversations.mattconv2);
-        setModalVisible(true);
-      }
+      // Si se toca ShopGirlIcon, abrimos el modal de tienda
+      setIsShopModal(true);
+      setModalVisible(true);
     } else {
-        setConversationContent(conversations.mattconv2);
+      // Para otros íconos, abrimos el modal de conversación
+      setIsShopModal(false);
+      setConversationContent(conversations.mattconv2);
+      setModalVisible(true);
     }
   };
 
@@ -81,12 +80,19 @@ const ShopScreen = () => {
       <Location text="Tienda" />
 
       {modalVisible && (
-        <ConversationChoiceModal 
-          visible={modalVisible}  
-          conversation={conversationContent}
-          onClose={() => setModalVisible(false)}
-          onAccept={handleAccept}
-        />
+        isShopModal ? (
+          <ShopModal 
+            visible={modalVisible}  
+            onClose={() => setModalVisible(false)}
+          />
+        ) : (
+          <ConversationChoiceModal 
+            visible={modalVisible}  
+            conversation={conversationContent}
+            onClose={() => setModalVisible(false)}
+            onAccept={handleAccept}
+          />
+        )
       )}
     </View>
   );

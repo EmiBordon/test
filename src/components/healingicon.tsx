@@ -41,7 +41,7 @@ const HealingIcon: React.FC<HealingIconProps> = ({ iconType, value, onSelect }) 
           if (onSelect) onSelect(iconType);
         }}
       >
-        <IconComponent width="300%" height="300%" fill={fillColor} />
+        <IconComponent width={'300%'} height={'300%'} fill={fillColor} />
       </TouchableOpacity>
     </View>
   );

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { View, StyleSheet, Pressable, Alert, Image } from 'react-native';
+import { View, StyleSheet, Pressable, Alert, Image, Dimensions } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { MaiaIcon, MattIcon, DoorIcon, ChestCloseIcon, ArrowIcon } from '../../components/SvgExporter';
+import { MaiaIcon, ArrowIcon, GermisIcon, JoxIcon, GorjoxIcon } from '../../components/SvgExporter';
 import Inventory from '../../components/inventory';
 import Location from '../../components/functions/location';
 import ConversationChoiceModal from '../../components/modal/conversationchoicemodal';
@@ -9,91 +9,112 @@ import { conversations, Conversation } from '../../components/functions/conversa
 import { useSelector, useDispatch } from 'react-redux';
 import { setMattState } from '../../redux/mattSlice';
 
+
+const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
 const icons = [
   { 
-    component: MattIcon, 
-    height: 150, 
-    width: 150, 
-    style: { top: '30%', left: '10%' } 
+    component: GermisIcon, 
+    height: SCREEN_HEIGHT * 0.15, 
+    width: SCREEN_WIDTH * 0.3, 
+    style: { top: '35%', left: '10%' } ,
   },
   { 
-    component: DoorIcon, 
-    height: 150, 
-    width: 150, 
-    style: { top: '8%', left: '30%' } 
+    component: JoxIcon, 
+    height: SCREEN_HEIGHT * 0.18, 
+    width: SCREEN_WIDTH * 0.3,  
+    style: { top: '35%', left: '60%' } ,
   },
   { 
-    component: ChestCloseIcon, 
-    height: 100, 
-    width: 100, 
-    style: { top: '30%', left: '70%' } 
+    component: GorjoxIcon, 
+    height: SCREEN_HEIGHT * 0.5, 
+    width: SCREEN_WIDTH * 0.5,  
+    style: { top: '20%', left: '40%' } ,
   }
 ];
 
 const CaveScreen = () => {
   const navigation = useNavigation();
-  const [currentIconIndex, setCurrentIconIndex] = useState(0);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [currentLocationIndex, setCurrentLocationIndex] = useState(0);
   const [modalVisible, setModalVisible] = useState(false);
   const [conversationContent, setConversationContent] = useState<Conversation | null>(null);
   
   const dispatch = useDispatch();
   const mattState = useSelector((state: any) => state.matt.value);
 
-  const handleNextIcon = () => {
-    setCurrentIconIndex((prevIndex) => (prevIndex + 1) % icons.length);
+  const locationName = [
+    { text: "Entrada de La Cueva" },
+    { text: "Interior de La Cueva 1" },
+    { text: "Interior de La Cueva 2" },
+    { text: "Interior de La Cueva 3" },
+  ];
+
+  const backgroundImages = [
+    require('../../images/cave1.jpg'),
+    require('../../images/cave7.jpg'),
+    require('../../images/cave3.jpg'),
+    require('../../images/cave6.jpg'),
+  ];
+
+  const handleNextImage = () => {
+    if (currentImageIndex < backgroundImages.length - 1) {
+      setCurrentImageIndex(currentImageIndex + 1);
+      setCurrentLocationIndex(currentLocationIndex + 1);
+    }
   };
 
-  const handlePrevIcon = () => {
-    setCurrentIconIndex((prevIndex) => (prevIndex - 1 + icons.length) % icons.length);
+  const handlePrevImage = () => {
+    if (currentImageIndex !== 0) {
+      setCurrentImageIndex(currentImageIndex - 1);
+      setCurrentLocationIndex(currentLocationIndex - 1);
+    }
   };
 
-  // handleAccept navega a BattleScreen y despacha setMattState(2)
   const handleAccept = () => {
     dispatch(setMattState(2));
     navigation.replace('BattleScreen');
   };
 
   const handleIconPress = () => {
-    const { component: CurrentIcon } = icons[currentIconIndex];
-    if (CurrentIcon === MattIcon) {
-      if (mattState === 0) {
-        setConversationContent(conversations.mattconv1);
-        dispatch(setMattState(1));
-        setModalVisible(true);
-      } else if (mattState === 1) {
-        setConversationContent(conversations.mattconv2);
-        setModalVisible(true);
-      }
-    } else {
-      Alert.alert('Item seleccionado');
-    }
+    Alert.alert('Item seleccionado');
   };
 
-  const { component: CurrentIcon, height, width, style: iconStyle } = icons[currentIconIndex];
+  // Para la lógica de iconos: si la ubicación es "Entrada de La Cueva" (índice 0) no se muestra ninguno.
+  // En caso contrario, usamos currentLocationIndex - 1 para acceder al icono correcto.
+  const iconIndex = currentLocationIndex - 1;
+  const currentIconData = iconIndex >= 0 ? icons[iconIndex] : null;
 
   return (
     <View style={styles.container}>
-      <Image source={require('../../images/cave1.jpg')} style={styles.backgroundImage} />
+      {/* Fondo de la cueva */}
+      <Image 
+        source={backgroundImages[currentImageIndex]} 
+        style={styles.backgroundImage} 
+      />
+     
+       <Pressable style={styles.buttonImage} onPress={handleNextImage} />
 
-      <Pressable style={[styles.iconButton, iconStyle]} onPress={handleIconPress}>
-        <CurrentIcon height={height} width={width} />
-      </Pressable>
+      {/* Se muestra el icono solo si currentLocationIndex > 0 */}
+      {currentIconData && (
+        <Pressable style={[styles.iconButton, currentIconData.style]} onPress={handleIconPress}>
+          <currentIconData.component height={currentIconData.height} width={currentIconData.width} />
+        </Pressable>
+      )}
 
-      <View style={styles.sideIcons}>
-        <Pressable style={styles.arrowButton} onPress={handlePrevIcon}>
+      {currentImageIndex !== 0 && (
+        <View style={styles.sideIcons}>
+        <Pressable style={styles.arrowButton} onPress={handlePrevImage}>
           <ArrowIcon style={styles.leftArrow} height={50} width={50} />
         </Pressable>
-        <Pressable style={styles.arrowButton} onPress={handleNextIcon}>
-          <ArrowIcon height={50} width={50} />
-        </Pressable>
       </View>
+      )}
 
       <View style={styles.maiaContainer}>
         <MaiaIcon height={160} width={160} />
       </View>
 
       <Inventory />
-      <Location text="Entrada de la cueva" />
+      <Location text={locationName[currentLocationIndex].text} />
 
       {modalVisible && (
         <ConversationChoiceModal 
@@ -114,7 +135,11 @@ const styles = StyleSheet.create({
   backgroundImage: {
     ...StyleSheet.absoluteFillObject,
     width: '100%',
-    height: '35%',
+    height: '30%',
+  },
+  buttonImage: {
+    width: '100%',
+    height: '30%',
   },
   iconButton: {
     position: 'absolute',
@@ -124,11 +149,11 @@ const styles = StyleSheet.create({
     width: '100%',
     justifyContent: 'space-between',
     position: 'absolute',
-    top: '50%',
+    top: '70%',
     paddingHorizontal: '2%',
   },
   leftArrow: {
-    transform: [{ scaleX: -1 }],
+    transform: [{ rotate: "90deg" }],
   },
   arrowButton: {
     width: 50,

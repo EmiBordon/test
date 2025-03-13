@@ -97,14 +97,14 @@ const BagPackModal: React.FC<BagPackModalProps> = ({ visible, onClose }) => {
                 </View>
                 <View style={styles.itemsContainer2}>
                   {/* Sección CURACIÓN */}
-                  <View style={styles.healingIconContainer}>
-                    <View style={styles.itemTouchable}>
+                  <View style={styles.itemTouchable2}>
+                    
                       <HealingIcon 
                         iconType="G" 
                         value={healingState.grapes}
                         onSelect={handleHealingIconSelect}
                       />
-                    </View>
+                   
                     {selectedHealing === 'G' && (
                       <View style={styles.infoContainer}>
                         <Text style={styles.infoText}>Uvas ({healingState.grapes})</Text>
@@ -112,14 +112,14 @@ const BagPackModal: React.FC<BagPackModalProps> = ({ visible, onClose }) => {
                     )}
                   </View>
 
-                  <View style={styles.healingIconContainer}>
-                    <View style={styles.itemTouchable}>
+                  <View style={styles.itemTouchable2}>
+                    
                       <HealingIcon 
                         iconType="H" 
                         value={healingState.healthpotion}
                         onSelect={handleHealingIconSelect}
                       />
-                    </View>
+                    
                     {selectedHealing === 'H' && (
                       <View style={styles.infoContainer}>
                         <Text style={styles.infoText}>Frasco de Salud ({healingState.healthpotion})</Text>
@@ -127,14 +127,14 @@ const BagPackModal: React.FC<BagPackModalProps> = ({ visible, onClose }) => {
                     )}
                 </View>
 
-                  <View style={styles.healingIconContainer}>
-                    <View style={styles.itemTouchable}>
+                  <View style={styles.itemTouchable2}>
+                   
                       <HealingIcon 
                         iconType="B" 
                         value={healingState.bighealthpotion}
                         onSelect={handleHealingIconSelect}
                       />
-                    </View>
+                   
                     {selectedHealing === 'B' && (
                       <View style={styles.infoContainer}>
                         <Text style={styles.infoText}>Gran Frasco de Salud ({healingState.bighealthpotion})</Text>
@@ -190,6 +190,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   modalContainer: {
+    width: '90%', // 90% del ancho de la pantalla
+    height: '60%', // 60% de la altura de la pantalla
     backgroundColor: 'gray',
     borderRadius: 15,
     padding: '5%',
@@ -206,60 +208,74 @@ const styles = StyleSheet.create({
     fontSize: 24,
     color: '#fff',
     fontWeight: 'bold',
-    marginBottom: '-2%',
+    marginBottom: '2%', // margen en porcentaje para separar del contenido
     alignSelf: 'center',
     textShadowColor: '#000',
     textShadowOffset: { width: 1, height: 1 },
     textShadowRadius: 2,
   },
   sectionContainer: {
-    marginBottom: '14%',
+    marginBottom: '5%',
   },
   itemsContainer: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    justifyContent: 'center',
-    marginBottom: '8%',
+    justifyContent: 'space-around',
+    marginBottom: '5%',
   },
   itemsContainer2: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    justifyContent: 'center',
+    justifyContent: 'space-around',
   },
   itemTouchable: {
-    width: 90,
-    height: 90,
+    width: '28%',
+    height:'1%',  // aprox. 3 elementos por fila
+    aspectRatio: 1, // mantiene la forma cuadrada
     backgroundColor: '#fff',
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 10,
     borderWidth: 1,
-    borderColor: '#000',
-    margin: '2%',
-    marginTop: '15%',
+    borderColor: 'black',
+    marginVertical: '2%',
+    marginBottom: '10%',
+    marginTop: '10%',
   },
-  healingIconContainer: {
-    position: 'relative',
+  itemTouchable2: {
+    width: '28%',
+    height:'1%', 
+    aspectRatio: 1, // mantiene la forma cuadrada
+    backgroundColor: '#fff',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: 'black',
+    marginVertical: '2%',
+    marginBottom: '25%',
   },
+ 
+  // Los contenedores de info se reposicionan sobre el ícono de curación
   infoContainer: {
     position: 'absolute',
     backgroundColor: 'rgba(0, 0, 0, 0.8)',
-    padding: 5,
+    padding: '2%',
     borderRadius: 5,
     alignItems: 'center',
-    left: '55%',
-    transform: [{ translateX: -50 }],
-    bottom: '85%',
+    bottom: '103%', // se ubica justo arriba del contenedor
+    left: '5%',
+    //transform: [{ translateX: -50 }],
   },
   infoContainer2: {
     position: 'absolute',
     backgroundColor: 'rgba(0, 0, 0, 0.8)',
-    padding: 5,
+    padding: '2%',
     borderRadius: 5,
     alignItems: 'center',
-    left: '59%',
+    bottom:'80%',
+    left: '58%',
     transform: [{ translateX: -50 }],
-    bottom: '70%',
   },
   infoText: {
     color: '#fff',
@@ -285,7 +301,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: '5%',
     borderRadius: 10,
     alignSelf: 'center',
-    marginTop: '22%',
+    marginTop: '5%',
   },
   closeButtonText: {
     color: '#000',
@@ -295,16 +311,18 @@ const styles = StyleSheet.create({
   extraSlotsContainer: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    justifyContent: 'center',
-    marginTop: '10%',
-    paddingVertical: '6%',
+    justifyContent: 'space-around',
+    marginTop: '5%',
+    paddingVertical: '3%',
+    marginBottom: '34%',
   },
   extraSlot: {
-    width: 90,
-    height: 90,
+    width: '30%',
+    height:'10%',
+    aspectRatio: 1,
     borderWidth: 1,
     borderColor: '#000',
-    margin: '2%',
+    marginVertical: '2%',
     borderRadius: 10,
     backgroundColor: '#fff',
   },
