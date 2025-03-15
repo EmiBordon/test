@@ -6,18 +6,18 @@ import Animated, {
   withSequence,
   withTiming,
 } from 'react-native-reanimated';
-import { MattIcon } from '../SvgExporter';
+import { GermisIcon } from '../SvgExporter';
 
-export interface ShakyMattIconRef {
+export interface ShakyGermisIconRef {
   triggerShake: () => void;
 }
 
-interface ShakyMattIconProps {
+interface ShakyGermisIconProps {
   height: number;
   width: number;
 }
 
-const ShakyMattIcon = forwardRef<ShakyMattIconRef, ShakyMattIconProps>(
+const ShakyGermisIcon = forwardRef<ShakyGermisIconRef, ShakyGermisIconProps>(
   ({ height, width }, ref) => {
     const shake = useSharedValue({ x: 0, y: 0 });
 
@@ -44,10 +44,10 @@ const ShakyMattIcon = forwardRef<ShakyMattIconRef, ShakyMattIconProps>(
 
     return (
       <Animated.View style={[animatedStyle, { pointerEvents: 'none' }]}>
-        <MattIcon height={height} width={width} />
+        <GermisIcon height={height} width={width} />
       </Animated.View>
     );
   }
 );
 
-export default ShakyMattIcon;
+export default ShakyGermisIcon;

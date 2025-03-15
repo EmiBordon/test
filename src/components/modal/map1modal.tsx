@@ -126,7 +126,7 @@ const styles = StyleSheet.create({
   // Posicionamiento de los íconos
   iconHouse: { position: "absolute", top: "65%", left: "14%", transform: [{ translateX: -30 }, { translateY: -30 }], zIndex: 20 },
   iconPrison: { position: "absolute", top: "60%", left: "78%", transform: [{ translateX: -30 }, { translateY: -30 }], zIndex: 20 },
-  iconStore: { position: "absolute", top: "48%", left: "44%", transform: [{ translateX: -30 }, { translateY: -30 }], zIndex: 20 },
+  iconStore: { position: "absolute", top: "50%", left: "44%", transform: [{ translateX: -30 }, { translateY: -30 }], zIndex: 20 },
   iconRestaurant: { position: "absolute", top: "34%", left: "30%", transform: [{ translateX: -30 }, { translateY: -30 }], zIndex: 20 },
   iconBigHouse: { position: "absolute", top: "44%", left: "85%", transform: [{ translateX: -40 }, { translateY: -40 }], zIndex: 20 },
   iconCave: { position: "absolute", top: "80%", left: "80%", transform: [{ translateX: -30 }, { translateY: -30 }], zIndex: 20 },

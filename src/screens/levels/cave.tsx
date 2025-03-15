@@ -8,7 +8,7 @@ import ConversationChoiceModal from '../../components/modal/conversationchoicemo
 import { conversations, Conversation } from '../../components/functions/conversations';
 import { useSelector, useDispatch } from 'react-redux';
 import { setMattState } from '../../redux/mattSlice';
-
+import AnimatedArrow from '../../components/functions/animatedarrow';
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
 const icons = [
@@ -115,6 +115,13 @@ const CaveScreen = () => {
 
       <Inventory />
       <Location text={locationName[currentLocationIndex].text} />
+      <AnimatedArrow
+       style={styles.animatedArrow}
+        arrowWidth={60}
+        arrowHeight={60}
+        direction="U"  // La flecha se orientará y animará hacia arriba
+        animationDuration={1000}
+      />
 
       {modalVisible && (
         <ConversationChoiceModal 
@@ -164,6 +171,11 @@ const styles = StyleSheet.create({
     bottom: '10%',
     left: '50%',
     transform: [{ translateX: -80 }],
+  },
+  animatedArrow: {
+    position: 'absolute',
+    top: '35%',
+    left: '55%',
   },
 });
 

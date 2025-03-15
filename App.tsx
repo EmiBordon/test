@@ -7,7 +7,7 @@ import { store, persistor } from './src/redux/store';
 import HomeScreen from './src/screens/HomeScreen';
 import TutorialScreen from './src/screens/levels/tutorial';
 import HandGame from './src/components/functions/handgame';
-import BattleScreen from './src/components/battlescreen';
+import BattleScreen from './src/components/battles/battlescreen';
 import CaveScreen from './src/screens/levels/cave';
 import BarScreen from './src/screens/levels/bar';
 import ShopScreen from './src/screens/levels/shop';

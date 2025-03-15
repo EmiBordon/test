@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   Modal,
   View,
@@ -7,11 +7,33 @@ import {
   StyleSheet,
   FlatList,
 } from 'react-native';
+import {
+  GrapesIcon,
+  HealthPotionIcon,
+  BigHealthPotionIcon,
+  PillsIcon,
+  CoinsIcon,
+  QuiverArrowIcon
+} from '../SvgExporter';
+import { useSelector, useDispatch } from 'react-redux';
+import { incrementGrapes, incrementHealthPotion, incrementBigHealthPotion } from '../../redux/healingSlice';
+import { incrementArrows } from '../../redux/weaponsSlice';
+import { decrementCoins } from '../../redux/coinsSlice';
+
+interface CoinsState {
+  coins: number;
+}
+
+interface RootState {
+  coins: CoinsState;
+}
 
 interface Item {
   id: string;
   name: string;
   price: number;
+  amount?: string;
+  description: string;
 }
 
 interface ShopModalProps {
@@ -19,39 +41,129 @@ interface ShopModalProps {
   onClose: () => void;
 }
 
-const sampleItems: Item[] = [
-  { id: '1', name: 'Objeto 1', price: 10 },
-  { id: '2', name: 'Objeto 2', price: 20 },
-  { id: '3', name: 'Objeto 3', price: 30 },
+const shopItems: Item[] = [
+  { id: '1', name: 'Uvas', price: 5, description:'Descripcion 1' },
+  { id: '2', name: 'Frasco de Salud', price: 20, description:'Descripcion 2' },
+  { id: '3', name: 'Gran Frasco de Salud', price: 45, description: 'Descripcion 3' },
+  { id: '4', name: 'Pildoras', price: 50, description:'Descripcion 4' },
+  { id: '5', name: 'Flechas', amount:'X3' ,price: 10, description:'Descripcion 5' },
 ];
 
+// Definimos un tipo para los componentes de ícono que reciben width y height.
+type IconComponentType = React.ComponentType<{ width?: number; height?: number; style?: any }>;
+
+// Función para obtener el componente de ícono según el índice.
+const getIconComponent = (index: number): IconComponentType | null => {
+  switch (index) {
+    case 0:
+      return GrapesIcon;
+    case 1:
+      return HealthPotionIcon;
+    case 2:
+      return BigHealthPotionIcon;
+    case 3:
+      return PillsIcon;
+    case 4:
+      return QuiverArrowIcon;
+    default:
+      return null;
+  }
+};
+
 const ShopModal: React.FC<ShopModalProps> = ({ visible, onClose }) => {
-  const renderItem = ({ item }: { item: Item }) => (
-    <View style={styles.itemContainer}>
-      <Text style={styles.itemText}>{item.name}</Text>
-      <Text style={styles.itemText}>${item.price}</Text>
-      <TouchableOpacity style={styles.buyButton}>
-        <Text style={styles.buyButtonText}>Comprar</Text>
-      </TouchableOpacity>
-    </View>
-  );
+  const coins = useSelector((state: RootState) => state.coins.coins);
+  const dispatch = useDispatch();
+  // Estado para almacenar el objeto seleccionado para mostrar la info.
+  const [selectedInfo, setSelectedInfo] = useState<{ item: Item; index: number } | null>(null);
+  // Estado para mostrar mensaje de monedas insuficientes.
+  const [insufficientCoins, setInsufficientCoins] = useState(false);
+
+  // Función para manejar la compra del ítem
+  const handlePurchase = (item: Item, index: number) => {
+    if (coins >= item.price) {
+      setInsufficientCoins(false);
+      setSelectedInfo(null) ;
+      switch (item.name) {
+        case 'Uvas':
+          dispatch(incrementGrapes(1));
+          break;
+        case 'Frasco de Salud':
+          dispatch(incrementHealthPotion(1));
+          break;
+        case 'Gran Frasco de Salud':
+          dispatch(incrementBigHealthPotion(1));
+          break;
+        case 'Pildoras':
+          // Por el momento no se realiza ninguna acción para las Pildoras.
+          break;
+        case 'Flechas':
+          dispatch(incrementArrows(3)); // Aumenta 3 flechas
+          break;
+        default:
+          break;
+      }
+      // Reducimos los coins de acuerdo al precio del ítem.
+      dispatch(decrementCoins(item.price));
+    } else {
+      setInsufficientCoins(true);
+      setSelectedInfo(null) ;
+    }
+  };
+
+  const renderItem = ({ item, index }: { item: Item; index: number }) => {
+    const IconComponent = getIconComponent(index);
+    return (
+      <View style={styles.itemContainer}>
+        {IconComponent && <IconComponent width={30} height={30} />}
+        <Text style={styles.itemText}>{item.name} {item.amount}</Text>
+        <Text style={styles.priceText}>${item.price}</Text>
+        <View style={styles.buttonsContainer}>
+          <TouchableOpacity style={styles.buyButton} onPress={() => handlePurchase(item, index)}>
+            <Text style={styles.buyButtonText}>Comprar</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.infoButton}
+            onPress={() => { setInsufficientCoins(false); setSelectedInfo({ item, index }); }}
+          >
+            <Text style={styles.infoButtonText}>Info</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+    );
+  };
 
   return (
-    <Modal
-      animationType="slide"
-      transparent
-      visible={visible}
-      onRequestClose={onClose}
-    >
+    <Modal animationType="slide" transparent visible={visible} onRequestClose={onClose}>
       <View style={styles.modalOverlay}>
         <View style={styles.modalContainer}>
+          <View style={styles.coinsBar}>
+            <View style={styles.coinsContainer}>
+              <CoinsIcon height={18} width={18} style={styles.coinsIcon} />
+              <Text style={styles.coinsBarText}>{coins}</Text>
+            </View>
+          </View>
           <Text style={styles.title}>TIENDA</Text>
           <FlatList
-            data={sampleItems}
+            data={shopItems}
             keyExtractor={(item) => item.id}
             renderItem={renderItem}
             style={{ flex: 1 }}
           />
+          {insufficientCoins && (
+            <Text style={styles.errorText}>No tienes Monedas suficientes</Text>
+          )}
+          {/* Panel de información */}
+          {selectedInfo && (
+            <View style={styles.infoPanel}>
+              {(() => {
+                const SelectedIcon = getIconComponent(selectedInfo.index);
+                return SelectedIcon ? <SelectedIcon width={50} height={50} /> : null;
+              })()}
+              <Text style={styles.infoText}>
+                {selectedInfo.item.name}: {selectedInfo.item.description}.
+              </Text>
+            </View>
+          )}
           <TouchableOpacity onPress={onClose} style={styles.closeButton}>
             <Text style={styles.closeButtonText}>Cerrar</Text>
           </TouchableOpacity>
@@ -84,25 +196,47 @@ const styles = StyleSheet.create({
   },
   itemContainer: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
     alignItems: 'center',
     paddingVertical: '3%',
     borderBottomWidth: 1,
     borderColor: 'black',
   },
   itemText: {
+    flex: 1,
     color: 'black',
     fontSize: 16,
+    textAlign: 'left',
+    marginLeft: '2%',
+  },
+  priceText: {
+    color: 'black',
+    fontSize: 16,
+    marginRight: '3%',
+  },
+  buttonsContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   buyButton: {
     backgroundColor: 'black',
     paddingHorizontal: '4%',
     paddingVertical: '2%',
     borderRadius: 5,
+    marginRight: '5%',
   },
   buyButtonText: {
     color: 'white',
-    fontSize: 14,
+    fontSize: 15,
+  },
+  infoButton: {
+    backgroundColor: 'black',
+    paddingHorizontal: '4%',
+    paddingVertical: '2%',
+    borderRadius: 5,
+  },
+  infoButtonText: {
+    color: 'white',
+    fontSize: 15,
   },
   closeButton: {
     marginTop: '5%',
@@ -115,6 +249,44 @@ const styles = StyleSheet.create({
   closeButtonText: {
     color: 'white',
     fontSize: 16,
+  },
+  coinsBar: {
+    position: 'absolute',
+    bottom: '98%',
+    left: '8%',
+  },
+  coinsContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  coinsIcon: {
+    marginRight: '5%',
+  },
+  coinsBarText: {
+    color: 'black',
+    fontSize: 20,
+    fontWeight: 'bold',
+  },
+  infoPanel: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: '4%',
+    marginVertical: 10,
+    borderWidth: 1,
+    borderColor: 'gray',
+    borderRadius: 5,
+  },
+  infoText: {
+    flex: 1,
+    marginLeft: '7%',
+    color: 'black',
+    fontSize: 16,
+  },
+  errorText: {
+    textAlign: 'center',
+    color: 'black',
+    fontSize: 16,
+    marginTop: '8%',
   },
 });
 

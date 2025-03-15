@@ -67,7 +67,7 @@ const Inventory: React.FC = () => {
   // Estado para manejar el estado de los mapas
   const [mapStates, setMapStates] = useState<MapStates>({
     mapInv1: true,
-    mapInv2: false,
+    mapInv2: true,
     mapInv3: false,
   });
 

@@ -1,3 +1,4 @@
+// TutorialScreen.tsx
 import React, { useState } from 'react';
 import { View, StyleSheet, Pressable, Alert, Image } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
@@ -8,6 +9,7 @@ import ConversationChoiceModal from '../../components/modal/conversationchoicemo
 import { conversations, Conversation } from '../../components/functions/conversations';
 import { useSelector, useDispatch } from 'react-redux';
 import { setMattState } from '../../redux/mattSlice';
+
 
 const icons = [
   { 
@@ -95,6 +97,8 @@ const TutorialScreen = () => {
       <Inventory/>
       <Location text="Casa de los River" />
 
+   
+
       {modalVisible && (
         <ConversationChoiceModal 
           visible={modalVisible}  
@@ -140,6 +144,7 @@ const styles = StyleSheet.create({
     left: '50%',
     transform: [{ translateX: -80 }],
   },
+ 
 });
 
 export default TutorialScreen;

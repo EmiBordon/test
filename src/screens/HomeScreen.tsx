@@ -50,7 +50,7 @@ const HomeScreen = ({ navigation }) => {
         style={styles.button}
         onPress={() => {
           playSound("click");
-          dispatch(incrementCoins(6));
+          dispatch(incrementCoins(3));
         }}
       >
         <Text style={styles.buttonText}>Aumentar Flechas</Text>

@@ -1,15 +1,15 @@
 // BattleScreen.tsx
 import React, { useState, useRef, useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
-import { MaiaIcon, MattIcon, MaiaHeadIcon, HearthIcon, BrokenHearthIcon, MoonIcon, TearIcon, GarbageIcon, ShieldIcon, WhiteSwordIcon } from '../components/SvgExporter';
-import ShakyMattIcon, { ShakyMattIconRef } from '../components/characters/shakymatticon';
+import { MaiaIcon, MattIcon, MaiaHeadIcon, HearthIcon, BrokenHearthIcon, MoonIcon, TearIcon, GarbageIcon, ShieldIcon, WhiteSwordIcon } from '../SvgExporter';
+import ShakyMattIcon, { ShakyMattIconRef } from '../characters/shakymatticon';
 import { useSelector, useDispatch } from 'react-redux';
-import DrawBar from '../components/functions/drawbar'; // Componente de ataque
-import RandomSequenceGrid from '../components/functions/sequencegrid'; // Componente de defensa
-import ShakyMaiaHeadIcon, { ShakyMaiaHeadIconRef } from './characters/shakymaiaheadicon';
-import ShootingCircle from './functions/shootingcircle';
-import MoonTear from './functions/moontear';
-import { decrementMaiaCurrentHealth, incrementMaiaCurrentHealth } from '../redux/maiaSlice';
+import DrawBar from '../functions/drawbar'; // Componente de ataque
+import RandomSequenceGrid from '../functions/sequencegrid'; // Componente de defensa
+import ShakyMaiaHeadIcon, { ShakyMaiaHeadIconRef } from '../characters/shakymaiaheadicon';
+import ShootingCircle from '../functions/shootingcircle';
+import MoonTear from '../functions/moontear';
+import { decrementMaiaCurrentHealth, incrementMaiaCurrentHealth } from '../../redux/maiaSlice';
 
 const BattleScreen: React.FC = () => {
   // Obtenemos la salud actual y la salud máxima de Maia desde Redux
