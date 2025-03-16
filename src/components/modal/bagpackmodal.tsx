@@ -6,7 +6,7 @@ import { CrossBowIcon, BowIcon } from '../SvgExporter';
 import HealingIcon from '../healingicon';
 import { decrementBigHealthPotion, decrementGrapes, decrementHealthPotion } from '../../redux/healingSlice';
 import { useDispatch, useSelector } from "react-redux";
-import { incrementMaiaCurrentHealth } from '../../redux/maiaSlice';
+import { incrementMaiaCurrentHealth, incrementMaiaHealth } from '../../redux/maiaSlice';
 
 // Definir el tipo del estado de Redux para la curación
 interface RootState {
@@ -14,6 +14,9 @@ interface RootState {
     grapes: number;
     healthpotion: number;
     bighealthpotion: number;
+  };
+  maia: {
+    maiahealth: number;
   };
 }
 
@@ -33,6 +36,7 @@ const BagPackModal: React.FC<BagPackModalProps> = ({ visible, onClose }) => {
 
   // Obtener el estado de curación desde Redux
   const healingState = useSelector((state: RootState) => state.healing);
+  const maiaHealth = useSelector((state: RootState) => state.maia.maiahealth);
 
   // Callback que alterna la selección: si se presiona el mismo, se deselecciona.
   const handleHealingIconSelect = (type: 'G' | 'H' | 'B') => {
@@ -47,13 +51,13 @@ const BagPackModal: React.FC<BagPackModalProps> = ({ visible, onClose }) => {
   const handleUseHealing = () => {
     if (selectedHealing === 'G') {
       dispatch(decrementGrapes(1));
-      dispatch(incrementMaiaCurrentHealth(2));
+      dispatch(incrementMaiaCurrentHealth(Math.floor(maiaHealth / 5)));
     } else if (selectedHealing === 'H') {
       dispatch(decrementHealthPotion(1));
-      dispatch(incrementMaiaCurrentHealth(5));
+      dispatch(incrementMaiaCurrentHealth(Math.floor(maiaHealth / 2)));
     } else if (selectedHealing === 'B') {
       dispatch(decrementBigHealthPotion(1));
-      dispatch(incrementMaiaCurrentHealth(1000));
+      dispatch(incrementMaiaCurrentHealth(maiaHealth));
     }
     setSelectedHealing(null);
   };
@@ -161,7 +165,7 @@ const BagPackModal: React.FC<BagPackModalProps> = ({ visible, onClose }) => {
           )}
 
           {/* Botón "Cerrar" siempre visible */}
-          <TouchableOpacity style={styles.closeButton} onPress={onClose}>
+          <TouchableOpacity style={styles.closeButton} onPress={() => { setSelectedHealing(null); onClose(); }}>
             <Text style={styles.closeButtonText}>Cerrar</Text>
           </TouchableOpacity>
 

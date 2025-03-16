@@ -19,6 +19,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { incrementGrapes, incrementHealthPotion, incrementBigHealthPotion } from '../../redux/healingSlice';
 import { incrementArrows } from '../../redux/weaponsSlice';
 import { decrementCoins } from '../../redux/coinsSlice';
+import { incrementMaiaHealth } from '../../redux/maiaSlice';
 
 interface CoinsState {
   coins: number;
@@ -42,11 +43,11 @@ interface ShopModalProps {
 }
 
 const shopItems: Item[] = [
-  { id: '1', name: 'Uvas', price: 5, description:'Descripcion 1' },
-  { id: '2', name: 'Frasco de Salud', price: 20, description:'Descripcion 2' },
-  { id: '3', name: 'Gran Frasco de Salud', price: 45, description: 'Descripcion 3' },
-  { id: '4', name: 'Pildoras', price: 50, description:'Descripcion 4' },
-  { id: '5', name: 'Flechas', amount:'X3' ,price: 10, description:'Descripcion 5' },
+  { id: '1', name: 'Uvas', price: 5, description:'Aumentan el 20% de la Salud' },
+  { id: '2', name: 'Frasco de Salud', price: 20, description:'Aumenta el 50% de la Salud' },
+  { id: '3', name: 'Gran Frasco de Salud', price: 45, description: 'Aumenta el 100% de la Salud' },
+  { id: '4', name: 'Pildoras', price: 50, description:'Aumenta 5 puntos de Salud Total' },
+  { id: '5', name: 'Flechas', amount:'X3' ,price: 10, description:'Flechas para contrarrestar ataques enemigos' },
 ];
 
 // Definimos un tipo para los componentes de ícono que reciben width y height.
@@ -94,7 +95,7 @@ const ShopModal: React.FC<ShopModalProps> = ({ visible, onClose }) => {
           dispatch(incrementBigHealthPotion(1));
           break;
         case 'Pildoras':
-          // Por el momento no se realiza ninguna acción para las Pildoras.
+          dispatch(incrementMaiaHealth(5));
           break;
         case 'Flechas':
           dispatch(incrementArrows(3)); // Aumenta 3 flechas
@@ -160,7 +161,7 @@ const ShopModal: React.FC<ShopModalProps> = ({ visible, onClose }) => {
                 return SelectedIcon ? <SelectedIcon width={50} height={50} /> : null;
               })()}
               <Text style={styles.infoText}>
-                {selectedInfo.item.name}: {selectedInfo.item.description}.
+               {selectedInfo.item.description}.
               </Text>
             </View>
           )}

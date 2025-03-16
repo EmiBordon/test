@@ -3,10 +3,10 @@ import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { incrementArrows, decrementArrows, incrementWeapon, decrementWeapon } from "../redux/weaponsSlice";
 import { incrementGrapes, decrementGrapes, incrementHealthPotion, decrementHealthPotion, 
-  incrementBigHealthPotion, decrementBigHealthPotion, resetHealing } from "../redux/healingSlice";
+  incrementBigHealthPotion, decrementBigHealthPotion, resetHealing, incrementPills } from "../redux/healingSlice";
 import ConversationModal from "../components/modal/conversationmodal"; 
 import { conversations } from "../components/functions/conversations"; 
-import { FountainIcon, PillsIcon } from "../components/SvgExporter";
+import { FountainIcon, PillsIcon, CoinsIcon } from "../components/SvgExporter";
 import ResetButton from "../components/functions/resetbutton";
 import { playSound } from "../sounds/soundexporter"; // Importamos el sonido
 import NewItemModal from "../components/modal/newitemmodal";
@@ -50,7 +50,7 @@ const HomeScreen = ({ navigation }) => {
         style={styles.button}
         onPress={() => {
           playSound("click");
-          dispatch(incrementCoins(3));
+          dispatch(incrementCoins(300));
         }}
       >
         <Text style={styles.buttonText}>Aumentar Flechas</Text>
@@ -79,8 +79,8 @@ const HomeScreen = ({ navigation }) => {
       <NewItemModal
         visible={newItemModalVisible}
         onClose={() => setNewItemModalVisible(false)}
-        icon={<PillsIcon height={"50"} width={"50"} />}
-        name="Pildoras"
+        icon={<CoinsIcon height={"50"} width={"50"} />}
+        name="Monedas"
         description="Aumentan 5 puntos de vida"
       />
     </View>

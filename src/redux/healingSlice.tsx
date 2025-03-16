@@ -17,12 +17,14 @@ interface HealingState {
   grapes: number;
   healthpotion: number;
   bighealthpotion: number;
+  pills: number;
 }
 
 const initialState: HealingState = {
   grapes: 3,
   healthpotion: 1,
   bighealthpotion: 1,
+  pills:0,
 };
 
 const healingSlice = createSlice({
@@ -53,10 +55,19 @@ const healingSlice = createSlice({
       state.bighealthpotion = Math.max(state.bighealthpotion - action.payload, 0);
       saveState(state);
     },
+    incrementPills: (state, action: PayloadAction<number>) => {
+      state.pills += action.payload;
+      saveState(state);
+    },
+    decrementPills: (state, action: PayloadAction<number>) => {
+      state.pills = Math.max(state.pills - action.payload, 0);
+      saveState(state);
+    },
     resetHealing: (state) => {
       state.grapes = initialState.grapes;
       state.healthpotion = initialState.healthpotion;
       state.bighealthpotion = initialState.bighealthpotion;
+      state.pills = initialState.pills;
       saveState(state);
     },
   },
@@ -78,5 +89,7 @@ const saveState = async (state: HealingState) => {
   }
 };
 
-export const { incrementGrapes, decrementGrapes, incrementHealthPotion, decrementHealthPotion, incrementBigHealthPotion, decrementBigHealthPotion, resetHealing } = healingSlice.actions;
+export const { incrementGrapes, decrementGrapes, incrementHealthPotion, decrementHealthPotion, incrementBigHealthPotion, decrementBigHealthPotion, resetHealing 
+  ,incrementPills, decrementPills
+} = healingSlice.actions;
 export default healingSlice.reducer;

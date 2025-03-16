@@ -1,5 +1,5 @@
 import React from 'react';
-import { MaiaHeadIcon, MattHeadIcon, Maia4HeadIcon, DianaHeadIcon, Maia2HeadIcon, Maia3HeadIcon } from "../SvgExporter";
+import { Sign2Icon,MaiaHeadIcon, MattHeadIcon, Maia4HeadIcon, DianaHeadIcon, Maia2HeadIcon, Maia3HeadIcon, ShopGirlHeadIcon } from "../SvgExporter";
 
 export interface Conversation {
   dialogos: {
@@ -9,9 +9,12 @@ export interface Conversation {
 }
 
 export const conversations: {
+  homechessclose:Conversation;
   mattconv1: Conversation;
   mattconv2: Conversation;
   mattconv3: Conversation;
+  shopgirlconv1: Conversation;
+  sign1:Conversation;
 } = {
   mattconv1: {
     dialogos: [
@@ -103,6 +106,34 @@ export const conversations: {
         text: "Genial", 
         svg: MattHeadIcon 
       }
+    ],
+  },
+  shopgirlconv1: {
+    dialogos: [
+      { 
+        text: "Tengo algunos productos que podrian interesarte.", 
+        svg: ShopGirlHeadIcon
+      },
+      { 
+        text: "¿Deseas comprar?", 
+        svg: ShopGirlHeadIcon 
+      },
+    ],
+  },
+  sign1: {
+    dialogos: [
+      { 
+        text: "PELIGRO!                      ESTA PROHIBIDO EL INGRESO!", 
+        svg: Sign2Icon
+      },
+    ],
+  },
+  homechessclose: {
+    dialogos: [
+      { 
+        text: "Es el baúl de Papá, Ovy tenia la llave...", 
+        svg: MaiaHeadIcon
+      },
     ],
   },
 };

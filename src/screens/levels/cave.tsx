@@ -1,36 +1,44 @@
 import React, { useState } from 'react';
 import { View, StyleSheet, Pressable, Alert, Image, Dimensions } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { MaiaIcon, ArrowIcon, GermisIcon, JoxIcon, GorjoxIcon } from '../../components/SvgExporter';
+import { MaiaIcon, ArrowIcon, GermisIcon, JoxIcon, GorjoxIcon, SignIcon } from '../../components/SvgExporter';
 import Inventory from '../../components/inventory';
 import Location from '../../components/functions/location';
-import ConversationChoiceModal from '../../components/modal/conversationchoicemodal';
+import ConversationModal from '../../components/modal/conversationmodal';
 import { conversations, Conversation } from '../../components/functions/conversations';
 import { useSelector, useDispatch } from 'react-redux';
-import { setMattState } from '../../redux/mattSlice';
 import AnimatedArrow from '../../components/functions/animatedarrow';
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
+
 const icons = [
   { 
     component: GermisIcon, 
     height: SCREEN_HEIGHT * 0.15, 
     width: SCREEN_WIDTH * 0.3, 
-    style: { top: '35%', left: '10%' } ,
+    style: { top: '35%', left: '10%' },
   },
   { 
     component: JoxIcon, 
     height: SCREEN_HEIGHT * 0.18, 
     width: SCREEN_WIDTH * 0.3,  
-    style: { top: '35%', left: '60%' } ,
+    style: { top: '35%', left: '60%' },
   },
   { 
     component: GorjoxIcon, 
     height: SCREEN_HEIGHT * 0.5, 
     width: SCREEN_WIDTH * 0.5,  
-    style: { top: '20%', left: '40%' } ,
+    style: { top: '20%', left: '40%' },
   }
 ];
+
+// Objeto para controlar el SignIcon
+const signIconData = {
+  component: SignIcon,
+  height: SCREEN_HEIGHT * 0.25, // Puedes ajustar este valor
+  width: SCREEN_WIDTH * 0.25,   // Puedes ajustar este valor
+  style: { top: '35%', left: '70%' } // Ajusta la posición según tus necesidades
+};
 
 const CaveScreen = () => {
   const navigation = useNavigation();
@@ -40,7 +48,10 @@ const CaveScreen = () => {
   const [conversationContent, setConversationContent] = useState<Conversation | null>(null);
   
   const dispatch = useDispatch();
-  const mattState = useSelector((state: any) => state.matt.value);
+  const handleOpenModal = () => {
+      setModalVisible(true);
+      setConversationContent(conversations.sign1);
+    };
 
   const locationName = [
     { text: "Entrada de La Cueva" },
@@ -70,17 +81,12 @@ const CaveScreen = () => {
     }
   };
 
-  const handleAccept = () => {
-    dispatch(setMattState(2));
-    navigation.replace('BattleScreen');
-  };
-
   const handleIconPress = () => {
     Alert.alert('Item seleccionado');
   };
 
-  // Para la lógica de iconos: si la ubicación es "Entrada de La Cueva" (índice 0) no se muestra ninguno.
-  // En caso contrario, usamos currentLocationIndex - 1 para acceder al icono correcto.
+  // Si la ubicación es "Entrada de La Cueva" (índice 0), no se muestra ninguno de los otros íconos.
+  // En caso contrario, usamos currentLocationIndex - 1 para acceder al ícono correcto.
   const iconIndex = currentLocationIndex - 1;
   const currentIconData = iconIndex >= 0 ? icons[iconIndex] : null;
 
@@ -91,10 +97,18 @@ const CaveScreen = () => {
         source={backgroundImages[currentImageIndex]} 
         style={styles.backgroundImage} 
       />
-     
-       <Pressable style={styles.buttonImage} onPress={handleNextImage} />
+      
+      {/* Botón para avanzar a la siguiente imagen */}
+      <Pressable style={styles.buttonImage} onPress={handleNextImage} />
 
-      {/* Se muestra el icono solo si currentLocationIndex > 0 */}
+      {/* SignIcon controlado igual que los demás íconos */}
+      {currentImageIndex === 0 && (
+        <Pressable style={[styles.iconButton, signIconData.style]} onPress={handleOpenModal}>
+          <signIconData.component height={signIconData.height} width={signIconData.width} />
+        </Pressable>
+      )}
+
+      {/* Ícono de ubicación según la lógica existente */}
       {currentIconData && (
         <Pressable style={[styles.iconButton, currentIconData.style]} onPress={handleIconPress}>
           <currentIconData.component height={currentIconData.height} width={currentIconData.width} />
@@ -103,10 +117,10 @@ const CaveScreen = () => {
 
       {currentImageIndex !== 0 && (
         <View style={styles.sideIcons}>
-        <Pressable style={styles.arrowButton} onPress={handlePrevImage}>
-          <ArrowIcon style={styles.leftArrow} height={50} width={50} />
-        </Pressable>
-      </View>
+          <Pressable style={styles.arrowButton} onPress={handlePrevImage}>
+            <ArrowIcon style={styles.leftArrow} height={50} width={50} />
+          </Pressable>
+        </View>
       )}
 
       <View style={styles.maiaContainer}>
@@ -115,20 +129,13 @@ const CaveScreen = () => {
 
       <Inventory />
       <Location text={locationName[currentLocationIndex].text} />
-      <AnimatedArrow
-       style={styles.animatedArrow}
-        arrowWidth={60}
-        arrowHeight={60}
-        direction="U"  // La flecha se orientará y animará hacia arriba
-        animationDuration={1000}
-      />
+     
 
       {modalVisible && (
-        <ConversationChoiceModal 
+        <ConversationModal 
           visible={modalVisible}  
           conversation={conversationContent}
           onClose={() => setModalVisible(false)}
-          onAccept={handleAccept}
         />
       )}
     </View>

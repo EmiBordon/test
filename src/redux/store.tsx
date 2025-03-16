@@ -8,12 +8,13 @@ import weaponsReducer from './weaponsSlice'; // Importamos weaponsSlice
 import healingReducer from './healingSlice'; 
 import agendaReducer from './agendaSlice';
 import coinsReducer from './coinsSlice'
+import charactersReducer from './charactersSlice'
 
 // Configuración del persist
 const persistConfig = {
   key: 'root',
   storage: AsyncStorage,
-  whitelist: ['matt', 'maia', 'weapons','healing', 'agenda','coins'], // Agregamos 'weapons' a la lista de persistencia
+  whitelist: ['matt', 'maia', 'weapons','healing', 'agenda','coins', 'characters'], // Agregamos 'weapons' a la lista de persistencia
 };
 
 // Reducer combinado
@@ -24,6 +25,7 @@ const rootReducer = combineReducers({
   healing: healingReducer,
   agenda: agendaReducer, 
   coins: coinsReducer,
+  characters: charactersReducer,
 });
 
 // Reducer persistente

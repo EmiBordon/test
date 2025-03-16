@@ -104,7 +104,7 @@ const MoonTear: React.FC<MoonTearProps> = ({
   moonIcon,
   tearIcon,
 }) => {
-  // Desestructuramos y renombramos las props para usarlas con mayúscula en JSX
+  // Renombramos los íconos para usarlos en JSX
   const MoonIcon = moonIcon;
   const TearIcon = tearIcon;
 
@@ -174,10 +174,7 @@ const MoonTear: React.FC<MoonTearProps> = ({
 
   return (
     <View style={styles.container}>
-      <View
-        style={[styles.animationArea, { width: '40%', aspectRatio: 1 }]}
-        onLayout={onContainerLayout}
-      >
+      <View style={[styles.animationArea, { width: '40%', aspectRatio: 1 }]} onLayout={onContainerLayout}>
         {phase === 'showing' && containerSize && pattern.length > 0 && (
           <AnimatedIcon
             id={`${currentPatternIndex}`}
@@ -191,14 +188,29 @@ const MoonTear: React.FC<MoonTearProps> = ({
       </View>
 
       {phase === 'input' && (
-        <View style={styles.inputContainer}>
-          <TouchableOpacity style={styles.iconButton} onPress={() => handleUserInput(0)}>
-            <MoonIcon width={computedIconSize} height={computedIconSize} />
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.iconButton} onPress={() => handleUserInput(1)}>
-            <TearIcon width={computedIconSize} height={computedIconSize} />
-          </TouchableOpacity>
-        </View>
+        <>
+          <View style={styles.inputContainer}>
+            <TouchableOpacity style={styles.iconButton} onPress={() => handleUserInput(0)}>
+              <MoonIcon width={computedIconSize} height={computedIconSize} />
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.iconButton} onPress={() => handleUserInput(1)}>
+              <TearIcon width={computedIconSize} height={computedIconSize} />
+            </TouchableOpacity>
+          </View>
+
+          {/* Indicadores del patrón: rectángulos que se vuelven negros al acertar */}
+          <View style={styles.progressContainer}>
+            {pattern.map((_, index) => (
+              <View
+                key={index}
+                style={[
+                  styles.progressRect,
+                  { backgroundColor: index < userInput.length ? 'black' : 'white' },
+                ]}
+              />
+            ))}
+          </View>
+        </>
       )}
     </View>
   );
@@ -229,6 +241,19 @@ const styles = StyleSheet.create({
     aspectRatio: 1,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  progressContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 20,
+  },
+  progressRect: {
+    width: 35,
+    height: 15,
+    borderWidth: 1,
+    borderColor: 'black',
+    marginHorizontal: 5,
   },
 });
 

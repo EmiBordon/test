@@ -16,7 +16,7 @@ export const loadWeaponsState = createAsyncThunk(
 const initialState = {
   currentWeapon: 0,
   crossbow: false,
-  arrows: 5,
+  arrows: 6,
 };
 
 const weaponsSlice = createSlice({

@@ -1,4 +1,3 @@
-// DrawBar.tsx
 import React, { useEffect, useState } from 'react';
 import { View, TouchableOpacity, StyleSheet, Dimensions, Text } from 'react-native';
 import Animated, {
@@ -28,21 +27,22 @@ interface DrawBarProps {
 
 const DrawBar: React.FC<DrawBarProps> = ({ levels, duration, onResult }) => {
   const [currentLevel, setCurrentLevel] = useState(1);
-  // Inicialmente se puede dejar con el valor por defecto, luego se actualizará según el nivel
   const [targetZoneLeft, setTargetZoneLeft] = useState((CONTAINER_WIDTH - TARGET_ZONE_WIDTH) / 2);
+  // Este estado controla si ya se inició la animación en el primer nivel
+  const [hasStartedFirstLevel, setHasStartedFirstLevel] = useState(false);
 
   const x = useSharedValue(0);
-  const isMoving = useSharedValue(true);
+  const isMoving = useSharedValue(false);
 
-  // Worklet que anima la bola de 0 a FULL_DISTANCE usando el duration recibido
+  // Worklet que anima la bola desde 0 hasta FULL_DISTANCE
   function animateBall() {
     'worklet';
+    isMoving.value = true;
     x.value = withTiming(
       FULL_DISTANCE,
       { duration, easing: Easing.linear },
       (isFinished) => {
         if (isFinished && isMoving.value) {
-          // La animación terminó sin que se detuviera: fallo
           isMoving.value = false;
           runOnJS(onResult)(false);
         }
@@ -50,9 +50,7 @@ const DrawBar: React.FC<DrawBarProps> = ({ levels, duration, onResult }) => {
     );
   }
 
-  // Reinicia la animación y asigna targetZoneLeft según el nivel actual:
-  // - Nivel 1: valor fijo (2)
-  // - Niveles a partir del 2: valor aleatorio
+  // Prepara la animación: en el nivel 1 se usa la zona central; para niveles mayores se asigna una posición aleatoria
   const startAnimation = () => {
     if (currentLevel === 1) {
       setTargetZoneLeft((CONTAINER_WIDTH - TARGET_ZONE_WIDTH) / 2);
@@ -61,27 +59,43 @@ const DrawBar: React.FC<DrawBarProps> = ({ levels, duration, onResult }) => {
       const newTargetZoneLeft = (CONTAINER_WIDTH - TARGET_ZONE_WIDTH) / factor;
       setTargetZoneLeft(newTargetZoneLeft);
     }
+    // Reiniciamos la posición y arrancamos la animación
     x.value = 0;
-    isMoving.value = true;
     animateBall();
   };
 
-  // Cada vez que cambia el nivel se reinicia la animación con nueva posición
+  // Cuando cambia el nivel...
   useEffect(() => {
-    startAnimation();
-  }, [currentLevel]);
+    if (currentLevel === 1 && !hasStartedFirstLevel) {
+      // Primer nivel: se deja estática la bola (no se inicia la animación automáticamente)
+      x.value = 0;
+      isMoving.value = false;
+    } else {
+      // A partir del segundo nivel (o si ya se inició en el primer nivel) se arranca la animación automáticamente
+      startAnimation();
+    }
+  }, [currentLevel, hasStartedFirstLevel]);
 
-  // Al presionar "Detener", se cancela la animación y se evalúa si se acierta
-  const handleStop = () => {
+  const handlePress = () => {
+    if (currentLevel === 1 && !hasStartedFirstLevel) {
+      // Primer toque en el primer nivel: inicia la animación
+      setHasStartedFirstLevel(true);
+      startAnimation();
+      return;
+    }
+
+    // Si la animación ya está en curso, se detiene y se evalúa el resultado
     if (!isMoving.value) return;
     cancelAnimation(x);
     isMoving.value = false;
-    const hit = x.value >= targetZoneLeft && x.value <= targetZoneLeft + TARGET_ZONE_WIDTH;
+    const hit =
+      x.value >= targetZoneLeft &&
+      x.value <= targetZoneLeft + TARGET_ZONE_WIDTH;
     if (!hit) {
       onResult(false);
     } else {
       if (currentLevel < levels) {
-        setCurrentLevel(currentLevel + 1);
+        setCurrentLevel(prev => prev + 1);
       } else {
         onResult(true);
       }
@@ -98,12 +112,12 @@ const DrawBar: React.FC<DrawBarProps> = ({ levels, duration, onResult }) => {
         {currentLevel} / {levels}
       </Text>
       <View style={styles.bar}>
-        {/* Zona objetivo con posición determinada */}
+        {/* Zona objetivo */}
         <View style={[styles.targetZone, { left: targetZoneLeft, width: TARGET_ZONE_WIDTH }]} />
         <Animated.View style={[styles.ball, animatedStyle]} />
       </View>
-      <TouchableOpacity onPress={handleStop} style={styles.button}>
-        <Text style={styles.buttonText}>ATAQUE</Text>
+      <TouchableOpacity onPress={handlePress} style={styles.button}>
+        <Text style={styles.buttonText}>ATACAR</Text>
       </TouchableOpacity>
     </View>
   );
@@ -139,7 +153,7 @@ const styles = StyleSheet.create({
     borderRadius: BALL_SIZE / 2,
     backgroundColor: 'black',
     position: 'absolute',
-    top: -5, // Centrado verticalmente en la barra
+    top: -5,
   },
   button: {
     padding: 10,

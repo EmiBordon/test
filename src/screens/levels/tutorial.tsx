@@ -5,6 +5,7 @@ import { useNavigation } from '@react-navigation/native';
 import { MaiaIcon, MattIcon, DoorIcon, ChestCloseIcon, ArrowIcon } from '../../components/SvgExporter';
 import Inventory from '../../components/inventory';
 import Location from '../../components/functions/location';
+import ConversationModal from '../../components/modal/conversationmodal';
 import ConversationChoiceModal from '../../components/modal/conversationchoicemodal';
 import { conversations, Conversation } from '../../components/functions/conversations';
 import { useSelector, useDispatch } from 'react-redux';
@@ -19,16 +20,10 @@ const icons = [
     style: { top: '30%', left: '10%' } 
   },
   { 
-    component: DoorIcon, 
-    height: 150, 
-    width: 150, 
-    style: { top: '8%', left: '30%' } 
-  },
-  { 
     component: ChestCloseIcon, 
     height: 100, 
     width: 100, 
-    style: { top: '30%', left: '70%' } 
+    style: { top: '32%', left: '70%' } 
   }
 ];
 
@@ -36,6 +31,7 @@ const TutorialScreen = () => {
   const navigation = useNavigation();
   const [currentIconIndex, setCurrentIconIndex] = useState(0);
   const [modalVisible, setModalVisible] = useState(false);
+  const [modal2Visible, setModal2Visible] = useState(false);
   const [conversationContent, setConversationContent] = useState<Conversation | null>(null);
   
   const dispatch = useDispatch();
@@ -67,7 +63,8 @@ const TutorialScreen = () => {
         setModalVisible(true);
       }
     } else {
-      Alert.alert('Item seleccionado');
+      setConversationContent(conversations.homechessclose);
+      setModal2Visible(true);
     }
   };
 
@@ -105,6 +102,13 @@ const TutorialScreen = () => {
           conversation={conversationContent}
           onClose={() => setModalVisible(false)}
           onAccept={handleAccept}
+        />
+      )}
+       {modal2Visible && (
+        <ConversationModal 
+          visible={modal2Visible}  
+          conversation={conversationContent}
+          onClose={() => setModal2Visible(false)}
         />
       )}
     </View>

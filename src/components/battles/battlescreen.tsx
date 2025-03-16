@@ -1,43 +1,57 @@
 // BattleScreen.tsx
 import React, { useState, useRef, useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
-import { MaiaIcon, MattIcon, MaiaHeadIcon, HearthIcon, BrokenHearthIcon, MoonIcon, TearIcon, GarbageIcon, ShieldIcon, WhiteSwordIcon } from '../SvgExporter';
+import { 
+  MattIcon, MaiaHeadIcon, HearthIcon, BrokenHearthIcon, MoonIcon, TearIcon, 
+  GarbageIcon, ShieldIcon, WhiteSwordIcon, TextBubbleRightIcon, BowIcon, CrossBowIcon, QuiverArrowIcon 
+} from '../SvgExporter';
 import ShakyMattIcon, { ShakyMattIconRef } from '../characters/shakymatticon';
 import { useSelector, useDispatch } from 'react-redux';
-import DrawBar from '../functions/drawbar'; // Componente de ataque
-import RandomSequenceGrid from '../functions/sequencegrid'; // Componente de defensa
+import DrawBar from '../functions/drawbar';
+import RandomSequenceGrid from '../functions/sequencegrid';
 import ShakyMaiaHeadIcon, { ShakyMaiaHeadIconRef } from '../characters/shakymaiaheadicon';
 import ShootingCircle from '../functions/shootingcircle';
 import MoonTear from '../functions/moontear';
 import { decrementMaiaCurrentHealth, incrementMaiaCurrentHealth } from '../../redux/maiaSlice';
+import { decrementArrows } from '../../redux/weaponsSlice';
 
 const BattleScreen: React.FC = () => {
-  // Obtenemos la salud actual y la salud máxima de Maia desde Redux
+  // Estados y referencias existentes
   const dispatch = useDispatch();
   const maiaHealth = useSelector((state: any) => state.maia.maiahealth);
   const maiaCurrentHealth = useSelector((state: any) => state.maia.maiacurrenthealth);
+  const arrows = useSelector((state: any) => state.weapons.arrows);
 
-  // Salud de Matt (local)
   const [mattCurrentHealth, setMattCurrentHealth] = useState(10);
   const [mattMaxHealth, setMattMaxHealth] = useState(10);
 
-  // Estados para overlays y botones
   const [showDrawBar, setShowDrawBar] = useState(false);
+  const [showShootingCircle, setShowShootingCircle] = useState(false);
   const [showRandomSequence, setShowRandomSequence] = useState(false);
+  const [showMoonTear, setShowMoonTear] = useState(false);
   const [showAttackButton, setShowAttackButton] = useState(true);
   const [showDefenderButton, setShowDefenderButton] = useState(false);
-  // Estado para efecto de daño en Matt
   const [showDamagedMatt, setShowDamagedMatt] = useState(false);
-  // Estado para efecto shaky en Maia
   const [showDamagedMaia, setShowDamagedMaia] = useState(false);
-  // Estados para mostrar el icono de vida roto temporalmente
   const [showBrokenHearthMatt, setShowBrokenHearthMatt] = useState(false);
   const [showBrokenHearthMaia, setShowBrokenHearthMaia] = useState(false);
 
-  // Ref para el componente ShakyMattIcon
+  // Refs para animaciones
   const mattIconRef = useRef<ShakyMattIconRef>(null);
-  // Ref para el componente ShakyMaiaHeadIcon
   const maiaHeadIconRef = useRef<ShakyMaiaHeadIconRef>(null);
+
+  // Array de diálogos y estado para controlar el índice actual
+  const dialogueMessages = [
+    "Comencemos!",
+    "¡No te rindas!",
+    "¡Ataca ahora!"
+  ];
+  const [currentDialogueIndex, setCurrentDialogueIndex] = useState(0);
+
+  // Función para avanzar al siguiente diálogo al tocar la burbuja
+  const handleDialoguePress = () => {
+    setCurrentDialogueIndex(prev => (prev + 1) % dialogueMessages.length);
+  };
 
   // Efecto de daño para Matt
   useEffect(() => {
@@ -75,12 +89,27 @@ const BattleScreen: React.FC = () => {
     }
   };
 
+  const handleCounterResult = (result: boolean) => {
+    setShowShootingCircle(false);
+  
+    if (result) {
+      // Solo animación de daño para Matt
+      setShowDamagedMatt(true);
+      // Volver solo al botón de ataque
+      setShowAttackButton(true);
+      setShowDefenderButton(false);
+    } else {
+      // Volver a mostrar Defensa y Flecha
+      setShowDefenderButton(true);
+      setShowAttackButton(false);
+    }
+  };
+
   // Callback para el mini-juego de DEFENDER (RandomSequenceGrid)
   const handleDefenseResult = (result: boolean) => {
     setShowRandomSequence(false);
     setShowAttackButton(true);
     if (!result) {
-      // Despachamos la acción para reducir la salud de Maia en Redux
       dispatch(decrementMaiaCurrentHealth(1));
       setShowBrokenHearthMaia(true);
       setShowDamagedMaia(true);
@@ -88,14 +117,22 @@ const BattleScreen: React.FC = () => {
     }
   };
 
-  // Al presionar ATACAR se ocultan los botones y se muestra DrawBar
   const handleAttackPress = () => {
     setShowAttackButton(false);
     setShowDefenderButton(false);
     setShowDrawBar(true);
   };
+  
+  const handleCounterPress = () => {
+    if (arrows >= 3) {
+      setShowAttackButton(false);
+      setShowDefenderButton(false);
+      setShowShootingCircle(true);
+      dispatch(decrementArrows(3));
+    } 
+    // Si no hay suficientes flechas, no hace nada
+  };
 
-  // Al presionar DEFENDER se oculta el botón y se muestra RandomSequenceGrid
   const handleDefensePress = () => {
     setShowDefenderButton(false);
     setShowRandomSequence(true);
@@ -103,7 +140,7 @@ const BattleScreen: React.FC = () => {
 
   return (
     <View style={styles.container}>
-      {/* Parte superior: Matt */}
+      {/* Parte superior: salud, diálogo y Matt */}
       <View style={styles.topContainer}>
         <View style={styles.healthContainer}>
           {showBrokenHearthMatt ? (
@@ -115,11 +152,23 @@ const BattleScreen: React.FC = () => {
             {mattCurrentHealth}/{mattMaxHealth}
           </Text>
         </View>
-        {showDamagedMatt ? (
-          <ShakyMattIcon ref={mattIconRef} height={220} width={220} />
-        ) : (
-          <MattIcon height={220} width={220} />
-        )}
+        <View style={styles.dialogueAndMattContainer}>
+          {/* Contenedor para el diálogo con el icono grande */}
+          
+            <View style={styles.iconContainer}>
+              <TextBubbleRightIcon height={170} width={170} />
+              <Text style={styles.dialogueText}>
+                {dialogueMessages[currentDialogueIndex]}
+              </Text>
+            </View>
+          
+          {/* Icono de Matt */}
+          {showDamagedMatt ? (
+            <ShakyMattIcon ref={mattIconRef} height={220} width={220} />
+          ) : (
+            <MattIcon height={220} width={220} />
+          )}
+        </View>
       </View>
 
       {/* Botones de acción en la esquina inferior izquierda */}
@@ -131,7 +180,7 @@ const BattleScreen: React.FC = () => {
               <Text style={styles.actionButtonText}>ATAQUE</Text>
             </View>
           </TouchableOpacity>
-          <TouchableOpacity style={[styles.actionButton, { marginLeft: 10 }]} onPress={() => {}}>
+          <TouchableOpacity style={[styles.actionButton, { marginLeft: 9 }]} onPress={() => {}}>
             <View style={styles.buttonContent}>
               <GarbageIcon width={25} height={25} />
               <Text style={styles.actionButtonText}>OBJETO</Text>
@@ -148,10 +197,10 @@ const BattleScreen: React.FC = () => {
               <Text style={styles.actionButtonText}>DEFENSA</Text>
             </View>
           </TouchableOpacity>
-          <TouchableOpacity style={[styles.actionButton, { marginLeft: 10 }]} onPress={() => {}}>
+          <TouchableOpacity style={[styles.actionButton, { marginLeft: 9 }]} onPress={handleCounterPress}>
             <View style={styles.buttonContent}>
-              <GarbageIcon width={25} height={25} />
-              <Text style={styles.actionButtonText}>OBJETO</Text>
+              <BowIcon width={25} height={25} fill="white"/>
+              <Text style={styles.actionButtonText}>ARCO({arrows})</Text>
             </View>
           </TouchableOpacity>
         </View>
@@ -178,17 +227,38 @@ const BattleScreen: React.FC = () => {
         </View>
       </View>
 
-      {/* Overlay para DrawBar (ataque) */}
-      {showDrawBar && (
+      {/* Overlay para ShootingCircle (contra) */}
+      {showShootingCircle && (
         <View style={styles.overlay}>
-          <ShootingCircle rotationDuration={1800} shrinkDuration={8000} minDiameter={150} onResult={handleAttackResult} />
+          <ShootingCircle 
+            rotationDuration={1800} 
+            shrinkDuration={8000} 
+            minDiameter={150} 
+            onResult={handleCounterResult} 
+          />
+        </View>
+      )}
+       {/* Overlay para DrawBar (ataque) */}
+       {showDrawBar && (
+        <View style={styles.overlay}>
+          <DrawBar
+            levels={3}
+            duration={2000}
+            onResult={handleAttackResult} 
+          />
         </View>
       )}
 
       {/* Overlay para RandomSequenceGrid (defensa) */}
       {showRandomSequence && (
         <View style={styles.overlay}>
-          <MoonTear moonIcon={MoonIcon} tearIcon={TearIcon} difficulty={4} patternLength={3} onResult={handleDefenseResult} />
+          <MoonTear 
+            moonIcon={MoonIcon} 
+            tearIcon={TearIcon} 
+            difficulty={3} 
+            patternLength={4} 
+            onResult={handleDefenseResult} 
+          />
         </View>
       )}
     </View>
@@ -201,7 +271,39 @@ const styles = StyleSheet.create({
   },
   topContainer: {
     alignItems: 'center',
-    marginTop: "10%",
+    marginTop: "7%",
+    left: '5%',
+  },
+  dialogueAndMattContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    right: "15%",
+  },
+  iconContainer: {
+    position: 'relative',
+    width: "30%",
+    height: "35%",
+    justifyContent: 'center',
+    alignItems: 'center',
+    left: "9%",
+    bottom:'25%',
+    
+  },
+  dialogueText: {
+    position: 'absolute',
+    textAlign: 'left',
+    fontSize: 18,
+    color: '#000',
+    top: "15%",
+  },
+  healthContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: "2%",
+  },
+  healthText: {
+    fontSize: 20,
+    marginLeft: "1%",
   },
   actionButtonsContainer: {
     position: 'absolute',
@@ -212,7 +314,7 @@ const styles = StyleSheet.create({
   },
   actionButton: {
     backgroundColor: 'black',
-    padding: 10,
+    padding: "4%",
     borderRadius: 5,
   },
   buttonContent: {
@@ -223,7 +325,7 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 17,
     fontWeight: 'bold',
-    marginLeft: 5,
+    marginLeft: "2%",
   },
   maiaContainer: {
     position: 'absolute',
@@ -236,18 +338,9 @@ const styles = StyleSheet.create({
     height: "90%",
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: 5,
+    marginTop: "1%",
     borderColor: 'black',
     borderWidth: 3,
-  },
-  healthContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 5,
-  },
-  healthText: {
-    fontSize: 20,
-    marginLeft: 5,
   },
   overlay: {
     position: 'absolute',
@@ -255,7 +348,6 @@ const styles = StyleSheet.create({
     left: "0%",
     right: "0%",
     bottom: "0%",
-    backgroundColor: 'rgba(0, 0, 0, 0)',
     justifyContent: 'center',
     alignItems: 'center',
   },

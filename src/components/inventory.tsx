@@ -67,7 +67,7 @@ const Inventory: React.FC = () => {
   // Estado para manejar el estado de los mapas
   const [mapStates, setMapStates] = useState<MapStates>({
     mapInv1: true,
-    mapInv2: true,
+    mapInv2: false,
     mapInv3: false,
   });
 
@@ -179,9 +179,9 @@ const Inventory: React.FC = () => {
       {/* Casillero 4 - Cofre abierto */}
       <TouchableOpacity
         style={styles.slot}
-        onPress={() => handleItemPress("chestOpen")}
+        
       >
-        <DianaIcon width={40} height={40} />
+       
       </TouchableOpacity>
 
       {/* Modales */}

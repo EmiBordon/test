@@ -77,6 +77,10 @@ import JoxSvg from '../assets/jox.svg';
 import GorjoxSvg from '../assets/gorjox.svg';
 import ChestSvg from '../assets/chest.svg';
 import BoxSvg from '../assets/box.svg';
+import QuestionSvg from '../assets/question.svg';
+import ShopGirlHeadSvg from '../assets/shopgirlhead.svg';
+import SignSvg from '../assets/sign.svg';
+import Sign2Svg from '../assets/sign2.svg';
 
 const ArrowIcon = (props: any) => <ArrowSvg {...props} />;
 const ChestOpenIcon = (props: any) => <ChestOpenSvg {...props} />;
@@ -156,6 +160,10 @@ const JoxIcon = (props: any) => <JoxSvg {...props} />;
 const GorjoxIcon = (props: any) => <GorjoxSvg {...props} />;
 const ChestIcon = (props: any) => <ChestSvg {...props} />;
 const BoxIcon = (props: any) => <BoxSvg {...props} />;
+const QuestionIcon = (props: any) => <QuestionSvg {...props} />;
+const ShopGirlHeadIcon = (props: any) => <ShopGirlHeadSvg {...props} />;
+const SignIcon = (props: any) => <SignSvg {...props} />;
+const Sign2Icon = (props: any) => <Sign2Svg {...props} />;
 
 export { 
   ArrowIcon, 
@@ -236,4 +244,8 @@ export {
   GorjoxIcon,
   ChestIcon,
   BoxIcon,
+  QuestionIcon,
+  ShopGirlHeadIcon,
+  SignIcon,
+  Sign2Icon,
 };
