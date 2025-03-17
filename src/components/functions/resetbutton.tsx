@@ -9,6 +9,8 @@ import { resetState } from '../../redux/weaponsSlice'; // Ajusta la ruta según 
 import { resetNotas } from '../../redux/agendaSlice';
 import { resetCoins } from '../../redux/coinsSlice';
 import { resetCharacters } from '../../redux/charactersSlice';
+import { resetBoxes } from '../../redux/boxesSlice';
+import { resetLocations } from '../../redux/locationsSlice';
 
 const ResetButton = () => {
   const dispatch = useDispatch();
@@ -21,6 +23,8 @@ const ResetButton = () => {
     dispatch(resetNotas());
     dispatch(resetCoins());
     dispatch(resetCharacters());
+    dispatch(resetBoxes());
+    dispatch(resetLocations());
     };
 
   return (

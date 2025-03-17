@@ -7,7 +7,7 @@ import Location from '../../components/functions/location';
 import ConversationModal from '../../components/modal/conversationmodal';
 import { conversations, Conversation } from '../../components/functions/conversations';
 import { useSelector, useDispatch } from 'react-redux';
-import AnimatedArrow from '../../components/functions/animatedarrow';
+import { setCave } from '../../redux/locationsSlice';
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
 
@@ -48,10 +48,25 @@ const CaveScreen = () => {
   const [conversationContent, setConversationContent] = useState<Conversation | null>(null);
   
   const dispatch = useDispatch();
-  const handleOpenModal = () => {
+  const caveState = useSelector((state: any) => state.locations.cave);
+  
+  // Esta función se activa al presionar la imagen de fondo.
+  // Si estamos en la primera imagen y caveState es 0, se abre el modal con la conversación "caveclose1".
+  // De lo contrario, se avanza a la siguiente imagen.
+  const handleImagePress = () => {
+    if (currentImageIndex === 0 && caveState === 0) {
       setModalVisible(true);
-      setConversationContent(conversations.sign1);
-    };
+      setConversationContent(conversations.caveclose1);
+    } else if (currentImageIndex === 1 && caveState === 1) {
+      setModalVisible(true);
+      setConversationContent(conversations.caveclose2);
+    } else if (currentImageIndex === 2 && caveState === 2) {
+      setModalVisible(true);
+      setConversationContent(conversations.caveclose3);
+    } else {
+      handleNextImage();
+    }
+  };
 
   const locationName = [
     { text: "Entrada de La Cueva" },
@@ -98,12 +113,15 @@ const CaveScreen = () => {
         style={styles.backgroundImage} 
       />
       
-      {/* Botón para avanzar a la siguiente imagen */}
-      <Pressable style={styles.buttonImage} onPress={handleNextImage} />
+      {/* Al presionar la imagen se ejecuta handleImagePress */}
+      <Pressable style={styles.buttonImage} onPress={handleImagePress} />
 
       {/* SignIcon controlado igual que los demás íconos */}
       {currentImageIndex === 0 && (
-        <Pressable style={[styles.iconButton, signIconData.style]} onPress={handleOpenModal}>
+        <Pressable style={[styles.iconButton, signIconData.style]} onPress={() => {
+          setModalVisible(true);
+          setConversationContent(conversations.sign1);
+        }}>
           <signIconData.component height={signIconData.height} width={signIconData.width} />
         </Pressable>
       )}
@@ -129,8 +147,7 @@ const CaveScreen = () => {
 
       <Inventory />
       <Location text={locationName[currentLocationIndex].text} />
-     
-
+      
       {modalVisible && (
         <ConversationModal 
           visible={modalVisible}  

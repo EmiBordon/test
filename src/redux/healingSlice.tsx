@@ -13,7 +13,7 @@ export const loadHealingState = createAsyncThunk(
   }
 );
 
-interface HealingState {
+export interface HealingState {
   grapes: number;
   healthpotion: number;
   bighealthpotion: number;
@@ -24,7 +24,7 @@ const initialState: HealingState = {
   grapes: 3,
   healthpotion: 1,
   bighealthpotion: 1,
-  pills:0,
+  pills: 0,
 };
 
 const healingSlice = createSlice({
@@ -70,6 +70,15 @@ const healingSlice = createSlice({
       state.pills = initialState.pills;
       saveState(state);
     },
+
+    // ✅ Nueva función para restaurar desde backup
+    setHealingState: (state, action: PayloadAction<HealingState>) => {
+      state.grapes = action.payload.grapes;
+      state.healthpotion = action.payload.healthpotion;
+      state.bighealthpotion = action.payload.bighealthpotion;
+      state.pills = action.payload.pills;
+      saveState(state);
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(loadHealingState.fulfilled, (state, action) => {
@@ -89,7 +98,17 @@ const saveState = async (state: HealingState) => {
   }
 };
 
-export const { incrementGrapes, decrementGrapes, incrementHealthPotion, decrementHealthPotion, incrementBigHealthPotion, decrementBigHealthPotion, resetHealing 
-  ,incrementPills, decrementPills
+export const { 
+  incrementGrapes, 
+  decrementGrapes, 
+  incrementHealthPotion, 
+  decrementHealthPotion, 
+  incrementBigHealthPotion, 
+  decrementBigHealthPotion, 
+  incrementPills, 
+  decrementPills,
+  resetHealing,
+  setHealingState // 👈 nueva acción exportada
 } = healingSlice.actions;
+
 export default healingSlice.reducer;

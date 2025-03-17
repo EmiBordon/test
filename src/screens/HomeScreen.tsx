@@ -1,23 +1,31 @@
 import React, { useState } from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
-import { incrementArrows, decrementArrows, incrementWeapon, decrementWeapon } from "../redux/weaponsSlice";
-import { incrementGrapes, decrementGrapes, incrementHealthPotion, decrementHealthPotion, 
-  incrementBigHealthPotion, decrementBigHealthPotion, resetHealing, incrementPills } from "../redux/healingSlice";
-import ConversationModal from "../components/modal/conversationmodal"; 
-import { conversations } from "../components/functions/conversations"; 
+
+// Redux slices
+import { incrementGrapes, incrementHealthPotion, incrementBigHealthPotion, incrementPills, setHealingState } from "../redux/healingSlice";
+import { setMaiaState } from "../redux/maiaSlice";
+import { setWeaponsState } from "../redux/weaponsSlice";
+import { saveBackup, restoreBackup } from "../redux/backupSlice";
+
+// Otros imports que ya tenías
+import ConversationModal from "../components/modal/conversationmodal";
+import { conversations } from "../components/functions/conversations";
 import { FountainIcon, PillsIcon, CoinsIcon } from "../components/SvgExporter";
 import ResetButton from "../components/functions/resetbutton";
-import { playSound } from "../sounds/soundexporter"; // Importamos el sonido
+import { playSound } from "../sounds/soundexporter";
 import NewItemModal from "../components/modal/newitemmodal";
-import { setNotaTrue } from "../redux/agendaSlice";
-import { incrementCoins, decrementCoins } from "../redux/coinsSlice";
 
 const HomeScreen = ({ navigation }) => {
   const dispatch = useDispatch();
-
   const [modalVisible, setModalVisible] = useState(false);
   const [newItemModalVisible, setNewItemModalVisible] = useState(false);
+
+  // Obtenemos los estados que queremos guardar/restaurar
+  const healing = useSelector((state:any) => state.healing);
+  const maia = useSelector((state:any) => state.maia);
+  const weapons = useSelector((state:any) => state.weapons);
+  const backup = useSelector((state:any) => state.backup);
 
   return (
     <View style={styles.container}>
@@ -34,7 +42,6 @@ const HomeScreen = ({ navigation }) => {
         <Text style={styles.buttonText}>Nueva Partida</Text>
       </TouchableOpacity>
 
-      {/* Botón "Pruebas" que muestra el NewItemModal */}
       <TouchableOpacity
         style={styles.button}
         onPress={() => {
@@ -45,43 +52,47 @@ const HomeScreen = ({ navigation }) => {
         <Text style={styles.buttonText}>Pruebas</Text>
       </TouchableOpacity>
 
-      {/* Otros botones de ejemplo */}
+      {/* 🔵 GUARDAR ESTADOS */}
       <TouchableOpacity
         style={styles.button}
         onPress={() => {
           playSound("click");
-          dispatch(incrementCoins(300));
+          dispatch(saveBackup({ healing, maia, weapons }));
         }}
       >
-        <Text style={styles.buttonText}>Aumentar Flechas</Text>
+        <Text style={styles.buttonText}>Guardar Estados</Text>
       </TouchableOpacity>
 
+      {/* 🔵 CARGAR ESTADOS */}
       <TouchableOpacity
         style={styles.button}
         onPress={() => {
           playSound("click");
-          dispatch(decrementCoins(3));
+          if (backup.healing && backup.maia && backup.weapons) {
+            dispatch(setHealingState(backup.healing));
+            dispatch(setMaiaState(backup.maia));
+            dispatch(setWeaponsState(backup.weapons));
+          }
+          dispatch(restoreBackup()); // Solo para disparar el evento si lo necesitas
         }}
       >
-        <Text style={styles.buttonText}>Disminuir Flechas</Text>
+        <Text style={styles.buttonText}>Cargar Estados</Text>
       </TouchableOpacity>
 
       <ResetButton />
 
-      {/* Modal de conversación (se mantiene como ejemplo) */}
       <ConversationModal
         visible={modalVisible}
         onClose={() => setModalVisible(false)}
         conversation={conversations.mattconv1}
       />
 
-      {/* NewItemModal para mostrar el nuevo item */}
       <NewItemModal
         visible={newItemModalVisible}
         onClose={() => setNewItemModalVisible(false)}
         icon={<CoinsIcon height={"50"} width={"50"} />}
-        name="Monedas"
-        description="Aumentan 5 puntos de vida"
+        name="10 Monedas"
+        description=""
       />
     </View>
   );
@@ -114,12 +125,6 @@ const styles = StyleSheet.create({
     color: "#000",
     fontWeight: "bold",
     fontSize: 20,
-  },
-  weaponText: {
-    fontSize: 22,
-    fontWeight: "bold",
-    color: "#000",
-    marginTop: 15,
   },
 });
 

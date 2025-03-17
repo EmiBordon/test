@@ -13,7 +13,7 @@ export const loadCharactersState = createAsyncThunk(
   }
 );
 
-interface CharactersState {
+export interface CharactersState {
   shopgirl: number;
   baris: number;
   germis: number;

@@ -13,7 +13,7 @@ export const loadMaiaState = createAsyncThunk(
   }
 );
 
-interface MaiaState {
+export interface MaiaState {
   maiahealth: number;
   maiacurrenthealth: number;
 }
@@ -50,6 +50,13 @@ const maiaSlice = createSlice({
       state.maiacurrenthealth = Math.max(state.maiacurrenthealth - action.payload, 0);
       saveState(state);
     },
+
+    // ✅ NUEVO setMaiaState
+    setMaiaState: (state, action: PayloadAction<MaiaState>) => {
+      state.maiahealth = action.payload.maiahealth;
+      state.maiacurrenthealth = action.payload.maiacurrenthealth;
+      saveState(state);
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(loadMaiaState.fulfilled, (state, action) => {
@@ -60,7 +67,7 @@ const maiaSlice = createSlice({
   },
 });
 
-// Función para guardar el estado en AsyncStorage
+// Guardar estado en AsyncStorage
 const saveState = async (state: MaiaState) => {
   try {
     await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(state));
@@ -69,5 +76,13 @@ const saveState = async (state: MaiaState) => {
   }
 };
 
-export const { incrementMaiaHealth, decrementMaiaHealth, resetMaiaHealth, incrementMaiaCurrentHealth, decrementMaiaCurrentHealth } = maiaSlice.actions;
+export const { 
+  incrementMaiaHealth, 
+  decrementMaiaHealth, 
+  resetMaiaHealth, 
+  incrementMaiaCurrentHealth, 
+  decrementMaiaCurrentHealth,
+  setMaiaState // 👈 nueva acción agregada
+} = maiaSlice.actions;
+
 export default maiaSlice.reducer;

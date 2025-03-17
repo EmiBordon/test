@@ -1,5 +1,7 @@
 import React from 'react';
-import { Sign2Icon,MaiaHeadIcon, MattHeadIcon, Maia4HeadIcon, DianaHeadIcon, Maia2HeadIcon, Maia3HeadIcon, ShopGirlHeadIcon } from "../SvgExporter";
+import { Sign2Icon,MaiaHeadIcon, MattHeadIcon, Maia4HeadIcon, DianaHeadIcon, Maia2HeadIcon, Maia3HeadIcon, ShopGirlHeadIcon 
+  ,BoxIcon, BarisHeadIcon, GermisHeadIcon, JoxHeadIcon,GorjoxHeadIcon
+} from "../SvgExporter";
 
 export interface Conversation {
   dialogos: {
@@ -15,6 +17,12 @@ export const conversations: {
   mattconv3: Conversation;
   shopgirlconv1: Conversation;
   sign1:Conversation;
+  openbox:Conversation;
+  barisconv1:Conversation;
+  barisconv2:Conversation;
+  caveclose1:Conversation;
+  caveclose2:Conversation;
+  caveclose3:Conversation;
 } = {
   mattconv1: {
     dialogos: [
@@ -132,6 +140,130 @@ export const conversations: {
     dialogos: [
       { 
         text: "Es el baúl de Papá, Ovy tenia la llave...", 
+        svg: MaiaHeadIcon
+      },
+    ],
+  },
+  openbox: {
+    dialogos: [
+      { 
+        text: "Deseas romper la caja?", 
+        svg: BoxIcon
+      },
+    ],
+  },
+  barisconv1: {
+    dialogos: [
+      { 
+        text: "Ohh, pequeña Maia, en que puedo ayudarte?", 
+        svg: BarisHeadIcon 
+      },
+      { 
+        text: "Hola señor Baris, seguro esta enterado de lo de mi hermano, verdad?", 
+        svg: MaiaHeadIcon
+      },
+      { 
+        text: "Ohh, si por supuesto... realmente es una pena, siempre fue un buen chico.", 
+        svg: BarisHeadIcon 
+      },
+      { 
+        text: "Crei que usted lo odiaba... ", 
+        svg: MaiaHeadIcon
+      },
+      { 
+        text: "Ohh, para nada, solo era un niño un poco travieso...", 
+        svg: BarisHeadIcon 
+      },
+      { 
+        text: "Tus padres no sabian controlarlo, y el tenia una curiosa costumbre de robar en mi Bar...", 
+        svg: BarisHeadIcon 
+      },
+      { 
+        text: "Pero se que en el fondo solo fue un niño inconprendido.", 
+        svg: BarisHeadIcon 
+      },
+      { 
+        text: "Entiendo...  ", 
+        svg: MaiaHeadIcon
+      },
+      { 
+        text: "Señor Baris, yo queria pedirle un favor.", 
+        svg: MaiaHeadIcon 
+      },
+      { 
+        text: "Ohh, pequeña Maia, por supuesto, en que puedo ayudarte?", 
+        svg: BarisHeadIcon 
+      },
+      { 
+        text: "Yo necesito al menos hablar una ultima vez con Ovy...", 
+        svg: MaiaHeadIcon
+      },
+      { 
+        text: "Tengo entendido que usted hace años ayudo a obstuir los pasadizos que llevaban a los calabozos.", 
+        svg: MaiaHeadIcon
+      },
+      { 
+        text: "Ohh, pequeña Maia, no me gusta hacia donde va esta conversación.", 
+        svg: BarisHeadIcon 
+      },
+      { 
+        text: "Se lo pido por favor, necesito ir a esos pasadizos y entrar al calabozo donde tienen a Ovy.", 
+        svg: MaiaHeadIcon
+      },
+      { 
+        text: "Ohh, me va a dar algo...", 
+        svg: BarisHeadIcon 
+      },
+      { 
+        text: "...", 
+        svg: BarisHeadIcon 
+      },
+      { 
+        text: "De acuerdo...voy a acceder solo porque se que eres una gran guerrera como tus padres..", 
+        svg: BarisHeadIcon 
+      },
+      { 
+        text: "Primero deberas ir a la Cueva del pueblo, y deberas acabar con todos los bichos que se encuentran ahi.", 
+        svg: BarisHeadIcon 
+      },
+      { 
+        text: "Pero te advierto pequeña Maia, es una tarea muy arriesgada...", 
+        svg: BarisHeadIcon 
+      },
+      { 
+        text: "En caso de que aceptes, deberas volver aqui cuando hayas limpiado esa Cueva por completo, luego te dire como acceder a los pasadizos..", 
+        svg: BarisHeadIcon 
+      },
+      { 
+        text: "Se lo agradezco señor Baris.", 
+        svg: MaiaHeadIcon 
+      },
+      { 
+        text: "Ohh, dios, por favor, ten cuiado...", 
+        svg: BarisHeadIcon 
+      },
+    ],
+  },
+  barisconv2: {
+    dialogos: [
+      { 
+        text: "Ohh, pequeña Maia, la Cueva es muy peligrosa, tendras que tener mucho cuidado...", 
+        svg: BarisHeadIcon
+      },
+    ],
+  },
+  caveclose1: {
+    dialogos: [
+      { 
+        text: "No deberia entrar ahi...", 
+        svg: MaiaHeadIcon
+      },
+    ],
+  },
+  caveclose2: {
+    dialogos: [
+      { 
+        text: "Este Bicho no me deja avanzar...", 
         svg: MaiaHeadIcon
       },
     ],

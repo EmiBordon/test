@@ -1,32 +1,31 @@
 import React, { useState } from 'react';
 import { View, StyleSheet, Pressable, Alert, Image } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { MaiaIcon, MattIcon, DoorIcon, ChestCloseIcon, ArrowIcon, BarisIcon } from '../../components/SvgExporter';
+import { MaiaIcon, ArrowIcon, BarisIcon, BoxIcon, CoinsIcon } from '../../components/SvgExporter';
 import Inventory from '../../components/inventory';
 import Location from '../../components/functions/location';
 import ConversationChoiceModal from '../../components/modal/conversationchoicemodal';
+import ConversationModal from '../../components/modal/conversationmodal';
+import NewItemModal from '../../components/modal/newitemmodal';
 import { conversations, Conversation } from '../../components/functions/conversations';
 import { useSelector, useDispatch } from 'react-redux';
-import { setMattState } from '../../redux/mattSlice';
+import { incrementCoins } from '../../redux/coinsSlice';
+import { setBarboxFalse } from '../../redux/boxesSlice';
+import { setBaris } from '../../redux/charactersSlice';
+import { setCave } from '../../redux/locationsSlice';
 
 const icons = [
   { 
     component: BarisIcon, 
     height: 150, 
     width: 150, 
-    style: { top: '40%', left: '40%' } 
+    style: { top: '43%', left: '40%' } 
   },
   { 
-    component: DoorIcon, 
-    height: 150, 
-    width: 150, 
-    style: { top: '8%', left: '30%' } 
-  },
-  { 
-    component: ChestCloseIcon, 
+    component: BoxIcon, 
     height: 100, 
     width: 100, 
-    style: { top: '30%', left: '70%' } 
+    style: { top: '45%', left: '30%' } 
   }
 ];
 
@@ -34,10 +33,13 @@ const BarScreen = () => {
   const navigation = useNavigation();
   const [currentIconIndex, setCurrentIconIndex] = useState(0);
   const [modalVisible, setModalVisible] = useState(false);
+  const [modal2Visible, setModal2Visible] = useState(false);
   const [conversationContent, setConversationContent] = useState<Conversation | null>(null);
-  
+  const [newItemModalVisible, setNewItemModalVisible] = useState(false);
+
   const dispatch = useDispatch();
-  const mattState = useSelector((state: any) => state.matt.value);
+  const barboxState = useSelector((state: any) => state.boxes.barbox);
+  const barisState = useSelector((state: any) => state.characters.baris);
 
   const handleNextIcon = () => {
     setCurrentIconIndex((prevIndex) => (prevIndex + 1) % icons.length);
@@ -47,36 +49,62 @@ const BarScreen = () => {
     setCurrentIconIndex((prevIndex) => (prevIndex - 1 + icons.length) % icons.length);
   };
 
-  // handleAccept navega a BattleScreen y despacha setMattState(2)
+  // En handleAccept, si la conversación actual es de openbox se muestra el NewItemModal,
+  // se incrementan las monedas y se actualiza el estado de barbox a false.
   const handleAccept = () => {
-    dispatch(setMattState(2));
-    navigation.replace('BattleScreen');
-  };
-
-  const handleIconPress = () => {
-    const { component: CurrentIcon } = icons[currentIconIndex];
-    if (CurrentIcon === MattIcon) {
-      if (mattState === 0) {
-        setConversationContent(conversations.mattconv1);
-        dispatch(setMattState(1));
-        setModalVisible(true);
-      } else if (mattState === 1) {
-        setConversationContent(conversations.mattconv2);
-        setModalVisible(true);
-      }
+    if (conversationContent === conversations.openbox) {
+      setModalVisible(false);
+      setNewItemModalVisible(true);
+      dispatch(incrementCoins(10));
+      dispatch(setBarboxFalse());
     } else {
-      Alert.alert('Item seleccionado');
+      // Otra lógica para distintas conversaciones, si es necesario.
     }
   };
 
+  // En handleIconPress, si el ícono actual es BoxIcon y barboxState es true se abre el modal.
+  // Si es BoxIcon y barboxState es false, no hace nada.
+  const handleIconPress = () => {
+    const { component: CurrentIcon } = icons[currentIconIndex];
+    if (CurrentIcon === BoxIcon) {
+      if (barboxState) {
+        setConversationContent(conversations.openbox);
+        setModalVisible(true);
+      } else {
+        // El icono está "desaparecido", por lo que no se ejecuta acción.
+      }
+    } else if (CurrentIcon === BarisIcon) {
+      if (barisState === 0){
+        setConversationContent(conversations.barisconv1);
+        setModal2Visible(true);
+        dispatch(setBaris(1));
+        dispatch(setCave(1));
+      } else{
+        setConversationContent(conversations.barisconv2);
+        setModal2Visible(true);
+      }
+    }
+  };
+
+  // Obtenemos la información del ícono actual
   const { component: CurrentIcon, height, width, style: iconStyle } = icons[currentIconIndex];
+
+  // La imagen de fondo depende del tipo de ícono (BarisIcon: bar.jpg, BoxIcon: bardoor.jpg)
+  const backgroundImage = (CurrentIcon === BarisIcon)
+    ? require('../../images/bar.jpg')
+    : require('../../images/bardoor.jpg');
 
   return (
     <View style={styles.container}>
-      <Image source={require('../../images/bar.jpg')} style={styles.backgroundImage} />
+      <Image source={backgroundImage} style={styles.backgroundImage} />
 
       <Pressable style={[styles.iconButton, iconStyle]} onPress={handleIconPress}>
-        <CurrentIcon height={height} width={width} />
+        {
+          // Si es BoxIcon y barboxState es false, no renderizamos el ícono
+          (CurrentIcon === BoxIcon && !barboxState)
+            ? null
+            : <CurrentIcon height={height} width={width} />
+        }
       </Pressable>
 
       <View style={styles.sideIcons}>
@@ -94,6 +122,24 @@ const BarScreen = () => {
 
       <Inventory />
       <Location text="Bar" />
+
+      {/* NewItemModal para mostrar el nuevo ítem */}
+      <NewItemModal
+        visible={newItemModalVisible}
+        onClose={() => setNewItemModalVisible(false)}
+        icon={<CoinsIcon height="50" width="50" />}
+        name="10 Monedas"
+        description=""
+      />
+
+      {modal2Visible && (
+        <ConversationModal 
+          visible={modal2Visible}  
+          conversation={conversationContent}
+          onClose={() => setModal2Visible(false)}
+        />
+      )}  
+
 
       {modalVisible && (
         <ConversationChoiceModal 

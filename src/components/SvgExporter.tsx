@@ -81,6 +81,10 @@ import QuestionSvg from '../assets/question.svg';
 import ShopGirlHeadSvg from '../assets/shopgirlhead.svg';
 import SignSvg from '../assets/sign.svg';
 import Sign2Svg from '../assets/sign2.svg';
+import BarisHeadSvg from '../assets/barishead.svg';
+import GermisHeadSvg from '../assets/germishead.svg';
+import JoxHeadSvg from '../assets/joxhead.svg';
+import GorjoxHeadSvg from '../assets/gorjoxhead.svg';
 
 const ArrowIcon = (props: any) => <ArrowSvg {...props} />;
 const ChestOpenIcon = (props: any) => <ChestOpenSvg {...props} />;
@@ -164,6 +168,10 @@ const QuestionIcon = (props: any) => <QuestionSvg {...props} />;
 const ShopGirlHeadIcon = (props: any) => <ShopGirlHeadSvg {...props} />;
 const SignIcon = (props: any) => <SignSvg {...props} />;
 const Sign2Icon = (props: any) => <Sign2Svg {...props} />;
+const BarisHeadIcon = (props: any) => <BarisHeadSvg {...props} />;
+const GermisHeadIcon = (props: any) => <GermisHeadSvg {...props} />;
+const JoxHeadIcon = (props: any) => <JoxHeadSvg {...props} />;
+const GorjoxHeadIcon = (props: any) => <GorjoxHeadSvg {...props} />;
 
 export { 
   ArrowIcon, 
@@ -248,4 +256,8 @@ export {
   ShopGirlHeadIcon,
   SignIcon,
   Sign2Icon,
+  BarisHeadIcon,
+  GermisHeadIcon,
+  JoxHeadIcon,
+  GorjoxHeadIcon,
 };

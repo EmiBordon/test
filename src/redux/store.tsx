@@ -2,19 +2,35 @@
 import { configureStore, combineReducers } from '@reduxjs/toolkit';
 import { persistStore, persistReducer } from 'redux-persist';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+
+// Imports de tus slices
 import mattReducer from './mattSlice';
 import maiaReducer from './maiaSlice';
-import weaponsReducer from './weaponsSlice'; // Importamos weaponsSlice
-import healingReducer from './healingSlice'; 
+import weaponsReducer from './weaponsSlice';
+import healingReducer from './healingSlice';
 import agendaReducer from './agendaSlice';
-import coinsReducer from './coinsSlice'
-import charactersReducer from './charactersSlice'
+import coinsReducer from './coinsSlice';
+import charactersReducer from './charactersSlice';
+import boxesReducer from './boxesSlice';
+import locationsReducer from './locationsSlice';
+import backupReducer from './backupSlice'; // 👈 NUEVO
 
-// Configuración del persist
+// Configuración de persist
 const persistConfig = {
   key: 'root',
   storage: AsyncStorage,
-  whitelist: ['matt', 'maia', 'weapons','healing', 'agenda','coins', 'characters'], // Agregamos 'weapons' a la lista de persistencia
+  whitelist: [
+    'matt', 
+    'maia', 
+    'weapons', 
+    'healing', 
+    'agenda',
+    'coins', 
+    'characters', 
+    'boxes',
+    'locations'
+  ],
+  // No incluimos 'backup' ya que es un snapshot temporal y no debe persistir
 };
 
 // Reducer combinado
@@ -23,9 +39,12 @@ const rootReducer = combineReducers({
   maia: maiaReducer,
   weapons: weaponsReducer,
   healing: healingReducer,
-  agenda: agendaReducer, 
+  agenda: agendaReducer,
   coins: coinsReducer,
   characters: charactersReducer,
+  boxes: boxesReducer,
+  locations: locationsReducer,
+  backup: backupReducer, // 👈 agregado aquí
 });
 
 // Reducer persistente
@@ -36,7 +55,7 @@ export const store = configureStore({
   reducer: persistedReducer,
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
-      serializableCheck: false, // Deshabilita la verificación de valores no serializables
+      serializableCheck: false,
     }),
 });
 

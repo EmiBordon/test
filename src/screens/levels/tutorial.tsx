@@ -92,7 +92,7 @@ const TutorialScreen = () => {
       </View>
 
       <Inventory/>
-      <Location text="Casa de los River" />
+      <Location text="Casa" />
 
    
 

@@ -13,7 +13,7 @@ export const loadCoinsState = createAsyncThunk(
   }
 );
 
-interface CoinsState {
+export interface CoinsState {
   coins: number;
 }
 

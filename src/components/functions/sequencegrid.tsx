@@ -45,7 +45,7 @@ const RandomSequenceGrid: React.FC<RandomSequenceGridProps> = ({ sequenceLength,
     // Para cada número de la secuencia se programa su encendido y apagado.
     arr.forEach((num, index) => {
       const onTime = index * delay * 1.8; // momento para encender
-      const offTime = onTime + delay;   // momento para apagar
+      const offTime = onTime + delay;      // momento para apagar
       const t1 = setTimeout(() => {
         setCurrentLit(num);
       }, onTime);
@@ -54,10 +54,10 @@ const RandomSequenceGrid: React.FC<RandomSequenceGridProps> = ({ sequenceLength,
       }, offTime);
       timeouts.push(t1, t2);
     });
-    // Al finalizar la secuencia, se oculta la cuadrícula animada y se habilita la interactiva.
+    // Ajustamos el timeout final para que se ejecute al apagarse el último patrón.
     const finalTimeout = setTimeout(() => {
       setSequenceComplete(true);
-    }, arr.length * delay * 1.5);
+    }, (arr.length - 1) * delay * 1.8 + delay);
     timeouts.push(finalTimeout);
   };
 
@@ -90,35 +90,30 @@ const RandomSequenceGrid: React.FC<RandomSequenceGridProps> = ({ sequenceLength,
 
   return (
     <View style={styles.container}>
-      
       {/* Cuadrícula animada: se muestra solo si la secuencia no ha finalizado */}
       {!sequenceComplete && (
-          <View style={styles.grid}>
-            <Text style={styles.title}>   PATRON DE ATAQUE</Text>
+        <View style={styles.grid}>
+          <Text style={styles.title}>   PATRON DE ATAQUE</Text>
           {squares.map(num => {
             const isLit = currentLit === num;
             return (
-              <View key={num} style={[styles.square, isLit && styles.litSquare]}>
-              </View>
+              <View key={num} style={[styles.square, isLit && styles.litSquare]} />
             );
           })}
         </View>
       )}
       
-      
-      
       {/* Cuadrícula interactiva: se muestra cuando la animación ha finalizado */}
       {sequenceComplete && (
         <View style={styles.container}>
           <View style={styles.grid}>
-          <Text style={styles.title}>REPRODUCE EL PATRON</Text>
+            <Text style={styles.title}>REPRODUCE EL PATRON</Text>
             {squares.map(num => (
               <TouchableOpacity
                 key={num}
                 style={styles.square}
                 onPress={() => handleSquarePress(num)}
-              >
-              </TouchableOpacity>
+              />
             ))}
           </View>
         </View>
@@ -131,7 +126,6 @@ const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
     padding: 20,
-    
   },
   title: {
     fontSize: 20,
@@ -155,7 +149,6 @@ const styles = StyleSheet.create({
   litSquare: {
     backgroundColor: 'black',
   },
- 
 });
 
 export default RandomSequenceGrid;

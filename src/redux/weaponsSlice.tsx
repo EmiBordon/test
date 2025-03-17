@@ -1,8 +1,15 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // Claves de almacenamiento en AsyncStorage
 const STORAGE_KEY = 'weaponsState';
+
+// Interface del estado
+export interface WeaponsState {
+  currentWeapon: number;
+  crossbow: boolean;
+  arrows: number;
+}
 
 // Función para cargar el estado guardado
 export const loadWeaponsState = createAsyncThunk(
@@ -13,7 +20,8 @@ export const loadWeaponsState = createAsyncThunk(
   }
 );
 
-const initialState = {
+// Estado inicial
+const initialState: WeaponsState = {
   currentWeapon: 0,
   crossbow: false,
   arrows: 6,
@@ -31,11 +39,11 @@ const weaponsSlice = createSlice({
       if (state.currentWeapon > 0) state.currentWeapon -= 1;
       saveState(state);
     },
-    incrementArrows: (state, action) => {
+    incrementArrows: (state, action: PayloadAction<number>) => {
       state.arrows += action.payload;
       saveState(state);
     },
-    decrementArrows: (state, action) => {
+    decrementArrows: (state, action: PayloadAction<number>) => {
       state.arrows = Math.max(0, state.arrows - action.payload);
       saveState(state);
     },
@@ -45,6 +53,14 @@ const weaponsSlice = createSlice({
     },
     resetState: (state) => {
       Object.assign(state, initialState);
+      saveState(state);
+    },
+
+    // ✅ NUEVO setWeaponsState
+    setWeaponsState: (state, action: PayloadAction<WeaponsState>) => {
+      state.currentWeapon = action.payload.currentWeapon;
+      state.crossbow = action.payload.crossbow;
+      state.arrows = action.payload.arrows;
       saveState(state);
     },
   },
@@ -58,7 +74,7 @@ const weaponsSlice = createSlice({
 });
 
 // Guardar estado en AsyncStorage
-const saveState = async (state) => {
+const saveState = async (state: WeaponsState) => {
   try {
     await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(state));
   } catch (error) {
@@ -66,13 +82,15 @@ const saveState = async (state) => {
   }
 };
 
+// Exports
 export const { 
   incrementWeapon, 
   decrementWeapon, 
   incrementArrows, 
   decrementArrows, 
   activateCrossbow, 
-  resetState 
+  resetState,
+  setWeaponsState // 👈 nueva acción
 } = weaponsSlice.actions;
 
 export default weaponsSlice.reducer;
