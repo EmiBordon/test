@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import { Modal, View, Text, TouchableOpacity, StyleSheet } from 'react-native';
-import { PaperIcon } from '../SvgExporter'; // Asegúrate de que la ruta sea la correcta
+import { Modal, View, Text, TouchableOpacity, StyleSheet, Image } from 'react-native';
+import { PaperIcon } from '../SvgExporter';
 import { useSelector } from 'react-redux';
-import { selectVisibleNotas } from '../../redux/agendaSlice'; // Actualiza la ruta según tu estructura
-import { NOTES, Note } from '../../components/functions/notes'; // Actualiza la ruta según corresponda
+import { selectVisibleNotas } from '../../redux/agendaSlice';
+import { NOTES, Note } from '../../components/functions/notes';
 
 interface NotesModalProps {
   visible: boolean;
@@ -26,7 +26,11 @@ const NotesModal: React.FC<NotesModalProps> = ({ visible, onClose }) => {
   const renderDetailView = () => (
     <View style={styles.modalContainer}>
       <Text style={styles.detailTitle}>{selectedNote?.title}</Text>
-      <Text style={styles.detailContent}>{selectedNote?.content}</Text>
+      {selectedNote?.image ? (
+        <Image source={selectedNote.image} style={styles.detailImage} resizeMode="contain" />
+      ) : (
+        <Text style={styles.detailContent}>{selectedNote?.content}</Text>
+      )}
       <TouchableOpacity style={styles.backButton} onPress={() => setSelectedNote(null)}>
         <Text style={styles.backButtonText}>Atrás</Text>
       </TouchableOpacity>
@@ -153,8 +157,12 @@ const styles = StyleSheet.create({
     color: '#333',
     flex: 1,
   },
+  detailImage: {
+    width: '100%',
+    height: '85%',
+    borderRadius: 10,
+  },
   backButton: {
-    marginTop: '3%',
     backgroundColor: 'black',
     paddingVertical: '2%',
     paddingHorizontal: '5%',

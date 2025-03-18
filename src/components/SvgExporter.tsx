@@ -2,11 +2,17 @@ import React from 'react';
 import ArrowSvg from '../assets/arrow.svg';
 import ChestOpenSvg from '../assets/chest-open.svg';
 import ChestCloseSvg from '../assets/chest-close.svg';
+import CodeChestSvg from '../assets/codechest.svg';
+import KeyChestSvg from '../assets/keychest.svg';
 import DoorHandleSvg from '../assets/door-handle.svg';
 import DoorSvg from '../assets/door.svg';
 import DoorOpenSvg from '../assets/door-open.svg';
 import Key1Svg from '../assets/key1.svg';
 import Key2Svg from '../assets/key2.svg';
+import Key3Svg from '../assets/key3.svg';
+import Key4Svg from '../assets/key4.svg';
+import Safe1Svg from '../assets/safe1.svg';
+import Safe2Svg from '../assets/safe2.svg';
 import MaiaSvg from '../assets/maia.svg';
 import Maia2Svg from '../assets/maia2.svg';
 import Maia3Svg from '../assets/maia3.svg';
@@ -86,15 +92,22 @@ import BarisHeadSvg from '../assets/barishead.svg';
 import GermisHeadSvg from '../assets/germishead.svg';
 import JoxHeadSvg from '../assets/joxhead.svg';
 import GorjoxHeadSvg from '../assets/gorjoxhead.svg';
+import AccessCardSvg from '../assets/accesscard.svg';
 
 const ArrowIcon = (props: any) => <ArrowSvg {...props} />;
 const ChestOpenIcon = (props: any) => <ChestOpenSvg {...props} />;
 const ChestCloseIcon = (props: any) => <ChestCloseSvg {...props} />;
+const CodeChestIcon = (props: any) => <CodeChestSvg {...props} />;
+const KeyChestIcon = (props: any) => <KeyChestSvg {...props} />;
 const DoorHandleIcon = (props: any) => <DoorHandleSvg {...props} />;
 const DoorIcon = (props: any) => <DoorSvg {...props} />;
 const DoorOpenIcon = (props: any) => <DoorOpenSvg {...props} />;
 const Key1Icon = (props: any) => <Key1Svg {...props} />;
 const Key2Icon = (props: any) => <Key2Svg {...props} />;
+const Key3Icon = (props: any) => <Key3Svg {...props} />;
+const Key4Icon = (props: any) => <Key4Svg {...props} />;
+const Safe1Icon = (props: any) => <Safe1Svg {...props} />;
+const Safe2Icon = (props: any) => <Safe2Svg {...props} />;
 const MaiaIcon = (props: any) => <MaiaSvg {...props} />;
 const Maia2Icon = (props: any) => <Maia2Svg {...props} />;
 const Maia3Icon = (props: any) => <Maia3Svg {...props} />;
@@ -174,6 +187,7 @@ const BarisHeadIcon = (props: any) => <BarisHeadSvg {...props} />;
 const GermisHeadIcon = (props: any) => <GermisHeadSvg {...props} />;
 const JoxHeadIcon = (props: any) => <JoxHeadSvg {...props} />;
 const GorjoxHeadIcon = (props: any) => <GorjoxHeadSvg {...props} />;
+const AccessCardIcon = (props: any) => <AccessCardSvg {...props} />;
 
 export { 
   ArrowIcon, 
@@ -263,4 +277,11 @@ export {
   JoxHeadIcon,
   GorjoxHeadIcon,
   Shield2Icon,
+  Safe1Icon,
+  Safe2Icon,
+  Key3Icon,
+  Key4Icon,
+  AccessCardIcon,
+  CodeChestIcon,
+  KeyChestIcon,
 };

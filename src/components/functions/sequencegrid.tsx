@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, Dimensions } from 'react-native';
 import { TouchableOpacity } from 'react-native';
 import ShieldIcon from '../shieldicon';
+import { font} from './fontsize';
 
 const { width } = Dimensions.get('window');
 const CONTAINER_WIDTH = width * 0.58;
@@ -71,7 +72,7 @@ const RandomSequenceGrid: React.FC<RandomSequenceGridProps> = ({ sequenceLength,
     <View style={styles.container}>
       {!sequenceComplete && (
         <View style={styles.grid}>
-          <Text style={styles.title}>PATRON DE ATAQUE</Text>
+          <Text style={styles.title}>RECUERDA EL PATRON</Text>
           {squares.map(num => (
             <View key={num} style={styles.square}>
               <ShieldIcon 
@@ -113,24 +114,22 @@ const RandomSequenceGrid: React.FC<RandomSequenceGridProps> = ({ sequenceLength,
 const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
-    width: '80%',
-    height: '30%',
+    width: '60%',
+    height: '35%',
   },
   title: {
-    fontSize: 18,
-    marginBottom: 10,
+    fontSize: font(18),
+    marginBottom: "5%",
   },
   grid: {
     width: CONTAINER_WIDTH,
     flexDirection: 'row',
     flexWrap: 'wrap',
-    top: "15%",
+    top: "5%",
   },
   square: {
     width: SQUARE_SIZE,
     height: SQUARE_SIZE,
-    alignItems: 'center',
-    justifyContent: 'center',
   },
 });
 

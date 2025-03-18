@@ -8,19 +8,23 @@ import { setMaiaState } from "../redux/maiaSlice";
 import { setWeaponsState } from "../redux/weaponsSlice";
 import { saveBackup, restoreBackup } from "../redux/backupSlice";
 
-// Otros imports que ya tenías
+// Otros imports
 import ConversationModal from "../components/modal/conversationmodal";
 import { conversations } from "../components/functions/conversations";
 import { FountainIcon, PillsIcon, CoinsIcon } from "../components/SvgExporter";
 import ResetButton from "../components/functions/resetbutton";
 import { playSound } from "../sounds/soundexporter";
-// Se importa el SafeModal
-import SafeModal from "../components/modal/safemodal";
+// Importamos nuestro CodeModal
+import CodeModal from "../components/modal/codemodal";
 
-const HomeScreen = ({ navigation }) => {
+interface HomeScreenProps {
+  navigation: any;
+}
+
+const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
   const dispatch = useDispatch();
-  const [modalVisible, setModalVisible] = useState(false);
-  const [safeModalVisible, setSafeModalVisible] = useState(false);
+  const [modalVisible, setModalVisible] = useState<boolean>(false);
+  const [codeModalVisible, setCodeModalVisible] = useState<boolean>(false);
 
   // Obtenemos los estados que queremos guardar/restaurar
   const healing = useSelector((state: any) => state.healing);
@@ -47,7 +51,7 @@ const HomeScreen = ({ navigation }) => {
         style={styles.button}
         onPress={() => {
           playSound("click");
-          setSafeModalVisible(true);
+          setCodeModalVisible(true);
         }}
       >
         <Text style={styles.buttonText}>Pruebas</Text>
@@ -88,11 +92,10 @@ const HomeScreen = ({ navigation }) => {
         conversation={conversations.mattconv1}
       />
 
-      {/* Se integra el SafeModal con el código 3409 */}
-      <SafeModal
-        visible={safeModalVisible}
-        correctCode="3409"
-        onClose={() => setSafeModalVisible(false)}
+      <CodeModal
+        visible={codeModalVisible}
+        codigo="381547260"
+        onClose={() => setCodeModalVisible(false)}
       />
     </View>
   );
