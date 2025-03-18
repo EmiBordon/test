@@ -14,18 +14,19 @@ import { conversations } from "../components/functions/conversations";
 import { FountainIcon, PillsIcon, CoinsIcon } from "../components/SvgExporter";
 import ResetButton from "../components/functions/resetbutton";
 import { playSound } from "../sounds/soundexporter";
-import NewItemModal from "../components/modal/newitemmodal";
+// Se importa el SafeModal
+import SafeModal from "../components/modal/safemodal";
 
 const HomeScreen = ({ navigation }) => {
   const dispatch = useDispatch();
   const [modalVisible, setModalVisible] = useState(false);
-  const [newItemModalVisible, setNewItemModalVisible] = useState(false);
+  const [safeModalVisible, setSafeModalVisible] = useState(false);
 
   // Obtenemos los estados que queremos guardar/restaurar
-  const healing = useSelector((state:any) => state.healing);
-  const maia = useSelector((state:any) => state.maia);
-  const weapons = useSelector((state:any) => state.weapons);
-  const backup = useSelector((state:any) => state.backup);
+  const healing = useSelector((state: any) => state.healing);
+  const maia = useSelector((state: any) => state.maia);
+  const weapons = useSelector((state: any) => state.weapons);
+  const backup = useSelector((state: any) => state.backup);
 
   return (
     <View style={styles.container}>
@@ -46,7 +47,7 @@ const HomeScreen = ({ navigation }) => {
         style={styles.button}
         onPress={() => {
           playSound("click");
-          setNewItemModalVisible(true);
+          setSafeModalVisible(true);
         }}
       >
         <Text style={styles.buttonText}>Pruebas</Text>
@@ -73,7 +74,7 @@ const HomeScreen = ({ navigation }) => {
             dispatch(setMaiaState(backup.maia));
             dispatch(setWeaponsState(backup.weapons));
           }
-          dispatch(restoreBackup()); // Solo para disparar el evento si lo necesitas
+          dispatch(restoreBackup());
         }}
       >
         <Text style={styles.buttonText}>Cargar Estados</Text>
@@ -87,12 +88,11 @@ const HomeScreen = ({ navigation }) => {
         conversation={conversations.mattconv1}
       />
 
-      <NewItemModal
-        visible={newItemModalVisible}
-        onClose={() => setNewItemModalVisible(false)}
-        icon={<CoinsIcon height={"50"} width={"50"} />}
-        name="10 Monedas"
-        description=""
+      {/* Se integra el SafeModal con el código 3409 */}
+      <SafeModal
+        visible={safeModalVisible}
+        correctCode="3409"
+        onClose={() => setSafeModalVisible(false)}
       />
     </View>
   );

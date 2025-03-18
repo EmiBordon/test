@@ -157,6 +157,7 @@ const MoonTear: React.FC<MoonTearProps> = ({
     const newInput = [...userInput, input];
     setUserInput(newInput);
 
+    // Validar cada entrada del usuario
     for (let i = 0; i < newInput.length; i++) {
       if (newInput[i] !== pattern[i].type) {
         onResult(false);
@@ -164,9 +165,12 @@ const MoonTear: React.FC<MoonTearProps> = ({
         return;
       }
     }
+    // Si la secuencia es correcta y se completó, esperar un momento para mostrar el último indicador en negro
     if (newInput.length === pattern.length) {
-      onResult(true);
-      setPhase('init');
+      setTimeout(() => {
+        onResult(true);
+        setPhase('init');
+      }, 250);
     }
   };
 
@@ -249,8 +253,8 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   progressRect: {
-    width: 35,
-    height: 15,
+    width: '6%',
+    height: '600%',
     borderWidth: 1,
     borderColor: 'black',
     marginHorizontal: 5,

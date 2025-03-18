@@ -29,12 +29,12 @@ const maiaSlice = createSlice({
   reducers: {
     incrementMaiaHealth: (state, action: PayloadAction<number>) => {
       state.maiahealth += action.payload;
-      state.maiacurrenthealth = Math.min(state.maiacurrenthealth, state.maiahealth);
+      state.maiacurrenthealth = state.maiahealth; // Se iguala al nuevo valor de maiahealth
       saveState(state);
     },
     decrementMaiaHealth: (state, action: PayloadAction<number>) => {
       state.maiahealth = Math.max(state.maiahealth - action.payload, 0);
-      state.maiacurrenthealth = Math.min(state.maiacurrenthealth, state.maiahealth);
+      state.maiacurrenthealth = state.maiahealth; // Se iguala al nuevo valor de maiahealth
       saveState(state);
     },
     resetMaiaHealth: (state) => {
@@ -50,14 +50,12 @@ const maiaSlice = createSlice({
       state.maiacurrenthealth = Math.max(state.maiacurrenthealth - action.payload, 0);
       saveState(state);
     },
-
-    // ✅ NUEVO setMaiaState
     setMaiaState: (state, action: PayloadAction<MaiaState>) => {
       state.maiahealth = action.payload.maiahealth;
       state.maiacurrenthealth = action.payload.maiacurrenthealth;
       saveState(state);
     },
-  },
+},
   extraReducers: (builder) => {
     builder.addCase(loadMaiaState.fulfilled, (state, action) => {
       if (action.payload) {

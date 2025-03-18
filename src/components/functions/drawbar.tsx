@@ -125,22 +125,22 @@ const DrawBar: React.FC<DrawBarProps> = ({ levels, duration, onResult }) => {
 
 const styles = StyleSheet.create({
   container: {
-    padding: 20,
+    padding: '6%',
     alignItems: 'center',
     backgroundColor: 'rgba(0, 0, 0, 0)',
   },
   levelText: {
-    marginBottom: 10,
-    fontSize: 16,
+    marginBottom: '3%',
+    fontSize: 18,
     fontWeight: 'bold',
   },
   bar: {
     width: CONTAINER_WIDTH,
-    height: 10,
+    height: '6%',
     backgroundColor: '#ddd',
     borderRadius: 5,
     overflow: 'hidden',
-    marginBottom: 20,
+    marginBottom: '5%',
   },
   targetZone: {
     position: 'absolute',
@@ -153,10 +153,10 @@ const styles = StyleSheet.create({
     borderRadius: BALL_SIZE / 2,
     backgroundColor: 'black',
     position: 'absolute',
-    top: -5,
+    //top: '7%',
   },
   button: {
-    padding: 10,
+    padding: '3%',
     backgroundColor: 'black',
     borderRadius: 5,
     marginTop: '20%',

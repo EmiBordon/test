@@ -131,7 +131,7 @@ export const conversations: {
   sign1: {
     dialogos: [
       { 
-        text: "PELIGRO!                      ESTA PROHIBIDO EL INGRESO!", 
+        text: "PELIGRO!!!", 
         svg: Sign2Icon
       },
     ],

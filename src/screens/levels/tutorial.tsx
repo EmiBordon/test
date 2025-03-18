@@ -1,6 +1,5 @@
-// TutorialScreen.tsx
-import React, { useState } from 'react';
-import { View, StyleSheet, Pressable, Alert, Image } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, StyleSheet, Pressable, Image, BackHandler } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { MaiaIcon, MattIcon, DoorIcon, ChestCloseIcon, ArrowIcon } from '../../components/SvgExporter';
 import Inventory from '../../components/inventory';
@@ -10,7 +9,6 @@ import ConversationChoiceModal from '../../components/modal/conversationchoicemo
 import { conversations, Conversation } from '../../components/functions/conversations';
 import { useSelector, useDispatch } from 'react-redux';
 import { setMattState } from '../../redux/mattSlice';
-
 
 const icons = [
   { 
@@ -37,6 +35,15 @@ const TutorialScreen = () => {
   const dispatch = useDispatch();
   const mattState = useSelector((state: any) => state.matt.value);
 
+  // Bloquear botón "back" físico
+  useEffect(() => {
+    const backHandler = BackHandler.addEventListener(
+      'hardwareBackPress',
+      () => true // bloquea el back
+    );
+    return () => backHandler.remove();
+  }, []);
+
   const handleNextIcon = () => {
     setCurrentIconIndex((prevIndex) => (prevIndex + 1) % icons.length);
   };
@@ -45,7 +52,6 @@ const TutorialScreen = () => {
     setCurrentIconIndex((prevIndex) => (prevIndex - 1 + icons.length) % icons.length);
   };
 
-  // handleAccept navega a BattleScreen y despacha setMattState(2)
   const handleAccept = () => {
     dispatch(setMattState(2));
     navigation.replace('BattleScreen');
@@ -91,10 +97,8 @@ const TutorialScreen = () => {
         <MaiaIcon height={160} width={160} />
       </View>
 
-      <Inventory/>
+      <Inventory />
       <Location text="Casa" />
-
-   
 
       {modalVisible && (
         <ConversationChoiceModal 
@@ -104,7 +108,7 @@ const TutorialScreen = () => {
           onAccept={handleAccept}
         />
       )}
-       {modal2Visible && (
+      {modal2Visible && (
         <ConversationModal 
           visible={modal2Visible}  
           conversation={conversationContent}
@@ -148,7 +152,6 @@ const styles = StyleSheet.create({
     left: '50%',
     transform: [{ translateX: -80 }],
   },
- 
 });
 
 export default TutorialScreen;

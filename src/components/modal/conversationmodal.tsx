@@ -70,7 +70,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   modalContainer: {
-    width: '95%',          // Ocupa el 95% del ancho de la pantalla
+    width: '100%',          // Ocupa el 95% del ancho de la pantalla
     backgroundColor: '#fff', // Fondo blanco
     borderTopLeftRadius: 10, // Se usan números en propiedades que no admiten porcentajes
     borderTopRightRadius: 10,
@@ -96,7 +96,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
   },
   button: {
-    marginTop: '5%',
+    marginTop: '3%',
     //backgroundColor: 'red', // Botón negro
     paddingVertical: 10,     // Los padding en vertical se definen con números
     borderRadius: 5,

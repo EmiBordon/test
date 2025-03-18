@@ -96,7 +96,11 @@ const BattleScreen: React.FC = () => {
   };
 
   const handleDefenseResult = (result: boolean) => {
-    setShowRandomSequence(false);
+    if (enemyCurrentHealth % 2 === 0) {
+      setShowRandomSequence(false);
+    } else {
+      setShowMoonTear(false);
+    }
     if (!result) {
       dispatch(decrementMaiaCurrentHealth(1));
       setShowBrokenHearthMaia(true);
@@ -124,8 +128,13 @@ const BattleScreen: React.FC = () => {
   };
 
   const handleDefensePress = () => {
-    setShowDefenderButton(false);
-    setShowRandomSequence(true);
+    if (enemyCurrentHealth % 2 === 0) {
+      setShowDefenderButton(false);
+      setShowRandomSequence(true);
+    } else {
+      setShowDefenderButton(false);
+      setShowMoonTear(true);
+    }
   };
 
   // Al presionar el botón OBJETO se abre el HealingModal
@@ -149,9 +158,9 @@ const BattleScreen: React.FC = () => {
         </View>
         <View style={styles.enemyContainer}>
           {showDamagedEnemy ? (
-            <ShakyMattIcon ref={enemyIconRef} height={220} width={220} />
+            <ShakyMattIcon ref={enemyIconRef} height={200} width={200} />
           ) : (
-            <MattIcon height={220} width={220} />
+            <MattIcon height={200} width={200} />
           )}
         </View>
       </View>
@@ -239,7 +248,7 @@ const BattleScreen: React.FC = () => {
             moonIcon={MoonIcon} 
             tearIcon={TearIcon} 
             difficulty={3} 
-            patternLength={4} 
+            patternLength={3} 
             onResult={handleDefenseResult} 
           />
         </View>
@@ -247,7 +256,7 @@ const BattleScreen: React.FC = () => {
       {showRandomSequence && (
         <View style={styles.overlay}>
           <RandomSequenceGrid
-            sequenceLength={5} 
+            sequenceLength={3} 
             onResult={handleDefenseResult} 
           />
         </View>
@@ -300,7 +309,7 @@ const styles = StyleSheet.create({
   actionButtonsContainer: {
     position: 'absolute',
     bottom: "5%",
-    left: "5%",
+    left: "2%",
     flexDirection: 'row',
     alignItems: 'center',
   },
@@ -322,7 +331,7 @@ const styles = StyleSheet.create({
   maiaContainer: {
     position: 'absolute',
     bottom: "5%",
-    right: "5%",
+    right: "3%",
     alignItems: 'center',
   },
   maiaIconBox: {

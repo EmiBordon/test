@@ -61,6 +61,7 @@ import BrokenHearthSvg from '../assets/brokenhearth.svg';
 import TearSvg from '../assets/tear.svg';
 import MoonSvg from '../assets/moon.svg';
 import ShieldSvg from '../assets/shield.svg';
+import Shield2Svg from '../assets/shield2.svg';
 import BrokenShieldSvg from '../assets/brokenshield.svg';
 import GarbageSvg from '../assets/garbage.svg';
 import WhiteSwordSvg from '../assets/whitesword.svg';
@@ -148,6 +149,7 @@ const BrokenHearthIcon = (props: any) => <BrokenHearthSvg {...props} />;
 const TearIcon = (props: any) => <TearSvg {...props} />;
 const MoonIcon = (props: any) => <MoonSvg {...props} />;
 const ShieldIcon = (props: any) => <ShieldSvg {...props} />;
+const Shield2Icon = (props: any) => <Shield2Svg {...props} />;
 const BrokenShieldIcon = (props: any) => <BrokenShieldSvg {...props} />;
 const GarbageIcon = (props: any) => <GarbageSvg {...props} />;
 const WhiteSwordIcon = (props: any) => <WhiteSwordSvg {...props} />;
@@ -260,4 +262,5 @@ export {
   GermisHeadIcon,
   JoxHeadIcon,
   GorjoxHeadIcon,
+  Shield2Icon,
 };

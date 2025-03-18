@@ -93,7 +93,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   modalContainer: {
-    width: '95%',          // Ocupa el 95% del ancho de la pantalla
+    width: '100%',          // Ocupa el 95% del ancho de la pantalla
     backgroundColor: '#fff', // Fondo blanco
     borderTopLeftRadius: 10,
     borderTopRightRadius: 10,

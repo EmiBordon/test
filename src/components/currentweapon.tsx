@@ -12,11 +12,11 @@ type WeaponType = {
 
 // Mapeo de armas con tipo seguro
 const weaponData: Record<number, WeaponType> = {
-  0: { name: "Espada", damage: 1, icon: <SwordIcon width={50} height={50} /> },
-  1: { name: "Doble Espada", damage: 2, icon: <DoubleSwordIcon width={50} height={50} /> },
-  2: { name: "Espada Pirata", damage: 5, icon: <PirateSwordIcon width={50} height={50} /> },
-  3: { name: "Dagas", damage: 10, icon: <DaggersIcon width={50} height={50} /> },
-  4: { name: "Super Espada", damage: 15, icon: <SuperSwordIcon width={50} height={50} /> },
+  0: { name: "Espada de madera", damage: 1, icon: <SwordIcon width={50} height={50} /> },
+  1: { name: "Dagas", damage: 3, icon: <DaggersIcon width={50} height={50} /> },
+  2: { name: "Espada Pirata", damage: 7, icon: <PirateSwordIcon width={50} height={50} /> },
+  3: { name: "Doble Espada", damage: 15, icon: <DoubleSwordIcon width={50} height={50} /> },
+  4: { name: "Super Espada", damage: 25, icon: <SuperSwordIcon width={50} height={50} /> },
 };
 
 const CurrentWeaponIcon = () => {

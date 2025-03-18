@@ -1,11 +1,10 @@
-// BattleScreen.tsx
 import React, { useState, useRef, useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { 
-  GermisIcon,MattIcon, MaiaHeadIcon, HearthIcon, BrokenHearthIcon, MoonIcon, TearIcon, 
+  MattIcon, MaiaHeadIcon, HearthIcon, BrokenHearthIcon, MoonIcon, TearIcon, 
   GarbageIcon, ShieldIcon, WhiteSwordIcon, TextBubbleRightIcon, BowIcon, CrossBowIcon, QuiverArrowIcon 
 } from '../SvgExporter';
-import ShakyGermisIcon, {ShakyGermisIconRef} from '../characters/shakygermisicon';
+import ShakyMattIcon, { ShakyMattIconRef } from '../characters/shakymatticon';
 import { useSelector, useDispatch } from 'react-redux';
 import DrawBar from '../functions/drawbar';
 import RandomSequenceGrid from '../functions/sequencegrid';
@@ -14,16 +13,16 @@ import ShootingCircle from '../functions/shootingcircle';
 import MoonTear from '../functions/moontear';
 import { decrementMaiaCurrentHealth, incrementMaiaCurrentHealth } from '../../redux/maiaSlice';
 import { decrementArrows } from '../../redux/weaponsSlice';
+import HealingModal from '../modal/healingmodal';
 
-const GermisBattle: React.FC = () => {
-  // Estados y referencias existentes
+const BattleScreen: React.FC = () => {
   const dispatch = useDispatch();
   const maiaHealth = useSelector((state: any) => state.maia.maiahealth);
   const maiaCurrentHealth = useSelector((state: any) => state.maia.maiacurrenthealth);
   const arrows = useSelector((state: any) => state.weapons.arrows);
 
-  const [mattCurrentHealth, setMattCurrentHealth] = useState(10);
-  const [mattMaxHealth, setMattMaxHealth] = useState(10);
+  const [enemyCurrentHealth, setEnemyCurrentHealth] = useState(10);
+  const [enemyMaxHealth, setEnemyMaxHealth] = useState(10);
 
   const [showDrawBar, setShowDrawBar] = useState(false);
   const [showShootingCircle, setShowShootingCircle] = useState(false);
@@ -31,43 +30,37 @@ const GermisBattle: React.FC = () => {
   const [showMoonTear, setShowMoonTear] = useState(false);
   const [showAttackButton, setShowAttackButton] = useState(true);
   const [showDefenderButton, setShowDefenderButton] = useState(false);
-  const [showDamagedMatt, setShowDamagedMatt] = useState(false);
+  const [showDamagedEnemy, setShowDamagedEnemy] = useState(false);
   const [showDamagedMaia, setShowDamagedMaia] = useState(false);
-  const [showBrokenHearthMatt, setShowBrokenHearthMatt] = useState(false);
+  const [showBrokenHearthEnemy, setShowBrokenHearthEnemy] = useState(false);
   const [showBrokenHearthMaia, setShowBrokenHearthMaia] = useState(false);
 
+  // Estado para controlar la visibilidad del HealingModal
+  const [showHealingModal, setShowHealingModal] = useState(false);
+
   // Refs para animaciones
-  const germisIconRef = useRef<ShakyGermisIconRef>(null);
+  const enemyIconRef = useRef<ShakyMattIconRef>(null);
   const maiaHeadIconRef = useRef<ShakyMaiaHeadIconRef>(null);
 
-  // Array de diálogos y estado para controlar el índice actual
-  const dialogueMessages = [
-    "Comencemos!",
-    "¡No te rindas!",
-    "¡Ataca ahora!"
-  ];
-  const [currentDialogueIndex, setCurrentDialogueIndex] = useState(0);
-
-  // Función para avanzar al siguiente diálogo al tocar la burbuja
-  const handleDialoguePress = () => {
-    setCurrentDialogueIndex(prev => (prev + 1) % dialogueMessages.length);
-  };
-
-  // Efecto de daño para Matt
   useEffect(() => {
-    if (showDamagedMatt) {
+    if (showDamagedEnemy) {
+      // Deshabilitamos los botones al iniciar la animación
+      setShowAttackButton(false);
+      setShowDefenderButton(false);
       setTimeout(() => {
-        germisIconRef.current?.triggerShake();
+        enemyIconRef.current?.triggerShake();
       }, 100);
       setTimeout(() => {
-        setShowDamagedMatt(false);
+        setShowDamagedEnemy(false);
       }, 1000);
     }
-  }, [showDamagedMatt]);
+  }, [showDamagedEnemy]);
 
-  // Efecto de daño para Maia (shake)
   useEffect(() => {
     if (showDamagedMaia) {
+      // Deshabilitamos los botones al iniciar la animación
+      setShowAttackButton(false);
+      setShowDefenderButton(false);
       setTimeout(() => {
         maiaHeadIconRef.current?.triggerShake();
       }, 100);
@@ -77,43 +70,45 @@ const GermisBattle: React.FC = () => {
     }
   }, [showDamagedMaia]);
 
-  // Callback para el mini-juego de ATACAR (DrawBar)
   const handleAttackResult = (result: boolean) => {
     setShowDrawBar(false);
-    setShowDefenderButton(true);
     if (result) {
-      setMattCurrentHealth(prev => prev - 1);
-      setShowDamagedMatt(true);
-      setShowBrokenHearthMatt(true);
-      setTimeout(() => setShowBrokenHearthMatt(false), 1000);
+      setEnemyCurrentHealth(prev => prev - 1);
+      setShowDamagedEnemy(true);
+      setShowBrokenHearthEnemy(true);
+      setTimeout(() => setShowBrokenHearthEnemy(false), 1000);
+      setTimeout(() => setShowDefenderButton(true), 1100);
+    } else {
+      setShowDefenderButton(true);
     }
   };
 
   const handleCounterResult = (result: boolean) => {
     setShowShootingCircle(false);
-  
     if (result) {
-      // Solo animación de daño para Matt
-      setShowDamagedMatt(true);
-      // Volver solo al botón de ataque
-      setShowAttackButton(true);
+      setShowDamagedEnemy(true);
+      setTimeout(() => setShowAttackButton(true), 1100);
       setShowDefenderButton(false);
     } else {
-      // Volver a mostrar Defensa y Flecha
       setShowDefenderButton(true);
       setShowAttackButton(false);
     }
   };
 
-  // Callback para el mini-juego de DEFENDER (RandomSequenceGrid)
   const handleDefenseResult = (result: boolean) => {
-    setShowMoonTear(false);
-    setShowAttackButton(true);
+    if (enemyCurrentHealth % 2 === 0) {
+      setShowRandomSequence(false);
+    } else {
+      setShowMoonTear(false);
+    }
     if (!result) {
       dispatch(decrementMaiaCurrentHealth(1));
       setShowBrokenHearthMaia(true);
       setShowDamagedMaia(true);
       setTimeout(() => setShowBrokenHearthMaia(false), 1000);
+      setTimeout(() => setShowAttackButton(true), 1100);
+    } else {
+      setShowAttackButton(true);
     }
   };
 
@@ -122,7 +117,7 @@ const GermisBattle: React.FC = () => {
     setShowDefenderButton(false);
     setShowDrawBar(true);
   };
-  
+
   const handleCounterPress = () => {
     if (arrows >= 3) {
       setShowAttackButton(false);
@@ -130,43 +125,42 @@ const GermisBattle: React.FC = () => {
       setShowShootingCircle(true);
       dispatch(decrementArrows(3));
     } 
-    // Si no hay suficientes flechas, no hace nada
   };
 
   const handleDefensePress = () => {
-    setShowDefenderButton(false);
-    setShowMoonTear(true);
+    if (enemyCurrentHealth % 2 === 0) {
+      setShowDefenderButton(false);
+      setShowRandomSequence(true);
+    } else {
+      setShowDefenderButton(false);
+      setShowMoonTear(true);
+    }
+  };
+
+  // Al presionar el botón OBJETO se abre el HealingModal
+  const handleObjetoPress = () => {
+    setShowHealingModal(true);
   };
 
   return (
     <View style={styles.container}>
-      {/* Parte superior: salud, diálogo y Matt */}
+      {/* Parte superior: salud, diálogo y enemy */}
       <View style={styles.topContainer}>
         <View style={styles.healthContainer}>
-          {showBrokenHearthMatt ? (
+          {showBrokenHearthEnemy ? (
             <BrokenHearthIcon height={20} width={20} />
           ) : (
             <HearthIcon height={20} width={20} />
           )}
           <Text style={styles.healthText}>
-            {mattCurrentHealth}/{mattMaxHealth}
+            {enemyCurrentHealth}/{enemyMaxHealth}
           </Text>
         </View>
-        <View style={styles.dialogueAndMattContainer}>
-          {/* Contenedor para el diálogo con el icono grande */}
-          
-            <View style={styles.iconContainer}>
-              <TextBubbleRightIcon height={170} width={170} />
-              <Text style={styles.dialogueText}>
-                {dialogueMessages[currentDialogueIndex]}
-              </Text>
-            </View>
-          
-          {/* Icono de Matt */}
-          {showDamagedMatt ? (
-            <ShakyGermisIcon ref={germisIconRef} height={220} width={220} />
+        <View style={styles.enemyContainer}>
+          {showDamagedEnemy ? (
+            <ShakyMattIcon ref={enemyIconRef} height={200} width={200} />
           ) : (
-            <GermisIcon height={220} width={220} />
+            <MattIcon height={200} width={200} />
           )}
         </View>
       </View>
@@ -180,7 +174,7 @@ const GermisBattle: React.FC = () => {
               <Text style={styles.actionButtonText}>ATAQUE</Text>
             </View>
           </TouchableOpacity>
-          <TouchableOpacity style={[styles.actionButton, { marginLeft: 9 }]} onPress={() => {}}>
+          <TouchableOpacity style={[styles.actionButton, { marginLeft: 9 }]} onPress={handleObjetoPress}>
             <View style={styles.buttonContent}>
               <GarbageIcon width={25} height={25} />
               <Text style={styles.actionButtonText}>OBJETO</Text>
@@ -199,7 +193,7 @@ const GermisBattle: React.FC = () => {
           </TouchableOpacity>
           <TouchableOpacity style={[styles.actionButton, { marginLeft: 9 }]} onPress={handleCounterPress}>
             <View style={styles.buttonContent}>
-              <BowIcon width={25} height={25} fill="white"/>
+              <BowIcon width={25} height={25} fill="white" />
               <Text style={styles.actionButtonText}>ARCO({arrows})</Text>
             </View>
           </TouchableOpacity>
@@ -227,7 +221,6 @@ const GermisBattle: React.FC = () => {
         </View>
       </View>
 
-      {/* Overlay para ShootingCircle (contra) */}
       {showShootingCircle && (
         <View style={styles.overlay}>
           <ShootingCircle 
@@ -238,8 +231,8 @@ const GermisBattle: React.FC = () => {
           />
         </View>
       )}
-       {/* Overlay para DrawBar (ataque) */}
-       {showDrawBar && (
+
+      {showDrawBar && (
         <View style={styles.overlay}>
           <DrawBar
             levels={3}
@@ -249,18 +242,38 @@ const GermisBattle: React.FC = () => {
         </View>
       )}
 
-      {/* Overlay para RandomSequenceGrid (defensa) */}
       {showMoonTear && (
         <View style={styles.overlay}>
           <MoonTear 
             moonIcon={MoonIcon} 
             tearIcon={TearIcon} 
             difficulty={3} 
-            patternLength={4} 
+            patternLength={3} 
             onResult={handleDefenseResult} 
           />
         </View>
       )}
+      {showRandomSequence && (
+        <View style={styles.overlay}>
+          <RandomSequenceGrid
+            sequenceLength={3} 
+            onResult={handleDefenseResult} 
+          />
+        </View>
+      )}
+
+      {/* HealingModal se muestra al presionar OBJETO */}
+      <HealingModal 
+        visible={showHealingModal} 
+        onClose={() => setShowHealingModal(false)} 
+        onHealingUsed={(used) => {
+          if (used) {
+            // Al usar curación se oculta el botón de ATAQUE y se muestran DEFENSA y ARCO
+            setShowAttackButton(false);
+            setShowDefenderButton(true);
+          }
+        }} 
+      />
     </View>
   );
 };
@@ -272,22 +285,10 @@ const styles = StyleSheet.create({
   topContainer: {
     alignItems: 'center',
     marginTop: "7%",
-    left: '5%',
   },
-  dialogueAndMattContainer: {
+  enemyContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    right: "15%",
-  },
-  iconContainer: {
-    position: 'relative',
-    width: "30%",
-    height: "35%",
-    justifyContent: 'center',
-    alignItems: 'center',
-    left: "9%",
-    bottom:'25%',
-    
   },
   dialogueText: {
     position: 'absolute',
@@ -308,7 +309,7 @@ const styles = StyleSheet.create({
   actionButtonsContainer: {
     position: 'absolute',
     bottom: "5%",
-    left: "5%",
+    left: "2%",
     flexDirection: 'row',
     alignItems: 'center',
   },
@@ -330,7 +331,7 @@ const styles = StyleSheet.create({
   maiaContainer: {
     position: 'absolute',
     bottom: "5%",
-    right: "5%",
+    right: "3%",
     alignItems: 'center',
   },
   maiaIconBox: {
@@ -353,4 +354,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default GermisBattle;
+export default BattleScreen;
