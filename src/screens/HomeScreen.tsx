@@ -13,7 +13,6 @@ import ConversationModal from "../components/modal/conversationmodal";
 import { conversations } from "../components/functions/conversations";
 import { FountainIcon, PillsIcon, CoinsIcon } from "../components/SvgExporter";
 import ResetButton from "../components/functions/resetbutton";
-import { playSound } from "../sounds/soundexporter";
 // Importamos nuestro CodeModal
 import CodeModal from "../components/modal/codemodal";
 
@@ -40,8 +39,8 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
       <TouchableOpacity
         style={styles.button}
         onPress={() => {
-          playSound("click");
-          navigation.navigate("Tutorial");
+          
+          navigation.replace("Tutorial");
         }}
       >
         <Text style={styles.buttonText}>Nueva Partida</Text>
@@ -50,7 +49,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
       <TouchableOpacity
         style={styles.button}
         onPress={() => {
-          playSound("click");
+          
           setCodeModalVisible(true);
         }}
       >
@@ -61,7 +60,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
       <TouchableOpacity
         style={styles.button}
         onPress={() => {
-          playSound("click");
+         
           dispatch(saveBackup({ healing, maia, weapons }));
         }}
       >
@@ -72,7 +71,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
       <TouchableOpacity
         style={styles.button}
         onPress={() => {
-          playSound("click");
+         
           if (backup.healing && backup.maia && backup.weapons) {
             dispatch(setHealingState(backup.healing));
             dispatch(setMaiaState(backup.maia));

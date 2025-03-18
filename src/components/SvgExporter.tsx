@@ -93,6 +93,7 @@ import GermisHeadSvg from '../assets/germishead.svg';
 import JoxHeadSvg from '../assets/joxhead.svg';
 import GorjoxHeadSvg from '../assets/gorjoxhead.svg';
 import AccessCardSvg from '../assets/accesscard.svg';
+import MenuSvg from '../assets/menu.svg';
 
 const ArrowIcon = (props: any) => <ArrowSvg {...props} />;
 const ChestOpenIcon = (props: any) => <ChestOpenSvg {...props} />;
@@ -188,6 +189,7 @@ const GermisHeadIcon = (props: any) => <GermisHeadSvg {...props} />;
 const JoxHeadIcon = (props: any) => <JoxHeadSvg {...props} />;
 const GorjoxHeadIcon = (props: any) => <GorjoxHeadSvg {...props} />;
 const AccessCardIcon = (props: any) => <AccessCardSvg {...props} />;
+const MenuIcon = (props: any) => <MenuSvg {...props} />;
 
 export { 
   ArrowIcon, 
@@ -284,4 +286,5 @@ export {
   AccessCardIcon,
   CodeChestIcon,
   KeyChestIcon,
+  MenuIcon,
 };

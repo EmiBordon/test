@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, BackHandler } from 'react-native';
 import { 
   MattIcon, MaiaHeadIcon, HearthIcon, BrokenHearthIcon, MoonIcon, TearIcon, 
   GarbageIcon, ShieldIcon, WhiteSwordIcon, TextBubbleRightIcon, BowIcon, CrossBowIcon, QuiverArrowIcon 
@@ -14,15 +14,23 @@ import MoonTear from '../functions/moontear';
 import { decrementMaiaCurrentHealth, incrementMaiaCurrentHealth } from '../../redux/maiaSlice';
 import { decrementArrows } from '../../redux/weaponsSlice';
 import HealingModal from '../modal/healingmodal';
+import { restoreBackup } from '../../redux/backupSlice';
+import { setMaiaState } from '../../redux/maiaSlice';
+import { setHealingState } from '../../redux/healingSlice';
+import { setWeaponsState } from '../../redux/weaponsSlice';
+import { useNavigation } from '@react-navigation/native';
 
 const BattleScreen: React.FC = () => {
   const dispatch = useDispatch();
+  const navigation = useNavigation();
+
   const maiaHealth = useSelector((state: any) => state.maia.maiahealth);
   const maiaCurrentHealth = useSelector((state: any) => state.maia.maiacurrenthealth);
   const arrows = useSelector((state: any) => state.weapons.arrows);
+  const backup = useSelector((state: any) => state.backup);
 
-  const [enemyCurrentHealth, setEnemyCurrentHealth] = useState(10);
-  const [enemyMaxHealth, setEnemyMaxHealth] = useState(10);
+  const [enemyCurrentHealth, setEnemyCurrentHealth] = useState(5);
+  const [enemyMaxHealth, setEnemyMaxHealth] = useState(5);
 
   const [showDrawBar, setShowDrawBar] = useState(false);
   const [showShootingCircle, setShowShootingCircle] = useState(false);
@@ -38,9 +46,22 @@ const BattleScreen: React.FC = () => {
   // Estado para controlar la visibilidad del HealingModal
   const [showHealingModal, setShowHealingModal] = useState(false);
 
+  // Estado para controlar la pantalla de victoria con retraso
+  const [showVictory, setShowVictory] = useState(false);
+  const [showDefeat, setShowDefeat] = useState(false);
+
   // Refs para animaciones
   const enemyIconRef = useRef<ShakyMattIconRef>(null);
   const maiaHeadIconRef = useRef<ShakyMaiaHeadIconRef>(null);
+
+ // Bloquear botón "back" físico
+  useEffect(() => {
+    const backHandler = BackHandler.addEventListener(
+      'hardwareBackPress',
+      () => true // bloquea el back
+    );
+    return () => backHandler.remove();
+  }, []);
 
   useEffect(() => {
     if (showDamagedEnemy) {
@@ -70,10 +91,29 @@ const BattleScreen: React.FC = () => {
     }
   }, [showDamagedMaia]);
 
+  // useEffect para activar el retraso antes de mostrar la pantalla de victoria
+  useEffect(() => {
+    if (enemyCurrentHealth <= 0) {
+      const timer = setTimeout(() => {
+        setShowVictory(true);
+      }, 1000);
+      return () => clearTimeout(timer);
+    }
+  }, [enemyCurrentHealth]);
+
+  useEffect(() => {
+    if (maiaCurrentHealth <= 0) {
+      const timer = setTimeout(() => {
+        setShowDefeat(true);
+      }, 1000);
+      return () => clearTimeout(timer);
+    }
+  }, [maiaCurrentHealth]);
+
   const handleAttackResult = (result: boolean) => {
     setShowDrawBar(false);
     if (result) {
-      setEnemyCurrentHealth(prev => prev - 1);
+      setEnemyCurrentHealth(prev => Math.max(0, prev - 1));
       setShowDamagedEnemy(true);
       setShowBrokenHearthEnemy(true);
       setTimeout(() => setShowBrokenHearthEnemy(false), 1000);
@@ -102,7 +142,7 @@ const BattleScreen: React.FC = () => {
       setShowMoonTear(false);
     }
     if (!result) {
-      dispatch(decrementMaiaCurrentHealth(1));
+      dispatch(decrementMaiaCurrentHealth(6));
       setShowBrokenHearthMaia(true);
       setShowDamagedMaia(true);
       setTimeout(() => setShowBrokenHearthMaia(false), 1000);
@@ -141,6 +181,79 @@ const BattleScreen: React.FC = () => {
   const handleObjetoPress = () => {
     setShowHealingModal(true);
   };
+
+  // Si se cumplió el retraso y el enemigo está derrotado, mostramos la pantalla de victoria
+  if (enemyCurrentHealth <= 0 && showVictory) {
+    return (
+      <View style={styles.container}>
+        <View style={styles.topContainer}>
+        <View style={styles.healthContainer}>
+            <BrokenHearthIcon height={20} width={20} />
+          </View>
+          <View style={styles.enemyContainer}>
+            <MattIcon height={200} width={200} />
+          </View>
+          
+        </View>
+        <View style={styles.winMessageContainer}>
+          <Text style={styles.winMessage}>Matt se siente enojado porque lo haz golpeado demasiado fuerte...</Text>
+        </View>
+        <TouchableOpacity 
+          style={styles.advanceButton} 
+          onPress={() => navigation.replace("Tutorial")}
+        >
+          <Text style={styles.advanceButtonText}>Avanzar</Text>
+        </TouchableOpacity>
+      </View>
+    );
+  }
+
+  if (maiaCurrentHealth <= 0 && showDefeat) {
+    return (
+      <View style={styles.container}>
+        <View style={styles.topContainer}>
+        <View style={styles.healthContainer}>
+            <HearthIcon height={20} width={20} />
+          </View>
+          <View style={styles.enemyContainer}>
+            <MattIcon height={200} width={200} />
+          </View>
+          
+        </View>
+        <View style={styles.winMessageContainer}>
+          <Text style={styles.winMessage}>Matt se siente absolutamente avergonzado de que no hayas podido derrotarlo...</Text>
+        </View>
+        <TouchableOpacity 
+          style={styles.advanceButton} 
+          onPress={() => {
+                    if (backup.healing && backup.maia && backup.weapons) {
+                      dispatch(setHealingState(backup.healing));
+                      dispatch(setMaiaState(backup.maia));
+                      dispatch(setWeaponsState(backup.weapons));
+                      navigation.replace("BattleScreen");
+                    }
+                    dispatch(restoreBackup());
+                  }}
+        >
+          <Text style={styles.advanceButtonText}>Reintentar</Text>
+        </TouchableOpacity>
+        <TouchableOpacity 
+          style={styles.advanceButton} 
+          onPress={() => {
+                    if (backup.healing && backup.maia && backup.weapons) {
+                      dispatch(setHealingState(backup.healing));
+                      dispatch(setMaiaState(backup.maia));
+                      dispatch(setWeaponsState(backup.weapons));
+                      navigation.replace("Tutorial");
+                    }
+                    dispatch(restoreBackup());
+                  }}
+        >
+          <Text style={styles.advanceButtonText}>Salir</Text>
+        </TouchableOpacity>
+      </View>
+    );
+  }
 
   return (
     <View style={styles.container}>
@@ -351,6 +464,28 @@ const styles = StyleSheet.create({
     bottom: "0%",
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  winMessageContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  winMessage: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    marginBottom: 20,
+  },
+  advanceButton: {
+    backgroundColor: 'black',
+    padding: 10,
+    borderRadius: 5,
+    alignSelf: 'center',
+    marginBottom: 50,
+  },
+  advanceButtonText: {
+    color: 'white',
+    fontSize: 18,
   },
 });
 

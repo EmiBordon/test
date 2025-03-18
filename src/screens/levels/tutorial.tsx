@@ -9,6 +9,7 @@ import ConversationChoiceModal from '../../components/modal/conversationchoicemo
 import { conversations, Conversation } from '../../components/functions/conversations';
 import { useSelector, useDispatch } from 'react-redux';
 import { setMattState } from '../../redux/mattSlice';
+import { saveBackup } from "../../redux/backupSlice";
 
 const icons = [
   { 
@@ -34,6 +35,9 @@ const TutorialScreen = () => {
   
   const dispatch = useDispatch();
   const mattState = useSelector((state: any) => state.matt.value);
+  const healing = useSelector((state: any) => state.healing);
+  const maia = useSelector((state: any) => state.maia);
+  const weapons = useSelector((state: any) => state.weapons);
 
   // Bloquear botón "back" físico
   useEffect(() => {
@@ -54,6 +58,7 @@ const TutorialScreen = () => {
 
   const handleAccept = () => {
     dispatch(setMattState(2));
+    dispatch(saveBackup({ healing, maia, weapons }));
     navigation.replace('BattleScreen');
   };
 

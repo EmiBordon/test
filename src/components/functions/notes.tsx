@@ -3,16 +3,16 @@ export interface Note {
   id: number;
   title: string;
   content?: string;
-  image?: any; // Puedes cambiar 'any' por un tipo más específico si quieres, como 'ImageSourcePropType' en React Native
+  images?: any[]; // O puedes usar: ImageSourcePropType[]
 }
 
-// Aquí podrías importar imágenes si las tienes
 import img1 from '../../images/garabato.jpg';
-
+import img2 from '../../images/garabato2.jpg'; // ejemplo
+import img3 from '../../images/garabato3.jpg'; // ejemplo
 
 export const NOTES: Note[] = [
-  { id: 1, title: "Tutorial de Matt", image: img1 },
-  { id: 2, title: "Título 2", content: "Este es el contenido de la nota 2." },
+  { id: 1, title: "Tutorial de Matt", images: [img1, img2, img3] },
+  { id: 2, title: "Título 2", content: "Este es el contenido de la nota 2.", images: [img3] },
   { id: 3, title: "Título 3", content: "Este es el contenido de la nota 3."},
   { id: 4, title: "Título 4", content: "Este es el contenido de la nota 4." },
   { id: 5, title: "Título 5", content: "Este es el contenido de la nota 5." },

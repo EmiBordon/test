@@ -22,7 +22,7 @@ export const loadWeaponsState = createAsyncThunk(
 
 // Estado inicial
 const initialState: WeaponsState = {
-  currentWeapon: 1,
+  currentWeapon: 0,
   crossbow: false,
   arrows: 6,
 };

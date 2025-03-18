@@ -13,7 +13,7 @@ const Map1Modal = ({ visible, onClose, navigation }) => {
 
   // Configuración de cada ícono
   const iconsConfig = [
-    { key: "house", icon: <HouseIcon width={70} height={70} />, text: "Casa", style: styles.iconHouse, action: () => { onClose(); navigation.replace("Home"); } },
+    { key: "house", icon: <HouseIcon width={70} height={70} />, text: "Casa", style: styles.iconHouse, action: () => { onClose(); navigation.replace("Tutorial"); } },
     { key: "prison", icon: <PrisionIcon width={70} height={70} />, text: "Prisión", style: styles.iconPrison, action: () => Alert.alert("Prisión", "Este es el ícono de la prisión") },
     { key: "store", icon: <StoreIcon width={70} height={70} />, text: "Tienda", style: styles.iconStore, action: () => { onClose(); navigation.replace("Shop"); } },
     { key: "restaurant", icon: <RestaurantIcon width={70} height={70} />, text: "Bar", style: styles.iconRestaurant, action: () => { onClose(); navigation.replace("Bar"); } },
