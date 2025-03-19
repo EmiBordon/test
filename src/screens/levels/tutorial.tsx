@@ -57,7 +57,6 @@ const TutorialScreen = () => {
   };
 
   const handleAccept = () => {
-    dispatch(setMattState(2));
     dispatch(saveBackup({ healing, maia, weapons }));
     navigation.replace('BattleScreen');
   };

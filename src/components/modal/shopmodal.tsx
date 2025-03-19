@@ -13,20 +13,26 @@ import {
   BigHealthPotionIcon,
   PillsIcon,
   CoinsIcon,
-  QuiverArrowIcon
+  QuiverArrowIcon,
+  DaggersIcon
 } from '../SvgExporter';
 import { useSelector, useDispatch } from 'react-redux';
 import { incrementGrapes, incrementHealthPotion, incrementBigHealthPotion } from '../../redux/healingSlice';
 import { incrementArrows } from '../../redux/weaponsSlice';
 import { decrementCoins } from '../../redux/coinsSlice';
 import { incrementMaiaHealth } from '../../redux/maiaSlice';
+import { setCurrentWeapon } from '../../redux/weaponsSlice';
 
 interface CoinsState {
   coins: number;
 }
+interface WeaponsState {
+  currentWeapon: number;
+}
 
 interface RootState {
   coins: CoinsState;
+  weapons: WeaponsState;
 }
 
 interface Item {
@@ -43,11 +49,12 @@ interface ShopModalProps {
 }
 
 const shopItems: Item[] = [
-  { id: '1', name: 'Uvas', price: 5, description:'Aumentan el 20% de la Salud' },
-  { id: '2', name: 'Frasco de Salud', price: 20, description:'Aumenta el 50% de la Salud' },
+  { id: '1', name: 'Uvas', price: 5, description: 'Aumentan el 20% de la Salud' },
+  { id: '2', name: 'Frasco de Salud', price: 20, description: 'Aumenta el 50% de la Salud' },
   { id: '3', name: 'Gran Frasco de Salud', price: 45, description: 'Aumenta el 100% de la Salud' },
-  { id: '4', name: 'Pildoras', price: 50, description:'Aumenta 5 puntos de Salud Total' },
-  { id: '5', name: 'Flechas', amount:'X3' ,price: 10, description:'Flechas para contrarrestar ataques enemigos' },
+  { id: '4', name: 'Pildoras', price: 50, description: 'Aumenta 5 puntos de Salud Total' },
+  { id: '5', name: 'Flechas', amount: 'X3', price: 10, description: 'Flechas para contrarrestar ataques enemigos' },
+  { id: '6', name: 'Dagas', price: 70, description: 'Poderosas Dagas' },
 ];
 
 // Definimos un tipo para los componentes de ícono que reciben width y height.
@@ -66,6 +73,8 @@ const getIconComponent = (index: number): IconComponentType | null => {
       return PillsIcon;
     case 4:
       return QuiverArrowIcon;
+    case 5:
+      return DaggersIcon;  
     default:
       return null;
   }
@@ -73,17 +82,26 @@ const getIconComponent = (index: number): IconComponentType | null => {
 
 const ShopModal: React.FC<ShopModalProps> = ({ visible, onClose }) => {
   const coins = useSelector((state: RootState) => state.coins.coins);
+  const weapon = useSelector((state: RootState) => state.weapons.currentWeapon);
   const dispatch = useDispatch();
+  
   // Estado para almacenar el objeto seleccionado para mostrar la info.
   const [selectedInfo, setSelectedInfo] = useState<{ item: Item; index: number } | null>(null);
   // Estado para mostrar mensaje de monedas insuficientes.
   const [insufficientCoins, setInsufficientCoins] = useState(false);
 
+  // Filtrar los ítems para que si weapon > 0 no se muestre "Dagas"
+  const filteredShopItems = shopItems.filter(item => !(weapon > 0 && item.name === 'Dagas'));
+
   // Función para manejar la compra del ítem
   const handlePurchase = (item: Item, index: number) => {
+    // Evitamos la compra de Dagas si weapon > 0, por seguridad.
+    if (item.name === 'Dagas' && weapon > 0) {
+      return;
+    }
     if (coins >= item.price) {
       setInsufficientCoins(false);
-      setSelectedInfo(null) ;
+      setSelectedInfo(null);
       switch (item.name) {
         case 'Uvas':
           dispatch(incrementGrapes(1));
@@ -100,6 +118,9 @@ const ShopModal: React.FC<ShopModalProps> = ({ visible, onClose }) => {
         case 'Flechas':
           dispatch(incrementArrows(3)); // Aumenta 3 flechas
           break;
+        case 'Dagas':
+          dispatch(setCurrentWeapon(1));
+          break;
         default:
           break;
       }
@@ -107,7 +128,7 @@ const ShopModal: React.FC<ShopModalProps> = ({ visible, onClose }) => {
       dispatch(decrementCoins(item.price));
     } else {
       setInsufficientCoins(true);
-      setSelectedInfo(null) ;
+      setSelectedInfo(null);
     }
   };
 
@@ -145,7 +166,7 @@ const ShopModal: React.FC<ShopModalProps> = ({ visible, onClose }) => {
           </View>
           <Text style={styles.title}>TIENDA</Text>
           <FlatList
-            data={shopItems}
+            data={filteredShopItems}
             keyExtractor={(item) => item.id}
             renderItem={renderItem}
             style={{ flex: 1 }}
@@ -161,7 +182,7 @@ const ShopModal: React.FC<ShopModalProps> = ({ visible, onClose }) => {
                 return SelectedIcon ? <SelectedIcon width={50} height={50} /> : null;
               })()}
               <Text style={styles.infoText}>
-               {selectedInfo.item.description}.
+                {selectedInfo.item.description}.
               </Text>
             </View>
           )}

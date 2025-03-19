@@ -11,6 +11,7 @@ import BattleScreen from './src/components/battles/battlescreen';
 import CaveScreen from './src/screens/levels/cave';
 import BarScreen from './src/screens/levels/bar';
 import ShopScreen from './src/screens/levels/shop';
+import PawnShopScreen from './src/screens/levels/pawnshop';
 
 const Stack = createNativeStackNavigator();
 
@@ -52,6 +53,11 @@ export default function App() {
              <Stack.Screen
               name="Shop"
               component={ShopScreen}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="PawnShop"
+              component={PawnShopScreen}
               options={{ headerShown: false }}
             />
           </Stack.Navigator>

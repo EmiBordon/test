@@ -94,6 +94,11 @@ import JoxHeadSvg from '../assets/joxhead.svg';
 import GorjoxHeadSvg from '../assets/gorjoxhead.svg';
 import AccessCardSvg from '../assets/accesscard.svg';
 import MenuSvg from '../assets/menu.svg';
+import PawnShopSvg from '../assets/pawnshop.svg';
+import PawnShopBoySvg from '../assets/pawnshopboy.svg';
+import DiamondSvg from '../assets/diamond.svg';
+import RubiSvg from '../assets/rubi.svg';
+import PocketWatchSvg from '../assets/pocketwatch.svg';
 
 const ArrowIcon = (props: any) => <ArrowSvg {...props} />;
 const ChestOpenIcon = (props: any) => <ChestOpenSvg {...props} />;
@@ -190,6 +195,11 @@ const JoxHeadIcon = (props: any) => <JoxHeadSvg {...props} />;
 const GorjoxHeadIcon = (props: any) => <GorjoxHeadSvg {...props} />;
 const AccessCardIcon = (props: any) => <AccessCardSvg {...props} />;
 const MenuIcon = (props: any) => <MenuSvg {...props} />;
+const PawnShopIcon = (props: any) => <PawnShopSvg {...props} />;
+const PawnShopBoyIcon = (props: any) => <PawnShopBoySvg {...props} />;
+const DiamondIcon = (props: any) => <DiamondSvg {...props} />;
+const RubiIcon = (props: any) => <RubiSvg {...props} />;
+const PocketWatchIcon = (props: any) => <PocketWatchSvg {...props} />;
 
 export { 
   ArrowIcon, 
@@ -287,4 +297,9 @@ export {
   CodeChestIcon,
   KeyChestIcon,
   MenuIcon,
+  PawnShopIcon,
+  PawnShopBoyIcon,
+  DiamondIcon,
+  RubiIcon,
+  PocketWatchIcon,
 };

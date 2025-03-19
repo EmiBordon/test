@@ -28,6 +28,17 @@ const BattleScreen: React.FC = () => {
   const maiaCurrentHealth = useSelector((state: any) => state.maia.maiacurrenthealth);
   const arrows = useSelector((state: any) => state.weapons.arrows);
   const backup = useSelector((state: any) => state.backup);
+  const weapon = useSelector((state: any) => state.weapons.currentWeapon);
+
+  const weaponDamageMap: { [key: number]: number } = {
+    0: 1,
+    1: 3,
+    2: 5,
+    3: 7,
+    4: 10,
+  };
+  
+  const damage = weaponDamageMap[weapon] ?? 0;
 
   const [enemyCurrentHealth, setEnemyCurrentHealth] = useState(5);
   const [enemyMaxHealth, setEnemyMaxHealth] = useState(5);
@@ -113,7 +124,7 @@ const BattleScreen: React.FC = () => {
   const handleAttackResult = (result: boolean) => {
     setShowDrawBar(false);
     if (result) {
-      setEnemyCurrentHealth(prev => Math.max(0, prev - 1));
+      setEnemyCurrentHealth(prev => Math.max(0, prev - damage));
       setShowDamagedEnemy(true);
       setShowBrokenHearthEnemy(true);
       setTimeout(() => setShowBrokenHearthEnemy(false), 1000);

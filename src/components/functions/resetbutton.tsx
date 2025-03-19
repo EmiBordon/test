@@ -11,6 +11,7 @@ import { resetCoins } from '../../redux/coinsSlice';
 import { resetCharacters } from '../../redux/charactersSlice';
 import { resetBoxes } from '../../redux/boxesSlice';
 import { resetLocations } from '../../redux/locationsSlice';
+import { resetObjects } from '../../redux/objectsSlice';
 
 const ResetButton = () => {
   const dispatch = useDispatch();
@@ -25,6 +26,7 @@ const ResetButton = () => {
     dispatch(resetCharacters());
     dispatch(resetBoxes());
     dispatch(resetLocations());
+    dispatch(resetObjects());
     };
 
   return (

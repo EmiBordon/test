@@ -160,6 +160,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'black',
     borderRadius: 5,
     marginTop: '20%',
+    top:'30%',
   },
   buttonText: {
     color: '#fff',

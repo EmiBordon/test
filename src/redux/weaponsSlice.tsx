@@ -31,8 +31,8 @@ const weaponsSlice = createSlice({
   name: 'weapons',
   initialState,
   reducers: {
-    incrementWeapon: (state) => {
-      state.currentWeapon += 1;
+    setCurrentWeapon: (state, action: PayloadAction<number>) => {
+      state.currentWeapon = action.payload;
       saveState(state);
     },
     decrementWeapon: (state) => {
@@ -84,7 +84,7 @@ const saveState = async (state: WeaponsState) => {
 
 // Exports
 export const { 
-  incrementWeapon, 
+  setCurrentWeapon, 
   decrementWeapon, 
   incrementArrows, 
   decrementArrows, 

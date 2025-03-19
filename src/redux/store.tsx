@@ -13,7 +13,8 @@ import coinsReducer from './coinsSlice';
 import charactersReducer from './charactersSlice';
 import boxesReducer from './boxesSlice';
 import locationsReducer from './locationsSlice';
-import backupReducer from './backupSlice'; // 👈 NUEVO
+import objectsReducer from './objectsSlice'
+import backupReducer from './backupSlice'; 
 
 // Configuración de persist
 const persistConfig = {
@@ -28,7 +29,8 @@ const persistConfig = {
     'coins', 
     'characters', 
     'boxes',
-    'locations'
+    'locations',
+    'objects',
   ],
   // No incluimos 'backup' ya que es un snapshot temporal y no debe persistir
 };
@@ -44,7 +46,8 @@ const rootReducer = combineReducers({
   characters: charactersReducer,
   boxes: boxesReducer,
   locations: locationsReducer,
-  backup: backupReducer, // 👈 agregado aquí
+  backup: backupReducer,
+  objects:objectsReducer, // 👈 agregado aquí
 });
 
 // Reducer persistente

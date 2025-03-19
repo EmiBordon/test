@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Modal, View, TouchableOpacity, Text, StyleSheet, Dimensions, Alert } from "react-native";
 import { 
-  Map1Icon, HouseIcon, PrisionIcon, StoreIcon, RestaurantIcon, BigHouseIcon, CaveIcon, CrossIcon
+  Map1Icon, HouseIcon, PrisionIcon, StoreIcon, RestaurantIcon, BigHouseIcon, CaveIcon, CrossIcon, PawnShopIcon
 } from "../SvgExporter"; 
 import { font } from "../functions/fontsize";
 
@@ -20,6 +20,7 @@ const Map1Modal = ({ visible, onClose, navigation }) => {
     { key: "restaurant", icon: <RestaurantIcon width={font(55)} height={font(55)} />, text: "Bar", style: styles.iconRestaurant, action: () => { onClose(); navigation.replace("Bar"); } },
     { key: "bigHouse", icon: <BigHouseIcon width={font(65)} height={font(65)} />, text: "Mansión", style: styles.iconBigHouse, action: () => Alert.alert("Mansión", "Este es el ícono de la mansión") },
     { key: "cave", icon: <CaveIcon width={font(40)} height={font(40)} />, text: "Cueva", style: styles.iconCave, action: () => { onClose(); navigation.replace("Cave"); } },
+    { key: "pawnShop", icon: <PawnShopIcon width={font(55)} height={font(55)} />, text: "Joyeria", style: styles.iconPawnShop, action: () => { onClose(); navigation.replace("PawnShop"); } },
   ];
 
   // Al presionar un ícono se guarda su key como seleccionado
@@ -131,7 +132,7 @@ const styles = StyleSheet.create({
   iconRestaurant: { position: "absolute", top: "40%", left: "33%", transform: [{ translateX: -30 }, { translateY: -30 }], zIndex: 20 },
   iconBigHouse: { position: "absolute", top: "35%", left: "88%", transform: [{ translateX: -40 }, { translateY: -40 }], zIndex: 20 },
   iconCave: { position: "absolute", top: "70%", left: "42%", transform: [{ translateX: -30 }, { translateY: -30 }], zIndex: 20 },
-
+  iconPawnShop: { position: "absolute", top: "84%", left: "74%", transform: [{ translateX: -30 }, { translateY: -30 }], zIndex: 20 },
   // Estilos para el prompt en la parte superior
   topPromptContainer: {
     position: "absolute",
@@ -181,9 +182,9 @@ const styles = StyleSheet.create({
     transform: [{ translateX: -30 }],
     backgroundColor: "black", 
     paddingHorizontal: font(2), 
-    paddingVertical: font(2), 
+    paddingVertical: font(3), 
     borderRadius: 5,
-    zIndex: 30,
+    //zIndex: 90,
   },
   nameText: { 
     color: "white", 

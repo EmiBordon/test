@@ -55,7 +55,7 @@ const BarScreen = () => {
     if (conversationContent === conversations.openbox) {
       setModalVisible(false);
       setNewItemModalVisible(true);
-      dispatch(incrementCoins(10));
+      dispatch(incrementCoins(70));
       dispatch(setBarboxFalse());
     } else {
       // Otra lógica para distintas conversaciones, si es necesario.
