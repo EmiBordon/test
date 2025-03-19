@@ -3,6 +3,7 @@ import { Modal, View, TouchableOpacity, Text, StyleSheet, Dimensions, Alert } fr
 import { 
   Map1Icon, HouseIcon, PrisionIcon, StoreIcon, RestaurantIcon, BigHouseIcon, CaveIcon, CrossIcon
 } from "../SvgExporter"; 
+import { font } from "../functions/fontsize";
 
 const Map1Modal = ({ visible, onClose, navigation }) => {
   const { height } = Dimensions.get("window");
@@ -13,12 +14,12 @@ const Map1Modal = ({ visible, onClose, navigation }) => {
 
   // Configuración de cada ícono
   const iconsConfig = [
-    { key: "house", icon: <HouseIcon width={70} height={70} />, text: "Casa", style: styles.iconHouse, action: () => { onClose(); navigation.replace("Tutorial"); } },
-    { key: "prison", icon: <PrisionIcon width={70} height={70} />, text: "Prisión", style: styles.iconPrison, action: () => Alert.alert("Prisión", "Este es el ícono de la prisión") },
-    { key: "store", icon: <StoreIcon width={70} height={70} />, text: "Tienda", style: styles.iconStore, action: () => { onClose(); navigation.replace("Shop"); } },
-    { key: "restaurant", icon: <RestaurantIcon width={70} height={70} />, text: "Bar", style: styles.iconRestaurant, action: () => { onClose(); navigation.replace("Bar"); } },
-    { key: "bigHouse", icon: <BigHouseIcon width={80} height={80} />, text: "Mansión", style: styles.iconBigHouse, action: () => Alert.alert("Mansión", "Este es el ícono de la mansión") },
-    { key: "cave", icon: <CaveIcon width={70} height={70} />, text: "Cueva", style: styles.iconCave, action: () => { onClose(); navigation.replace("Cave"); } },
+    { key: "house", icon: <HouseIcon width={font(55)} height={font(55)} />, text: "Casa", style: styles.iconHouse, action: () => { onClose(); navigation.replace("Tutorial"); } },
+    { key: "prison", icon: <PrisionIcon width={font(55)} height={font(55)} />, text: "Prisión", style: styles.iconPrison, action: () => Alert.alert("Prisión", "Este es el ícono de la prisión") },
+    { key: "store", icon: <StoreIcon width={font(50)} height={font(50)} />, text: "Tienda", style: styles.iconStore, action: () => { onClose(); navigation.replace("Shop"); } },
+    { key: "restaurant", icon: <RestaurantIcon width={font(55)} height={font(55)} />, text: "Bar", style: styles.iconRestaurant, action: () => { onClose(); navigation.replace("Bar"); } },
+    { key: "bigHouse", icon: <BigHouseIcon width={font(65)} height={font(65)} />, text: "Mansión", style: styles.iconBigHouse, action: () => Alert.alert("Mansión", "Este es el ícono de la mansión") },
+    { key: "cave", icon: <CaveIcon width={font(40)} height={font(40)} />, text: "Cueva", style: styles.iconCave, action: () => { onClose(); navigation.replace("Cave"); } },
   ];
 
   // Al presionar un ícono se guarda su key como seleccionado
@@ -50,7 +51,7 @@ const Map1Modal = ({ visible, onClose, navigation }) => {
 
           {/* Mapa de fondo */}
           <View style={styles.mapContainer}>
-            <Map1Icon width="136%" height="100%" style={styles.mapBackground} />
+            <Map1Icon width="120%" height="100%" style={styles.mapBackground} />
           </View>
 
           {/* Íconos interactivos */}
@@ -105,7 +106,7 @@ const styles = StyleSheet.create({
     alignItems: "center" 
   },
   modalContainer: { 
-    width: "90%", 
+    width: "95%", 
     backgroundColor: "white", 
     borderRadius: 10, 
     overflow: "hidden", 
@@ -117,19 +118,19 @@ const styles = StyleSheet.create({
   mapContainer: { 
     width: "100%", 
     height: "100%", 
-    top: "1%",   
-    left: "-20%", 
+    //top: "1%",   
+    left: "-15%", 
     marginTop: '30%',
   },
   mapBackground: { position: "absolute", top: 0, left: 0 },
   
   // Posicionamiento de los íconos
-  iconHouse: { position: "absolute", top: "65%", left: "14%", transform: [{ translateX: -30 }, { translateY: -30 }], zIndex: 20 },
-  iconPrison: { position: "absolute", top: "60%", left: "78%", transform: [{ translateX: -30 }, { translateY: -30 }], zIndex: 20 },
-  iconStore: { position: "absolute", top: "50%", left: "44%", transform: [{ translateX: -30 }, { translateY: -30 }], zIndex: 20 },
-  iconRestaurant: { position: "absolute", top: "34%", left: "30%", transform: [{ translateX: -30 }, { translateY: -30 }], zIndex: 20 },
-  iconBigHouse: { position: "absolute", top: "44%", left: "85%", transform: [{ translateX: -40 }, { translateY: -40 }], zIndex: 20 },
-  iconCave: { position: "absolute", top: "80%", left: "80%", transform: [{ translateX: -30 }, { translateY: -30 }], zIndex: 20 },
+  iconHouse: { position: "absolute", top: "35%", left: "9%", transform: [{ translateX: -30 }, { translateY: -30 }], zIndex: 20 },
+  iconPrison: { position: "absolute", top: "68%", left: "77%", transform: [{ translateX: -30 }, { translateY: -30 }], zIndex: 20 },
+  iconStore: { position: "absolute", top: "58%", left: "55%", transform: [{ translateX: -30 }, { translateY: -30 }], zIndex: 20 },
+  iconRestaurant: { position: "absolute", top: "40%", left: "33%", transform: [{ translateX: -30 }, { translateY: -30 }], zIndex: 20 },
+  iconBigHouse: { position: "absolute", top: "35%", left: "88%", transform: [{ translateX: -40 }, { translateY: -40 }], zIndex: 20 },
+  iconCave: { position: "absolute", top: "70%", left: "42%", transform: [{ translateX: -30 }, { translateY: -30 }], zIndex: 20 },
 
   // Estilos para el prompt en la parte superior
   topPromptContainer: {
@@ -144,7 +145,7 @@ const styles = StyleSheet.create({
   },
   promptText: {
     color: "white",
-    fontSize: 18,
+    fontSize: font(18),
     fontWeight: "bold",
   },
 
@@ -166,7 +167,7 @@ const styles = StyleSheet.create({
   },
   actionButtonText: {
     color: "white",
-    fontSize: 14,
+    fontSize: font(15),
     fontWeight: "bold",
   },
 
@@ -175,18 +176,18 @@ const styles = StyleSheet.create({
   // Estilos para el tag con el nombre sobre cada ícono
   nameTag: { 
     position: "absolute", 
-    top: -20, 
-    left: "50%", 
+    bottom: "100%", 
+    left: "55%", 
     transform: [{ translateX: -30 }],
     backgroundColor: "black", 
-    paddingHorizontal: 8, 
-    paddingVertical: 3, 
+    paddingHorizontal: font(2), 
+    paddingVertical: font(2), 
     borderRadius: 5,
     zIndex: 30,
   },
   nameText: { 
     color: "white", 
-    fontSize: 13, 
+    fontSize: font(13), 
     fontWeight: "bold" 
   },
 });
