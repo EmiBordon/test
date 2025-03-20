@@ -7,7 +7,7 @@ import Location from '../../components/functions/location';
 import ConversationModal from '../../components/modal/conversationmodal';
 import { conversations, Conversation } from '../../components/functions/conversations';
 import { useSelector, useDispatch } from 'react-redux';
-import { setCave } from '../../redux/locationsSlice';
+import { setLocation } from '../../redux/locationsSlice';
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
 

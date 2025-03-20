@@ -96,6 +96,7 @@ import AccessCardSvg from '../assets/accesscard.svg';
 import MenuSvg from '../assets/menu.svg';
 import PawnShopSvg from '../assets/pawnshop.svg';
 import PawnShopBoySvg from '../assets/pawnshopboy.svg';
+import PawnShopBoyHeadSvg from '../assets/pawnshopboyhead.svg';
 import DiamondSvg from '../assets/diamond.svg';
 import RubiSvg from '../assets/rubi.svg';
 import PocketWatchSvg from '../assets/pocketwatch.svg';
@@ -197,6 +198,7 @@ const AccessCardIcon = (props: any) => <AccessCardSvg {...props} />;
 const MenuIcon = (props: any) => <MenuSvg {...props} />;
 const PawnShopIcon = (props: any) => <PawnShopSvg {...props} />;
 const PawnShopBoyIcon = (props: any) => <PawnShopBoySvg {...props} />;
+const PawnShopBoyHeadIcon = (props: any) => <PawnShopBoyHeadSvg {...props} />;
 const DiamondIcon = (props: any) => <DiamondSvg {...props} />;
 const RubiIcon = (props: any) => <RubiSvg {...props} />;
 const PocketWatchIcon = (props: any) => <PocketWatchSvg {...props} />;
@@ -299,6 +301,7 @@ export {
   MenuIcon,
   PawnShopIcon,
   PawnShopBoyIcon,
+  PawnShopBoyHeadIcon,
   DiamondIcon,
   RubiIcon,
   PocketWatchIcon,

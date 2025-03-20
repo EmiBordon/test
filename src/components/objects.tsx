@@ -14,6 +14,7 @@ interface ObjectsState {
   pocketwatch: number;
   keychest1: number;
   keychest2: number;
+  keychest3: number;
   keydoor1: number;
   keydoor2: number;
 }
@@ -40,6 +41,7 @@ export const useObjects = () => {
     pocketwatch,
     keychest1,
     keychest2,
+    keychest3,
     keydoor1,
     keydoor2,
   } = useSelector((state: RootState) => state.objects);
@@ -85,6 +87,13 @@ export const useObjects = () => {
       description: 'Key to open chest 2.',
       icon: Key1Icon,
       state: keychest2,
+    },
+    {
+      id:'keychest3',
+      name: 'keychest3',
+      description: 'Key to open chest 3.',
+      icon: Key1Icon,
+      state: keychest3,
     },
     {
       id:'keydoor1',

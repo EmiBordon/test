@@ -33,28 +33,8 @@ const boxesSlice = createSlice({
   name: 'boxes',
   initialState,
   reducers: {
-    setBarboxFalse: (state) => {
-      state.barbox = false;
-      saveState(state);
-    },
-    setCavebox1False: (state) => {
-      state.cavebox1 = false;
-      saveState(state);
-    },
-    setCavebox2False: (state) => {
-      state.cavebox2 = false;
-      saveState(state);
-    },
-    setPrisionboxFalse: (state) => {
-      state.prisionbox = false;
-      saveState(state);
-    },
-    setMansionbox1False: (state) => {
-      state.mansionbox1 = false;
-      saveState(state);
-    },
-    setMansionbox2False: (state) => {
-      state.mansionbox2 = false;
+    setBoxFalse: (state, action: PayloadAction<keyof BoxesState>) => {
+      state[action.payload] = false;
       saveState(state);
     },
     resetBoxes: (state) => {
@@ -71,7 +51,6 @@ const boxesSlice = createSlice({
   },
 });
 
-// Guardar estado en AsyncStorage
 const saveState = async (state: BoxesState) => {
   try {
     await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(state));
@@ -80,14 +59,5 @@ const saveState = async (state: BoxesState) => {
   }
 };
 
-export const { 
-  setBarboxFalse, 
-  setCavebox1False, 
-  setCavebox2False, 
-  setPrisionboxFalse, 
-  setMansionbox1False, 
-  setMansionbox2False, 
-  resetBoxes 
-} = boxesSlice.actions;
-
+export const { setBoxFalse, resetBoxes } = boxesSlice.actions;
 export default boxesSlice.reducer;

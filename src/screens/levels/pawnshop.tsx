@@ -6,7 +6,7 @@ import Location from '../../components/functions/location';
 import ConversationChoiceModal from '../../components/modal/conversationchoicemodal';
 import { conversations, Conversation } from '../../components/functions/conversations';
 import { useSelector, useDispatch } from 'react-redux';
-import { setShopgirl } from '../../redux/charactersSlice';
+import { setCharacter } from '../../redux/charactersSlice';
 import { font } from '../../components/functions/fontsize';
 import PawnShopModal from '../../components/modal/pawnshopmodal';
 
@@ -14,7 +14,7 @@ const icons = [
   { 
     component: PawnShopBoyIcon, 
     height: font(140), 
-    width: font(140), 
+    width: font(140),
     style: { top: '43%', left: '10%' } 
   },
 ];
@@ -27,24 +27,24 @@ const PawnShopScreen = () => {
   const [conversationContent, setConversationContent] = useState<Conversation | null>(null);
   
   const dispatch = useDispatch();
-  const shopgirlState = useSelector((state: any) => state.characters.shopgirl);
+  const pawnshopboyState = useSelector((state: any) => state.characters.pawnshopboy);
 
   // Función para navegar a BattleScreen y actualizar el estado
   const handleAccept = () => {
-    dispatch(setShopgirl(1));
+    dispatch(setCharacter({ key: 'pawnshopboy', value: 1 }));
     setIsShopModal(true);
     setModalVisible(true);
   };
 
   const handleIconPress = () => {
     const { component: CurrentIcon } = icons[currentIconIndex];
-    if (CurrentIcon === PawnShopBoyIcon && shopgirlState === 1) {
+    if (CurrentIcon === PawnShopBoyIcon && pawnshopboyState === 1) {
       setIsShopModal(true);
       setModalVisible(true);
     } else {
       // Para otros íconos, abrimos el modal de conversación
       setIsShopModal(false);
-      setConversationContent(conversations.shopgirlconv1);
+      setConversationContent(conversations.pawnshopboyconv1);
       setModalVisible(true);
     }
   };

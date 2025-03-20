@@ -1,10 +1,8 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-// Clave para almacenar el estado en AsyncStorage
 const STORAGE_KEY = 'charactersState';
 
-// Función para cargar el estado guardado al iniciar la app
 export const loadCharactersState = createAsyncThunk(
   'characters/loadState',
   async () => {
@@ -19,6 +17,7 @@ export interface CharactersState {
   germis: number;
   jox: number;
   gorjox: number;
+  pawnshopboy:number;
 }
 
 const initialState: CharactersState = {
@@ -27,30 +26,16 @@ const initialState: CharactersState = {
   germis: 1,
   jox: 0,
   gorjox: 0,
+  pawnshopboy:0,
 };
 
 const charactersSlice = createSlice({
   name: 'characters',
   initialState,
   reducers: {
-    setShopgirl: (state, action: PayloadAction<number>) => {
-      state.shopgirl = action.payload;
-      saveState(state);
-    },
-    setBaris: (state, action: PayloadAction<number>) => {
-      state.baris = action.payload;
-      saveState(state);
-    },
-    setGermis: (state, action: PayloadAction<number>) => {
-      state.germis = action.payload;
-      saveState(state);
-    },
-    setJox: (state, action: PayloadAction<number>) => {
-      state.jox = action.payload;
-      saveState(state);
-    },
-    setGorjox: (state, action: PayloadAction<number>) => {
-      state.gorjox = action.payload;
+    setCharacter: (state, action: PayloadAction<{ key: keyof CharactersState; value: number }>) => {
+      const { key, value } = action.payload;
+      state[key] = value;
       saveState(state);
     },
     resetCharacters: (state) => {
@@ -67,7 +52,6 @@ const charactersSlice = createSlice({
   },
 });
 
-// Función para guardar el estado en AsyncStorage
 const saveState = async (state: CharactersState) => {
   try {
     await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(state));
@@ -76,5 +60,5 @@ const saveState = async (state: CharactersState) => {
   }
 };
 
-export const { setShopgirl, setBaris, setGermis, setJox, setGorjox, resetCharacters } = charactersSlice.actions;
+export const { setCharacter, resetCharacters } = charactersSlice.actions;
 export default charactersSlice.reducer;

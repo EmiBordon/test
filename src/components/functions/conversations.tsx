@@ -1,6 +1,6 @@
 import React from 'react';
 import { Sign2Icon,MaiaHeadIcon, MattHeadIcon, Maia4HeadIcon, DianaHeadIcon, Maia2HeadIcon, Maia3HeadIcon, ShopGirlHeadIcon 
-  ,BoxIcon, BarisHeadIcon, GermisHeadIcon, JoxHeadIcon,GorjoxHeadIcon
+  ,BoxIcon, BarisHeadIcon, GermisHeadIcon, JoxHeadIcon,GorjoxHeadIcon, PawnShopBoyHeadIcon
 } from "../SvgExporter";
 
 export interface Conversation {
@@ -16,6 +16,7 @@ export const conversations: {
   mattconv2: Conversation;
   mattconv3: Conversation;
   shopgirlconv1: Conversation;
+  pawnshopboyconv1:Conversation;
   sign1:Conversation;
   openbox:Conversation;
   barisconv1:Conversation;
@@ -265,6 +266,18 @@ export const conversations: {
       { 
         text: "Este Bicho no me deja avanzar...", 
         svg: MaiaHeadIcon
+      },
+    ],
+  },
+  pawnshopboyconv1: {
+    dialogos: [
+      { 
+        text: "Bienvenida, estoy dispuesto a comprarte cualquier tesoro que tengas.", 
+        svg: PawnShopBoyHeadIcon
+      },
+      { 
+        text: "¿Deseas vender?", 
+        svg: PawnShopBoyHeadIcon
       },
     ],
   },

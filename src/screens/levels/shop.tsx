@@ -8,7 +8,7 @@ import ShopModal from '../../components/modal/shopmodal';
 import { conversations, Conversation } from '../../components/functions/conversations';
 import { useSelector, useDispatch } from 'react-redux';
 
-import { setShopgirl } from '../../redux/charactersSlice';
+import { setCharacter } from '../../redux/charactersSlice';
 
 const icons = [
   { 
@@ -31,7 +31,7 @@ const ShopScreen = () => {
 
   // Función para navegar a BattleScreen y actualizar el estado
   const handleAccept = () => {
-    dispatch(setShopgirl(1));
+    dispatch(setCharacter({ key: 'shopgirl', value: 1 }));
     setIsShopModal(true);
     setModalVisible(true);
   };

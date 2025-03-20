@@ -10,9 +10,9 @@ import NewItemModal from '../../components/modal/newitemmodal';
 import { conversations, Conversation } from '../../components/functions/conversations';
 import { useSelector, useDispatch } from 'react-redux';
 import { incrementCoins } from '../../redux/coinsSlice';
-import { setBarboxFalse } from '../../redux/boxesSlice';
-import { setBaris } from '../../redux/charactersSlice';
-import { setCave } from '../../redux/locationsSlice';
+import { setBoxFalse } from '../../redux/boxesSlice';
+import { setCharacter } from '../../redux/charactersSlice';
+import { setLocation } from '../../redux/locationsSlice';
 
 const icons = [
   { 
@@ -56,7 +56,7 @@ const BarScreen = () => {
       setModalVisible(false);
       setNewItemModalVisible(true);
       dispatch(incrementCoins(70));
-      dispatch(setBarboxFalse());
+      dispatch(setBoxFalse('barbox'));
     } else {
       // Otra lógica para distintas conversaciones, si es necesario.
     }
@@ -77,8 +77,8 @@ const BarScreen = () => {
       if (barisState === 0){
         setConversationContent(conversations.barisconv1);
         setModal2Visible(true);
-        dispatch(setBaris(1));
-        dispatch(setCave(1));
+        dispatch(setCharacter({ key: 'baris', value: 1 }));
+        dispatch(setLocation({ key: 'cave', value: 1 }));
       } else{
         setConversationContent(conversations.barisconv2);
         setModal2Visible(true);
