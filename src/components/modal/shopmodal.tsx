@@ -22,6 +22,7 @@ import { incrementArrows } from '../../redux/weaponsSlice';
 import { decrementCoins } from '../../redux/coinsSlice';
 import { incrementMaiaHealth } from '../../redux/maiaSlice';
 import { setCurrentWeapon } from '../../redux/weaponsSlice';
+import { font } from '../functions/fontsize';
 
 interface CoinsState {
   coins: number;
@@ -136,7 +137,7 @@ const ShopModal: React.FC<ShopModalProps> = ({ visible, onClose }) => {
     const IconComponent = getIconComponent(index);
     return (
       <View style={styles.itemContainer}>
-        {IconComponent && <IconComponent width={30} height={30} />}
+        {IconComponent && <IconComponent width={font(29)} height={font(29)} />}
         <Text style={styles.itemText}>{item.name} {item.amount}</Text>
         <Text style={styles.priceText}>${item.price}</Text>
         <View style={styles.buttonsContainer}>
@@ -160,7 +161,7 @@ const ShopModal: React.FC<ShopModalProps> = ({ visible, onClose }) => {
         <View style={styles.modalContainer}>
           <View style={styles.coinsBar}>
             <View style={styles.coinsContainer}>
-              <CoinsIcon height={18} width={18} style={styles.coinsIcon} />
+              <CoinsIcon height={font(18)} width={font(18)} style={styles.coinsIcon} />
               <Text style={styles.coinsBarText}>{coins}</Text>
             </View>
           </View>
@@ -179,7 +180,7 @@ const ShopModal: React.FC<ShopModalProps> = ({ visible, onClose }) => {
             <View style={styles.infoPanel}>
               {(() => {
                 const SelectedIcon = getIconComponent(selectedInfo.index);
-                return SelectedIcon ? <SelectedIcon width={50} height={50} /> : null;
+                return SelectedIcon ? <SelectedIcon width={font(50)} height={font(50)} /> : null;
               })()}
               <Text style={styles.infoText}>
                 {selectedInfo.item.description}.
@@ -210,7 +211,7 @@ const styles = StyleSheet.create({
     padding: '5%',
   },
   title: {
-    fontSize: 24,
+    fontSize: font(24),
     fontWeight: 'bold',
     textAlign: 'center',
     color: 'black',
@@ -226,13 +227,13 @@ const styles = StyleSheet.create({
   itemText: {
     flex: 1,
     color: 'black',
-    fontSize: 16,
+    fontSize: font(15),
     textAlign: 'left',
     marginLeft: '2%',
   },
   priceText: {
     color: 'black',
-    fontSize: 16,
+    fontSize: font(15),
     marginRight: '3%',
   },
   buttonsContainer: {
@@ -248,7 +249,7 @@ const styles = StyleSheet.create({
   },
   buyButtonText: {
     color: 'white',
-    fontSize: 15,
+    fontSize: font(14),
   },
   infoButton: {
     backgroundColor: 'black',
@@ -258,7 +259,7 @@ const styles = StyleSheet.create({
   },
   infoButtonText: {
     color: 'white',
-    fontSize: 15,
+    fontSize: font(14),
   },
   closeButton: {
     marginTop: '5%',
@@ -270,7 +271,7 @@ const styles = StyleSheet.create({
   },
   closeButtonText: {
     color: 'white',
-    fontSize: 16,
+    fontSize: font(15),
   },
   coinsBar: {
     position: 'absolute',
@@ -286,14 +287,14 @@ const styles = StyleSheet.create({
   },
   coinsBarText: {
     color: 'black',
-    fontSize: 20,
+    fontSize: font(19),
     fontWeight: 'bold',
   },
   infoPanel: {
     flexDirection: 'row',
     alignItems: 'center',
     padding: '4%',
-    marginVertical: 10,
+    marginVertical: '1%',
     borderWidth: 1,
     borderColor: 'gray',
     borderRadius: 5,
@@ -302,12 +303,12 @@ const styles = StyleSheet.create({
     flex: 1,
     marginLeft: '7%',
     color: 'black',
-    fontSize: 16,
+    fontSize: font(15),
   },
   errorText: {
     textAlign: 'center',
     color: 'black',
-    fontSize: 16,
+    fontSize: font(16),
     marginTop: '8%',
   },
 });

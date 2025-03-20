@@ -240,7 +240,7 @@ export const conversations: {
         svg: MaiaHeadIcon 
       },
       { 
-        text: "Ohh, dios, por favor, ten cuiado...", 
+        text: "Ohh, dios, por favor, ten cuidado...", 
         svg: BarisHeadIcon 
       },
     ],

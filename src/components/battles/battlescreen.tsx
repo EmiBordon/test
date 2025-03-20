@@ -18,7 +18,8 @@ import { restoreBackup } from '../../redux/backupSlice';
 import { setMaiaState } from '../../redux/maiaSlice';
 import { setHealingState } from '../../redux/healingSlice';
 import { setWeaponsState } from '../../redux/weaponsSlice';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation,useFocusEffect } from '@react-navigation/native';
+import { font } from '../functions/fontsize';
 
 const BattleScreen: React.FC = () => {
   const dispatch = useDispatch();
@@ -66,13 +67,13 @@ const BattleScreen: React.FC = () => {
   const maiaHeadIconRef = useRef<ShakyMaiaHeadIconRef>(null);
 
  // Bloquear botón "back" físico
-  useEffect(() => {
-    const backHandler = BackHandler.addEventListener(
-      'hardwareBackPress',
-      () => true // bloquea el back
-    );
+ useFocusEffect(
+  React.useCallback(() => {
+    const backHandler = BackHandler.addEventListener('hardwareBackPress', () => true);
+    
     return () => backHandler.remove();
-  }, []);
+  }, [])
+);
 
   useEffect(() => {
     if (showDamagedEnemy) {
@@ -199,10 +200,10 @@ const BattleScreen: React.FC = () => {
       <View style={styles.container}>
         <View style={styles.topContainer}>
         <View style={styles.healthContainer}>
-            <BrokenHearthIcon height={20} width={20} />
+            <BrokenHearthIcon height={font(20)} width={font(20)} />
           </View>
           <View style={styles.enemyContainer}>
-            <MattIcon height={200} width={200} />
+            <MattIcon height={font(198)} width={font(198)} />
           </View>
           
         </View>
@@ -211,7 +212,7 @@ const BattleScreen: React.FC = () => {
         </View>
         <TouchableOpacity 
           style={styles.advanceButton} 
-          onPress={() => navigation.replace("Tutorial")}
+          onPress={() => navigation.goBack()}
         >
           <Text style={styles.advanceButtonText}>Avanzar</Text>
         </TouchableOpacity>
@@ -224,10 +225,10 @@ const BattleScreen: React.FC = () => {
       <View style={styles.container}>
         <View style={styles.topContainer}>
         <View style={styles.healthContainer}>
-            <HearthIcon height={20} width={20} />
+            <HearthIcon height={font(20)} width={font(20)} />
           </View>
           <View style={styles.enemyContainer}>
-            <MattIcon height={200} width={200} />
+            <MattIcon height={font(198)} width={font(198)} />
           </View>
           
         </View>
@@ -241,7 +242,7 @@ const BattleScreen: React.FC = () => {
                       dispatch(setHealingState(backup.healing));
                       dispatch(setMaiaState(backup.maia));
                       dispatch(setWeaponsState(backup.weapons));
-                      navigation.replace("BattleScreen");
+                      navigation.goBack();
                     }
                     dispatch(restoreBackup());
                   }}
@@ -255,7 +256,7 @@ const BattleScreen: React.FC = () => {
                       dispatch(setHealingState(backup.healing));
                       dispatch(setMaiaState(backup.maia));
                       dispatch(setWeaponsState(backup.weapons));
-                      navigation.replace("Tutorial");
+                      navigation.goBack();
                     }
                     dispatch(restoreBackup());
                   }}
@@ -272,9 +273,9 @@ const BattleScreen: React.FC = () => {
       <View style={styles.topContainer}>
         <View style={styles.healthContainer}>
           {showBrokenHearthEnemy ? (
-            <BrokenHearthIcon height={20} width={20} />
+            <BrokenHearthIcon height={font(20)} width={font(20)} />
           ) : (
-            <HearthIcon height={20} width={20} />
+            <HearthIcon height={font(20)} width={font(20)} />
           )}
           <Text style={styles.healthText}>
             {enemyCurrentHealth}/{enemyMaxHealth}
@@ -282,9 +283,9 @@ const BattleScreen: React.FC = () => {
         </View>
         <View style={styles.enemyContainer}>
           {showDamagedEnemy ? (
-            <ShakyMattIcon ref={enemyIconRef} height={200} width={200} />
+            <ShakyMattIcon ref={enemyIconRef} height={font(198)} width={font(198)} />
           ) : (
-            <MattIcon height={200} width={200} />
+            <MattIcon height={font(198)} width={font(198)} />
           )}
         </View>
       </View>
@@ -294,13 +295,13 @@ const BattleScreen: React.FC = () => {
         <View style={styles.actionButtonsContainer}>
           <TouchableOpacity style={styles.actionButton} onPress={handleAttackPress}>
             <View style={styles.buttonContent}>
-              <WhiteSwordIcon width={25} height={25} />
+              <WhiteSwordIcon width={font(24)} height={font(24)} />
               <Text style={styles.actionButtonText}>ATAQUE</Text>
             </View>
           </TouchableOpacity>
           <TouchableOpacity style={[styles.actionButton, { marginLeft: 9 }]} onPress={handleObjetoPress}>
             <View style={styles.buttonContent}>
-              <GarbageIcon width={25} height={25} />
+              <GarbageIcon width={font(24)} height={font(24)} />
               <Text style={styles.actionButtonText}>OBJETO</Text>
             </View>
           </TouchableOpacity>
@@ -311,13 +312,13 @@ const BattleScreen: React.FC = () => {
         <View style={styles.actionButtonsContainer}>
           <TouchableOpacity style={styles.actionButton} onPress={handleDefensePress}>
             <View style={styles.buttonContent}>
-              <ShieldIcon width={25} height={25} />
+              <ShieldIcon width={font(24)} height={font(24)} />
               <Text style={styles.actionButtonText}>DEFENSA</Text>
             </View>
           </TouchableOpacity>
           <TouchableOpacity style={[styles.actionButton, { marginLeft: 9 }]} onPress={handleCounterPress}>
             <View style={styles.buttonContent}>
-              <BowIcon width={25} height={25} fill="white" />
+              <BowIcon width={font(24)} height={font(24)} fill="white" />
               <Text style={styles.actionButtonText}>ARCO({arrows})</Text>
             </View>
           </TouchableOpacity>
@@ -328,9 +329,9 @@ const BattleScreen: React.FC = () => {
       <View style={styles.maiaContainer}>
         <View style={styles.healthContainer}>
           {showBrokenHearthMaia ? (
-            <BrokenHearthIcon height={20} width={20} />
+            <BrokenHearthIcon height={font(20)} width={font(20)} />
           ) : (
-            <HearthIcon height={20} width={20} />
+            <HearthIcon height={font(20)} width={font(20)} />
           )}
           <Text style={styles.healthText}>
             {maiaCurrentHealth}/{maiaHealth}
@@ -338,9 +339,9 @@ const BattleScreen: React.FC = () => {
         </View>
         <View style={styles.maiaIconBox}>
           {showDamagedMaia ? (
-            <ShakyMaiaHeadIcon ref={maiaHeadIconRef} height={100} width={100} />
+            <ShakyMaiaHeadIcon ref={maiaHeadIconRef} height={font(99)} width={font(99)} />
           ) : (
-            <MaiaHeadIcon height={100} width={100} />
+            <MaiaHeadIcon height={font(99)} width={font(99)} />
           )}
         </View>
       </View>
@@ -414,20 +415,14 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
   },
-  dialogueText: {
-    position: 'absolute',
-    textAlign: 'left',
-    fontSize: 18,
-    color: '#000',
-    top: "15%",
-  },
+  
   healthContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     marginBottom: "2%",
   },
   healthText: {
-    fontSize: 20,
+    fontSize: font(19),
     marginLeft: "1%",
   },
   actionButtonsContainer: {
@@ -448,7 +443,7 @@ const styles = StyleSheet.create({
   },
   actionButtonText: {
     color: 'white',
-    fontSize: 17,
+    fontSize: font(15.5),
     fontWeight: 'bold',
     marginLeft: "2%",
   },
@@ -482,21 +477,21 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   },
   winMessage: {
-    fontSize: 24,
+    fontSize: font(23),
     fontWeight: 'bold',
     textAlign: 'center',
-    marginBottom: 20,
+    marginBottom: '1%',
   },
   advanceButton: {
     backgroundColor: 'black',
     padding: 10,
     borderRadius: 5,
     alignSelf: 'center',
-    marginBottom: 50,
+    marginBottom: '15%',
   },
   advanceButtonText: {
     color: 'white',
-    fontSize: 18,
+    fontSize: font(18),
   },
 });
 

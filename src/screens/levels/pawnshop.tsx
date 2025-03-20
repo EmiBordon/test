@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { View, StyleSheet, Pressable, Image } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, StyleSheet, Pressable, Image, BackHandler } from 'react-native';
 import { MaiaIcon, ShopGirlIcon, PawnShopBoyIcon } from '../../components/SvgExporter';
 import Inventory from '../../components/inventory';
 import Location from '../../components/functions/location';
@@ -9,6 +9,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { setCharacter } from '../../redux/charactersSlice';
 import { font } from '../../components/functions/fontsize';
 import PawnShopModal from '../../components/modal/pawnshopmodal';
+import { useFocusEffect } from '@react-navigation/native';
 
 const icons = [
   { 
@@ -20,6 +21,13 @@ const icons = [
 ];
 
 const PawnShopScreen = () => {
+  useFocusEffect(
+       React.useCallback(() => {
+         const backHandler = BackHandler.addEventListener('hardwareBackPress', () => true);
+         
+         return () => backHandler.remove();
+       }, [])
+     );
   const [currentIconIndex, setCurrentIconIndex] = useState(0);
   const [modalVisible, setModalVisible] = useState(false);
   // Variable para distinguir el modal: true para ShopModal, false para ConversationChoiceModal

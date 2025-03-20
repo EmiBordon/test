@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { View, StyleSheet, Pressable, Image } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, StyleSheet, Pressable, Image, BackHandler} from 'react-native';
 import { MaiaIcon, ShopGirlIcon } from '../../components/SvgExporter';
 import Inventory from '../../components/inventory';
 import Location from '../../components/functions/location';
@@ -7,7 +7,7 @@ import ConversationChoiceModal from '../../components/modal/conversationchoicemo
 import ShopModal from '../../components/modal/shopmodal';
 import { conversations, Conversation } from '../../components/functions/conversations';
 import { useSelector, useDispatch } from 'react-redux';
-
+import { useFocusEffect } from '@react-navigation/native';
 import { setCharacter } from '../../redux/charactersSlice';
 
 const icons = [
@@ -20,6 +20,14 @@ const icons = [
 ];
 
 const ShopScreen = () => {
+  useFocusEffect(
+       React.useCallback(() => {
+         const backHandler = BackHandler.addEventListener('hardwareBackPress', () => true);
+         
+         return () => backHandler.remove();
+       }, [])
+     );
+
   const [currentIconIndex, setCurrentIconIndex] = useState(0);
   const [modalVisible, setModalVisible] = useState(false);
   // Variable para distinguir el modal: true para ShopModal, false para ConversationChoiceModal

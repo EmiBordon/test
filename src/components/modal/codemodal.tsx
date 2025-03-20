@@ -1,38 +1,32 @@
 import React, { useState } from 'react';
-import { Modal, View, TouchableOpacity, StyleSheet, Alert, Text } from 'react-native';
+import { Modal, View, TouchableOpacity, StyleSheet, Text } from 'react-native';
 import { font } from '../functions/fontsize';
 
 interface CodeModalProps {
   visible: boolean;
-  codigo: string; // Ejemplo: "3409"
-  onClose: () => void;
+  code: string;
+  onClose: (success: boolean) => void; // ahora recibe true/false
 }
 
-const CodeModal: React.FC<CodeModalProps> = ({ visible, codigo, onClose }) => {
-  // Estado para llevar el dígito actual que se debe acertar
+const CodeModal: React.FC<CodeModalProps> = ({ visible, code, onClose }) => {
   const [currentIndex, setCurrentIndex] = useState<number>(0);
-  // Estado para saber qué cuadrados han sido presionados correctamente
   const [pressed, setPressed] = useState<boolean[]>(Array(9).fill(false));
 
   const handlePress = (num: number, index: number) => {
-    if (num.toString() === codigo[currentIndex]) {
+    if (num.toString() === code[currentIndex]) {
       const newPressed = [...pressed];
       newPressed[index] = true;
       setPressed(newPressed);
       setCurrentIndex(currentIndex + 1);
-  
-      if (currentIndex + 1 === codigo.length) {
-        // Agrega un retardo para que se vea el último cuadrado en negro
+
+      if (currentIndex + 1 === code.length) {
         setTimeout(() => {
-          Alert.alert("Éxito", "¡Código ingresado correctamente!");
-          // Reiniciamos el estado y cerramos el modal
           setPressed(Array(9).fill(false));
           setCurrentIndex(0);
-          onClose();
-        }, 100); // 1000ms = 1 segundo de retardo (ajusta el tiempo según lo necesites)
+          onClose(true); // devolvemos true al cerrar
+        }, 100);
       }
     } else {
-      // Reinicia todos los cuadrados a gris y la secuencia
       setPressed(Array(9).fill(false));
       setCurrentIndex(0);
     }
@@ -48,12 +42,10 @@ const CodeModal: React.FC<CodeModalProps> = ({ visible, codigo, onClose }) => {
                 key={index}
                 style={[styles.gridItem, pressed[index] && styles.correctItem]}
                 onPress={() => handlePress(index, index)}
-              >
-                {/* Sin mostrar números */}
-              </TouchableOpacity>
+              />
             ))}
           </View>
-          <TouchableOpacity style={styles.closeButton} onPress={onClose}>
+          <TouchableOpacity style={styles.closeButton} onPress={() => onClose(false)}>
             <Text style={styles.closeButtonText}>Cerrar</Text>
           </TouchableOpacity>
         </View>
@@ -70,13 +62,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   modalContent: {
-    width: '80%',        // Ancho del 80% de la pantalla
-    height: '50%',       // Altura del 50% de la pantalla
+    width: '80%',
+    height: '50%',
     backgroundColor: 'rgb(46, 46, 46)',
     borderRadius: 8,
     padding: '5%',
     alignItems: 'center',
-    position: 'relative', // Para posicionar el botón de cerrar de forma absoluta
+    position: 'relative',
   },
   gridContainer: {
     width: '100%',
@@ -85,8 +77,8 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   gridItem: {
-    width: '30%',        // Aproximadamente 3 columnas (30% de ancho cada una)
-    height: '190%',       // Mantiene la forma cuadrada
+    width: '30%',
+    height: '190%',
     backgroundColor: 'grey',
     justifyContent: 'center',
     alignItems: 'center',
@@ -98,7 +90,7 @@ const styles = StyleSheet.create({
   },
   closeButton: {
     position: 'absolute',
-    bottom: '5%',        // Fijo en la parte inferior del modal
+    bottom: '5%',
     width: '30%',
     paddingVertical: '3%',
     backgroundColor: '#ccc',

@@ -13,16 +13,17 @@ type SafeModalProps = {
   visible: boolean;
   correctCode: string;
   onClose: () => void;
+  onSuccess: () => void; // nueva prop
 };
 
-const SafeModal: React.FC<SafeModalProps> = ({ visible, correctCode, onClose }) => {
+const SafeModal: React.FC<SafeModalProps> = ({ visible, correctCode, onClose, onSuccess }) => {
   const [enteredCode, setEnteredCode] = useState<string>('');
 
   useEffect(() => {
     if (enteredCode.length === 4) {
       const timer = setTimeout(() => {
         if (enteredCode === correctCode) {
-          Alert.alert('Éxito', 'El código es correcto');
+          onSuccess(); // devuelve "true" por medio de la función
           handleClose();
         } else {
           setEnteredCode('');
@@ -30,7 +31,7 @@ const SafeModal: React.FC<SafeModalProps> = ({ visible, correctCode, onClose }) 
       }, 500);
       return () => clearTimeout(timer);
     }
-  }, [enteredCode, correctCode]);
+  }, [enteredCode, correctCode, onSuccess]);
 
   const handlePress = (num: string) => {
     if (enteredCode.length < 4) {

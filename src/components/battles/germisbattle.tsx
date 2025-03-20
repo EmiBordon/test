@@ -1,10 +1,10 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, BackHandler } from 'react-native';
 import { 
-  MattIcon, MaiaHeadIcon, HearthIcon, BrokenHearthIcon, MoonIcon, TearIcon, 
+  GermisIcon, MaiaHeadIcon, HearthIcon, BrokenHearthIcon, MoonIcon, TearIcon, 
   GarbageIcon, ShieldIcon, WhiteSwordIcon, TextBubbleRightIcon, BowIcon, CrossBowIcon, QuiverArrowIcon 
 } from '../SvgExporter';
-import ShakyMattIcon, { ShakyMattIconRef } from '../characters/shakymatticon';
+import ShakyGermisIcon,{ShakyGermisIconRef} from '../characters/shakygermisicon';
 import { useSelector, useDispatch } from 'react-redux';
 import DrawBar from '../functions/drawbar';
 import RandomSequenceGrid from '../functions/sequencegrid';
@@ -14,12 +14,32 @@ import MoonTear from '../functions/moontear';
 import { decrementMaiaCurrentHealth, incrementMaiaCurrentHealth } from '../../redux/maiaSlice';
 import { decrementArrows } from '../../redux/weaponsSlice';
 import HealingModal from '../modal/healingmodal';
+import { restoreBackup } from '../../redux/backupSlice';
+import { setMaiaState } from '../../redux/maiaSlice';
+import { setHealingState } from '../../redux/healingSlice';
+import { setWeaponsState } from '../../redux/weaponsSlice';
+import { useNavigation,useFocusEffect } from '@react-navigation/native';
+import { font } from '../functions/fontsize';
 
 const BattleScreen: React.FC = () => {
   const dispatch = useDispatch();
+  const navigation = useNavigation();
+
   const maiaHealth = useSelector((state: any) => state.maia.maiahealth);
   const maiaCurrentHealth = useSelector((state: any) => state.maia.maiacurrenthealth);
   const arrows = useSelector((state: any) => state.weapons.arrows);
+  const backup = useSelector((state: any) => state.backup);
+  const weapon = useSelector((state: any) => state.weapons.currentWeapon);
+
+  const weaponDamageMap: { [key: number]: number } = {
+    0: 1,
+    1: 3,
+    2: 5,
+    3: 7,
+    4: 10,
+  };
+  
+  const damage = weaponDamageMap[weapon] ?? 0;
 
   const [enemyCurrentHealth, setEnemyCurrentHealth] = useState(10);
   const [enemyMaxHealth, setEnemyMaxHealth] = useState(10);
@@ -38,9 +58,22 @@ const BattleScreen: React.FC = () => {
   // Estado para controlar la visibilidad del HealingModal
   const [showHealingModal, setShowHealingModal] = useState(false);
 
+  // Estado para controlar la pantalla de victoria con retraso
+  const [showVictory, setShowVictory] = useState(false);
+  const [showDefeat, setShowDefeat] = useState(false);
+
   // Refs para animaciones
-  const enemyIconRef = useRef<ShakyMattIconRef>(null);
+  const enemyIconRef = useRef<ShakyGermisIconRef>(null);
   const maiaHeadIconRef = useRef<ShakyMaiaHeadIconRef>(null);
+
+ // Bloquear botón "back" físico
+ useFocusEffect(
+  React.useCallback(() => {
+    const backHandler = BackHandler.addEventListener('hardwareBackPress', () => true);
+    
+    return () => backHandler.remove();
+  }, [])
+);
 
   useEffect(() => {
     if (showDamagedEnemy) {
@@ -70,10 +103,29 @@ const BattleScreen: React.FC = () => {
     }
   }, [showDamagedMaia]);
 
+  // useEffect para activar el retraso antes de mostrar la pantalla de victoria
+  useEffect(() => {
+    if (enemyCurrentHealth <= 0) {
+      const timer = setTimeout(() => {
+        setShowVictory(true);
+      }, 1000);
+      return () => clearTimeout(timer);
+    }
+  }, [enemyCurrentHealth]);
+
+  useEffect(() => {
+    if (maiaCurrentHealth <= 0) {
+      const timer = setTimeout(() => {
+        setShowDefeat(true);
+      }, 1000);
+      return () => clearTimeout(timer);
+    }
+  }, [maiaCurrentHealth]);
+
   const handleAttackResult = (result: boolean) => {
     setShowDrawBar(false);
     if (result) {
-      setEnemyCurrentHealth(prev => prev - 1);
+      setEnemyCurrentHealth(prev => Math.max(0, prev - damage));
       setShowDamagedEnemy(true);
       setShowBrokenHearthEnemy(true);
       setTimeout(() => setShowBrokenHearthEnemy(false), 1000);
@@ -102,7 +154,7 @@ const BattleScreen: React.FC = () => {
       setShowMoonTear(false);
     }
     if (!result) {
-      dispatch(decrementMaiaCurrentHealth(1));
+      dispatch(decrementMaiaCurrentHealth(6));
       setShowBrokenHearthMaia(true);
       setShowDamagedMaia(true);
       setTimeout(() => setShowBrokenHearthMaia(false), 1000);
@@ -142,15 +194,88 @@ const BattleScreen: React.FC = () => {
     setShowHealingModal(true);
   };
 
+  // Si se cumplió el retraso y el enemigo está derrotado, mostramos la pantalla de victoria
+  if (enemyCurrentHealth <= 0 && showVictory) {
+    return (
+      <View style={styles.container}>
+        <View style={styles.topContainer}>
+        <View style={styles.healthContainer}>
+            <BrokenHearthIcon height={font(20)} width={font(20)} />
+          </View>
+          <View style={styles.enemyContainer}>
+            <GermisIcon height={font(198)} width={font(198)} />
+          </View>
+          
+        </View>
+        <View style={styles.winMessageContainer}>
+          <Text style={styles.winMessage}>Matt se siente enojado porque lo haz golpeado demasiado fuerte...</Text>
+        </View>
+        <TouchableOpacity 
+          style={styles.advanceButton} 
+          onPress={() => navigation.goBack()}
+        >
+          <Text style={styles.advanceButtonText}>Avanzar</Text>
+        </TouchableOpacity>
+      </View>
+    );
+  }
+
+  if (maiaCurrentHealth <= 0 && showDefeat) {
+    return (
+      <View style={styles.container}>
+        <View style={styles.topContainer}>
+        <View style={styles.healthContainer}>
+            <HearthIcon height={font(20)} width={font(20)} />
+          </View>
+          <View style={styles.enemyContainer}>
+            <GermisIcon height={font(198)} width={font(198)} />
+          </View>
+          
+        </View>
+        <View style={styles.winMessageContainer}>
+          <Text style={styles.winMessage}>Matt se siente absolutamente avergonzado de que no hayas podido derrotarlo...</Text>
+        </View>
+        <TouchableOpacity 
+          style={styles.advanceButton} 
+          onPress={() => {
+                    if (backup.healing && backup.maia && backup.weapons) {
+                      dispatch(setHealingState(backup.healing));
+                      dispatch(setMaiaState(backup.maia));
+                      dispatch(setWeaponsState(backup.weapons));
+                      navigation.goBack();
+                    }
+                    dispatch(restoreBackup());
+                  }}
+        >
+          <Text style={styles.advanceButtonText}>Reintentar</Text>
+        </TouchableOpacity>
+        <TouchableOpacity 
+          style={styles.advanceButton} 
+          onPress={() => {
+                    if (backup.healing && backup.maia && backup.weapons) {
+                      dispatch(setHealingState(backup.healing));
+                      dispatch(setMaiaState(backup.maia));
+                      dispatch(setWeaponsState(backup.weapons));
+                      navigation.goBack();
+                    }
+                    dispatch(restoreBackup());
+                  }}
+        >
+          <Text style={styles.advanceButtonText}>Salir</Text>
+        </TouchableOpacity>
+      </View>
+    );
+  }
+
   return (
     <View style={styles.container}>
       {/* Parte superior: salud, diálogo y enemy */}
       <View style={styles.topContainer}>
         <View style={styles.healthContainer}>
           {showBrokenHearthEnemy ? (
-            <BrokenHearthIcon height={20} width={20} />
+            <BrokenHearthIcon height={font(20)} width={font(20)} />
           ) : (
-            <HearthIcon height={20} width={20} />
+            <HearthIcon height={font(20)} width={font(20)} />
           )}
           <Text style={styles.healthText}>
             {enemyCurrentHealth}/{enemyMaxHealth}
@@ -158,9 +283,9 @@ const BattleScreen: React.FC = () => {
         </View>
         <View style={styles.enemyContainer}>
           {showDamagedEnemy ? (
-            <ShakyMattIcon ref={enemyIconRef} height={200} width={200} />
+            <ShakyGermisIcon ref={enemyIconRef} height={font(198)} width={font(198)} />
           ) : (
-            <MattIcon height={200} width={200} />
+            <GermisIcon height={font(198)} width={font(198)} />
           )}
         </View>
       </View>
@@ -170,13 +295,13 @@ const BattleScreen: React.FC = () => {
         <View style={styles.actionButtonsContainer}>
           <TouchableOpacity style={styles.actionButton} onPress={handleAttackPress}>
             <View style={styles.buttonContent}>
-              <WhiteSwordIcon width={25} height={25} />
+              <WhiteSwordIcon width={font(24)} height={font(24)} />
               <Text style={styles.actionButtonText}>ATAQUE</Text>
             </View>
           </TouchableOpacity>
           <TouchableOpacity style={[styles.actionButton, { marginLeft: 9 }]} onPress={handleObjetoPress}>
             <View style={styles.buttonContent}>
-              <GarbageIcon width={25} height={25} />
+              <GarbageIcon width={font(24)} height={font(24)} />
               <Text style={styles.actionButtonText}>OBJETO</Text>
             </View>
           </TouchableOpacity>
@@ -187,13 +312,13 @@ const BattleScreen: React.FC = () => {
         <View style={styles.actionButtonsContainer}>
           <TouchableOpacity style={styles.actionButton} onPress={handleDefensePress}>
             <View style={styles.buttonContent}>
-              <ShieldIcon width={25} height={25} />
+              <ShieldIcon width={font(24)} height={font(24)} />
               <Text style={styles.actionButtonText}>DEFENSA</Text>
             </View>
           </TouchableOpacity>
           <TouchableOpacity style={[styles.actionButton, { marginLeft: 9 }]} onPress={handleCounterPress}>
             <View style={styles.buttonContent}>
-              <BowIcon width={25} height={25} fill="white" />
+              <BowIcon width={font(24)} height={font(24)} fill="white" />
               <Text style={styles.actionButtonText}>ARCO({arrows})</Text>
             </View>
           </TouchableOpacity>
@@ -204,9 +329,9 @@ const BattleScreen: React.FC = () => {
       <View style={styles.maiaContainer}>
         <View style={styles.healthContainer}>
           {showBrokenHearthMaia ? (
-            <BrokenHearthIcon height={20} width={20} />
+            <BrokenHearthIcon height={font(20)} width={font(20)} />
           ) : (
-            <HearthIcon height={20} width={20} />
+            <HearthIcon height={font(20)} width={font(20)} />
           )}
           <Text style={styles.healthText}>
             {maiaCurrentHealth}/{maiaHealth}
@@ -214,9 +339,9 @@ const BattleScreen: React.FC = () => {
         </View>
         <View style={styles.maiaIconBox}>
           {showDamagedMaia ? (
-            <ShakyMaiaHeadIcon ref={maiaHeadIconRef} height={100} width={100} />
+            <ShakyMaiaHeadIcon ref={maiaHeadIconRef} height={font(99)} width={font(99)} />
           ) : (
-            <MaiaHeadIcon height={100} width={100} />
+            <MaiaHeadIcon height={font(99)} width={font(99)} />
           )}
         </View>
       </View>
@@ -290,20 +415,14 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
   },
-  dialogueText: {
-    position: 'absolute',
-    textAlign: 'left',
-    fontSize: 18,
-    color: '#000',
-    top: "15%",
-  },
+  
   healthContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     marginBottom: "2%",
   },
   healthText: {
-    fontSize: 20,
+    fontSize: font(19),
     marginLeft: "1%",
   },
   actionButtonsContainer: {
@@ -324,7 +443,7 @@ const styles = StyleSheet.create({
   },
   actionButtonText: {
     color: 'white',
-    fontSize: 17,
+    fontSize: font(15.5),
     fontWeight: 'bold',
     marginLeft: "2%",
   },
@@ -351,6 +470,28 @@ const styles = StyleSheet.create({
     bottom: "0%",
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  winMessageContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  winMessage: {
+    fontSize: font(23),
+    fontWeight: 'bold',
+    textAlign: 'center',
+    marginBottom: '1%',
+  },
+  advanceButton: {
+    backgroundColor: 'black',
+    padding: 10,
+    borderRadius: 5,
+    alignSelf: 'center',
+    marginBottom: '15%',
+  },
+  advanceButtonText: {
+    color: 'white',
+    fontSize: font(18),
   },
 });
 

@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { Modal, View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { DoubleArrowIcon } from '../SvgExporter';
+import { font } from '../functions/fontsize';
 
 interface Dialogue {
   text: string;
@@ -76,7 +77,7 @@ const ConversationChoiceModal: React.FC<ConversationChoiceModalProps> = ({
             </View>
           ) : (
             <TouchableOpacity style={styles.button} onPress={handleNext}>
-              <DoubleArrowIcon width="90%" height="90%" />
+              <DoubleArrowIcon width={font(18)} height={font(18)} />
             </TouchableOpacity>
           )}
         </View>
@@ -116,14 +117,14 @@ const styles = StyleSheet.create({
   },
   dialogueText: {
     color: '#000',
-    fontSize: 20,
+    fontSize: font(20),
   },
   button: {
     marginTop: '5%',
     paddingVertical: 10,
     borderRadius: 5,
     alignItems: 'center',
-    height: 40,
+    height: '5%',
     width: '10%',
     alignSelf: 'flex-end',
   },
@@ -140,7 +141,7 @@ const styles = StyleSheet.create({
   },
   choiceButtonText: {
     color: 'white',
-    fontSize: 16,
+    fontSize: font(16),
     fontWeight: 'bold',
   },
 });

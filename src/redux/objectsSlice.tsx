@@ -23,14 +23,14 @@ export interface ObjectsState {
 }
 
 const initialState: ObjectsState = {
-  diamond: 5,
-  rubi: 5,
-  pocketwatch: 5,
-  keychest1: 1,
-  keychest2: 1,
-  keychest3:1,
-  keydoor1: 1,
-  keydoor2: 1,
+  diamond: 0,
+  rubi: 0,
+  pocketwatch: 0,
+  keychest1: 0,
+  keychest2: 0,
+  keychest3: 0,
+  keydoor1: 0,
+  keydoor2: 0,
 };
 
 const objectsSlice = createSlice({

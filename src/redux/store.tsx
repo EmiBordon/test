@@ -15,6 +15,7 @@ import boxesReducer from './boxesSlice';
 import locationsReducer from './locationsSlice';
 import objectsReducer from './objectsSlice'
 import backupReducer from './backupSlice'; 
+import rewardReducer from './rewardSlice'
 
 // Configuración de persist
 const persistConfig = {
@@ -31,6 +32,7 @@ const persistConfig = {
     'boxes',
     'locations',
     'objects',
+    'rewards',
   ],
   // No incluimos 'backup' ya que es un snapshot temporal y no debe persistir
 };
@@ -47,7 +49,8 @@ const rootReducer = combineReducers({
   boxes: boxesReducer,
   locations: locationsReducer,
   backup: backupReducer,
-  objects:objectsReducer, // 👈 agregado aquí
+  objects:objectsReducer,
+  rewards:rewardReducer, 
 });
 
 // Reducer persistente

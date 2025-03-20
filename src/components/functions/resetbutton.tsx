@@ -12,6 +12,7 @@ import { resetCharacters } from '../../redux/charactersSlice';
 import { resetBoxes } from '../../redux/boxesSlice';
 import { resetLocations } from '../../redux/locationsSlice';
 import { resetObjects } from '../../redux/objectsSlice';
+import { resetProcessedRewards } from '../../redux/rewardSlice';
 
 const ResetButton = () => {
   const dispatch = useDispatch();
@@ -27,6 +28,7 @@ const ResetButton = () => {
     dispatch(resetBoxes());
     dispatch(resetLocations());
     dispatch(resetObjects());
+    dispatch(resetProcessedRewards());
     };
 
   return (

@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { View, StyleSheet, Pressable, Image, BackHandler } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import { MaiaIcon, MattIcon, DoorIcon, ChestCloseIcon, ArrowIcon } from '../../components/SvgExporter';
 import Inventory from '../../components/inventory';
 import Location from '../../components/functions/location';
@@ -39,14 +39,22 @@ const TutorialScreen = () => {
   const maia = useSelector((state: any) => state.maia);
   const weapons = useSelector((state: any) => state.weapons);
 
+  
+
   // Bloquear botón "back" físico
-  useEffect(() => {
-    const backHandler = BackHandler.addEventListener(
-      'hardwareBackPress',
-      () => true // bloquea el back
+  useFocusEffect(
+      React.useCallback(() => {
+        const backHandler = BackHandler.addEventListener('hardwareBackPress', () => true);
+        
+        return () => backHandler.remove();
+      }, [])
     );
-    return () => backHandler.remove();
-  }, []);
+    useFocusEffect(
+      React.useCallback(() => {
+        setModalVisible(false);
+        return () => {};
+      }, [])
+    );
 
   const handleNextIcon = () => {
     setCurrentIconIndex((prevIndex) => (prevIndex + 1) % icons.length);
@@ -58,7 +66,8 @@ const TutorialScreen = () => {
 
   const handleAccept = () => {
     dispatch(saveBackup({ healing, maia, weapons }));
-    navigation.replace('BattleScreen');
+    setModalVisible(false);
+    navigation.navigate('BattleScreen');
   };
 
   const handleIconPress = () => {

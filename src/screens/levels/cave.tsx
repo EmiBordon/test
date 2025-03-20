@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
-import { View, StyleSheet, Pressable, Alert, Image, Dimensions } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import React, { useState,useEffect } from 'react';
+import { View, StyleSheet, Pressable, Alert, Image, Dimensions, BackHandler } from 'react-native';
+import { useNavigation,useFocusEffect } from '@react-navigation/native';
 import { MaiaIcon, ArrowIcon, GermisIcon, JoxIcon, GorjoxIcon, SignIcon } from '../../components/SvgExporter';
 import Inventory from '../../components/inventory';
 import Location from '../../components/functions/location';
@@ -41,6 +41,13 @@ const signIconData = {
 };
 
 const CaveScreen = () => {
+  useFocusEffect(
+       React.useCallback(() => {
+         const backHandler = BackHandler.addEventListener('hardwareBackPress', () => true);
+         
+         return () => backHandler.remove();
+       }, [])
+     );
   const navigation = useNavigation();
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [currentLocationIndex, setCurrentLocationIndex] = useState(0);

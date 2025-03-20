@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { Modal, View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { DoubleArrowIcon } from '../SvgExporter';
+import { font } from '../functions/fontsize';
 
 const ConversationModal = ({ visible, onClose, conversation }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -49,9 +50,9 @@ const ConversationModal = ({ visible, onClose, conversation }) => {
             <TouchableOpacity style={styles.button} onPress={handleNext}>
         
                 {currentIndex === conversation.dialogos.length - 1 ? (
-                <DoubleArrowIcon width="90%" height="90%" style={styles.rotatedIcon}  />
+                <DoubleArrowIcon width={font(18)} height={font(18)} style={styles.rotatedIcon}  />
               ) : (
-                <DoubleArrowIcon width="90%" height="90%"  />
+                <DoubleArrowIcon width={font(18)} height={font(18)}  />
               )}
 
             </TouchableOpacity>
@@ -93,7 +94,7 @@ const styles = StyleSheet.create({
   },
   dialogueText: {
     color: '#000',         // Texto en negro
-    fontSize: 20,
+    fontSize: font(20),
   },
   button: {
     marginTop: '3%',

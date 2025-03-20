@@ -25,6 +25,7 @@ import Map2Modal from "../components/modal/map2modal";
 import BagPackModal from "../components/modal/bagpackmodal";
 import NotesModal from "../components/modal/notesmodal";
 import { NavigationProp, useNavigation } from "@react-navigation/native";
+import { font } from "./functions/fontsize";
 
 // Tipado para el estado de Redux
 interface MaiaState {
@@ -112,7 +113,7 @@ const Inventory: React.FC = () => {
        {/* Barra de vida en la parte superior derecha */}
        <View style={styles.coinsBar}>
         <View style={styles.healthContainer}>
-          <CoinsIcon height={18} width={18} style={styles.hearthIcon} />
+          <CoinsIcon height={font(18)} width={font(18)} style={styles.hearthIcon} />
           <Text style={styles.healthBarText}>
             {coins}
           </Text>
@@ -121,7 +122,7 @@ const Inventory: React.FC = () => {
       {/* Barra de vida en la parte superior derecha */}
       <View style={styles.healthBar}>
         <View style={styles.healthContainer}>
-          <HearthIcon height={18} width={18} style={styles.hearthIcon} />
+          <HearthIcon height={font(18)} width={font(18)} style={styles.hearthIcon} />
           <Text style={styles.healthBarText}>
             {maiaCurrentHealth}/{maiaHealth}
           </Text>
@@ -133,34 +134,34 @@ const Inventory: React.FC = () => {
         style={styles.slot}
         onPress={() => setBagPackModalVisible(true)}
       >
-        <BagPackIcon width={40} height={40} />
+        <BagPackIcon width={font(40)} height={font(40)} />
       </TouchableOpacity>
 
       {/* Casillero 2 - Mapa con opciones */}
       <View style={styles.mapContainer}>
         <TouchableOpacity style={styles.slot} onPress={toggleMapOptions}>
-          <MapIcon width={40} height={40} />
+          <MapIcon width={font(40)} height={font(40)} />
         </TouchableOpacity>
         {showMapOptions && (
           <View style={styles.mapOptions}>
             <TouchableOpacity onPress={() => handleMapPress("mapInv1")}>
               <MapInv1Icon
-                width={40}
-                height={40}
+                width={font(38)}
+                height={font(38)}
                 fill={mapStates.mapInv1 ? "black" : "gray"}
               />
             </TouchableOpacity>
             <TouchableOpacity onPress={() => handleMapPress("mapInv2")}>
               <MapInv2Icon
-                width={40}
-                height={40}
+                width={font(38)}
+                height={font(38)}
                 fill={mapStates.mapInv2 ? "black" : "gray"}
               />
             </TouchableOpacity>
             <TouchableOpacity onPress={() => handleMapPress("mapInv3")}>
               <MapInv3Icon
-                width={40}
-                height={40}
+                width={font(38)}
+                height={font(38)}
                 fill={mapStates.mapInv3 ? "black" : "gray"}
               />
             </TouchableOpacity>
@@ -173,7 +174,7 @@ const Inventory: React.FC = () => {
         style={styles.slot}
         onPress={() => setNotesModalVisible(true)}
       >
-        <NoteBookIcon width={40} height={40} />
+        <NoteBookIcon width={font(38)} height={font(38)} />
       </TouchableOpacity>
 
       {/* Casillero 4 - Cofre abierto */}
@@ -220,8 +221,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
   },
   slot: {
-    width: 60,
-    height: 60,
+    width: font(58),
+    height: font(58),
     backgroundColor: "white",
     borderRadius: 10,
     justifyContent: "center",
@@ -241,7 +242,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     borderWidth: 1,
     borderColor: "black",
-    gap: 15,
+    gap: font(15),
   },
   healthBar: {
     position: "absolute",
@@ -258,7 +259,7 @@ const styles = StyleSheet.create({
   },
   healthBarText: {
     color: "black",
-    fontSize: 20,
+    fontSize: font(19),
     fontWeight: "bold",
   },
   coinsBar: {
