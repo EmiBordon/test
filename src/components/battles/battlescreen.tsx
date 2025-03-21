@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, BackHandler } from 'react-native';
 import { 
   MattIcon, MaiaHeadIcon, HearthIcon, BrokenHearthIcon, MoonIcon, TearIcon, 
-  GarbageIcon, ShieldIcon, WhiteSwordIcon, TextBubbleRightIcon, BowIcon, CrossBowIcon, QuiverArrowIcon 
+  GarbageIcon, ShieldIcon, WhiteSwordIcon, TextBubbleRightIcon, BowIcon, CrossBowIcon
 } from '../SvgExporter';
 import ShakyMattIcon, { ShakyMattIconRef } from '../characters/shakymatticon';
 import { useSelector, useDispatch } from 'react-redux';
@@ -11,19 +11,24 @@ import RandomSequenceGrid from '../functions/sequencegrid';
 import ShakyMaiaHeadIcon, { ShakyMaiaHeadIconRef } from '../characters/shakymaiaheadicon';
 import ShootingCircle from '../functions/shootingcircle';
 import MoonTear from '../functions/moontear';
-import { decrementMaiaCurrentHealth, incrementMaiaCurrentHealth } from '../../redux/maiaSlice';
+import { decrementMaiaCurrentHealth} from '../../redux/maiaSlice';
 import { decrementArrows } from '../../redux/weaponsSlice';
 import HealingModal from '../modal/healingmodal';
 import { restoreBackup } from '../../redux/backupSlice';
 import { setMaiaState } from '../../redux/maiaSlice';
 import { setHealingState } from '../../redux/healingSlice';
 import { setWeaponsState } from '../../redux/weaponsSlice';
-import { useNavigation,useFocusEffect } from '@react-navigation/native';
+import { useNavigation,useFocusEffect, useRoute, RouteProp, } from '@react-navigation/native';
 import { font } from '../functions/fontsize';
+import { enemies } from './enemyData';
+import { getCurrentPhase } from './enemyLogic';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { RootStackParamList } from './types';
 
 const BattleScreen: React.FC = () => {
+  const route = useRoute<RouteProp<RootStackParamList, 'BattleScreen'>>();
+  const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const dispatch = useDispatch();
-  const navigation = useNavigation();
 
   const maiaHealth = useSelector((state: any) => state.maia.maiahealth);
   const maiaCurrentHealth = useSelector((state: any) => state.maia.maiacurrenthealth);
@@ -40,9 +45,10 @@ const BattleScreen: React.FC = () => {
   };
   
   const damage = weaponDamageMap[weapon] ?? 0;
-
-  const [enemyCurrentHealth, setEnemyCurrentHealth] = useState(5);
-  const [enemyMaxHealth, setEnemyMaxHealth] = useState(5);
+  const { enemyName } = route.params as { enemyName: string };
+  const currentEnemy = enemies.find(e => e.name === enemyName) || enemies[0];
+  const [enemyCurrentHealth, setEnemyCurrentHealth] = useState(currentEnemy.health);
+  
 
   const [showDrawBar, setShowDrawBar] = useState(false);
   const [showShootingCircle, setShowShootingCircle] = useState(false);
@@ -65,7 +71,7 @@ const BattleScreen: React.FC = () => {
   // Refs para animaciones
   const enemyIconRef = useRef<ShakyMattIconRef>(null);
   const maiaHeadIconRef = useRef<ShakyMaiaHeadIconRef>(null);
-
+  const currentPhase = getCurrentPhase(currentEnemy, enemyCurrentHealth);
  // Bloquear botón "back" físico
  useFocusEffect(
   React.useCallback(() => {
@@ -154,7 +160,7 @@ const BattleScreen: React.FC = () => {
       setShowMoonTear(false);
     }
     if (!result) {
-      dispatch(decrementMaiaCurrentHealth(6));
+      dispatch(decrementMaiaCurrentHealth(currentPhase.damage));
       setShowBrokenHearthMaia(true);
       setShowDamagedMaia(true);
       setTimeout(() => setShowBrokenHearthMaia(false), 1000);
@@ -171,11 +177,11 @@ const BattleScreen: React.FC = () => {
   };
 
   const handleCounterPress = () => {
-    if (arrows >= 3) {
+    if (arrows >= currentEnemy.arrowsRequired) {
       setShowAttackButton(false);
       setShowDefenderButton(false);
       setShowShootingCircle(true);
-      dispatch(decrementArrows(3));
+      dispatch(decrementArrows(currentEnemy.arrowsRequired));
     } 
   };
 
@@ -208,7 +214,7 @@ const BattleScreen: React.FC = () => {
           
         </View>
         <View style={styles.winMessageContainer}>
-          <Text style={styles.winMessage}>Matt se siente enojado porque lo haz golpeado demasiado fuerte...</Text>
+          <Text style={styles.winMessage}>{currentEnemy.victoryMessage}</Text>
         </View>
         <TouchableOpacity 
           style={styles.advanceButton} 
@@ -233,7 +239,7 @@ const BattleScreen: React.FC = () => {
           
         </View>
         <View style={styles.winMessageContainer}>
-          <Text style={styles.winMessage}>Matt se siente absolutamente avergonzado de que no hayas podido derrotarlo...</Text>
+          <Text style={styles.winMessage}>{currentEnemy.defeatMessage}</Text>
         </View>
         <TouchableOpacity 
           style={styles.advanceButton} 
@@ -278,7 +284,7 @@ const BattleScreen: React.FC = () => {
             <HearthIcon height={font(20)} width={font(20)} />
           )}
           <Text style={styles.healthText}>
-            {enemyCurrentHealth}/{enemyMaxHealth}
+            {enemyCurrentHealth}/{currentEnemy.health}
           </Text>
         </View>
         <View style={styles.enemyContainer}>
@@ -360,8 +366,8 @@ const BattleScreen: React.FC = () => {
       {showDrawBar && (
         <View style={styles.overlay}>
           <DrawBar
-            levels={3}
-            duration={1500}
+            levels={currentPhase.drawBarLevels}
+            duration={currentPhase.drawBarDuration}
             onResult={handleAttackResult} 
           />
         </View>
@@ -372,8 +378,8 @@ const BattleScreen: React.FC = () => {
           <MoonTear 
             moonIcon={MoonIcon} 
             tearIcon={TearIcon} 
-            difficulty={3} 
-            patternLength={3} 
+            difficulty={currentPhase.moonTearDifficulty} 
+            patternLength={currentPhase.moonTearPattern} 
             onResult={handleDefenseResult} 
           />
         </View>
@@ -381,7 +387,7 @@ const BattleScreen: React.FC = () => {
       {showRandomSequence && (
         <View style={styles.overlay}>
           <RandomSequenceGrid
-            sequenceLength={3} 
+            sequenceLength={currentPhase.gridLength} 
             onResult={handleDefenseResult} 
           />
         </View>

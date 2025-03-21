@@ -10,6 +10,9 @@ import { conversations, Conversation } from '../../components/functions/conversa
 import { useSelector, useDispatch } from 'react-redux';
 import { setMattState } from '../../redux/mattSlice';
 import { saveBackup } from "../../redux/backupSlice";
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { RootStackParamList } from '../../components/battles/types';
+
 
 const icons = [
   { 
@@ -27,7 +30,8 @@ const icons = [
 ];
 
 const TutorialScreen = () => {
-  const navigation = useNavigation();
+  type TutorialScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'Tutorial'>;
+  const navigation = useNavigation<TutorialScreenNavigationProp>();
   const [currentIconIndex, setCurrentIconIndex] = useState(0);
   const [modalVisible, setModalVisible] = useState(false);
   const [modal2Visible, setModal2Visible] = useState(false);
@@ -67,7 +71,7 @@ const TutorialScreen = () => {
   const handleAccept = () => {
     dispatch(saveBackup({ healing, maia, weapons }));
     setModalVisible(false);
-    navigation.navigate('BattleScreen');
+    navigation.navigate('BattleScreen', { enemyName: 'Germis' });
   };
 
   const handleIconPress = () => {

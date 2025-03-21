@@ -4,6 +4,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
 import { store, persistor } from './src/redux/store';
+
 import HomeScreen from './src/screens/HomeScreen';
 import TutorialScreen from './src/screens/levels/tutorial';
 import HandGame from './src/components/functions/handgame';
@@ -12,8 +13,9 @@ import CaveScreen from './src/screens/levels/cave';
 import BarScreen from './src/screens/levels/bar';
 import ShopScreen from './src/screens/levels/shop';
 import PawnShopScreen from './src/screens/levels/pawnshop';
+import { RootStackParamList } from './src/components/battles/types';
 
-const Stack = createNativeStackNavigator();
+const Stack = createNativeStackNavigator<RootStackParamList>();
 
 export default function App() {
   return (
