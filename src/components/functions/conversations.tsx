@@ -24,6 +24,16 @@ export const conversations: {
   caveclose1:Conversation;
   caveclose2:Conversation;
   caveclose3:Conversation;
+  germisconv1:Conversation;
+  germisconv2:Conversation;
+  joxconv1:Conversation;
+  joxconv2:Conversation;
+  gorjoxconv0:Conversation;
+  gorjoxconv1:Conversation;
+  gorjoxconv2:Conversation;
+  gorjoxconv3:Conversation;
+  gorjoxconv4:Conversation;
+
 } = {
   mattconv1: {
     dialogos: [
@@ -269,6 +279,14 @@ export const conversations: {
       },
     ],
   },
+  caveclose3: {
+    dialogos: [
+      { 
+        text: "Este Bicho no me deja avanzar...", 
+        svg: MaiaHeadIcon
+      },
+    ],
+  },
   pawnshopboyconv1: {
     dialogos: [
       { 
@@ -278,6 +296,150 @@ export const conversations: {
       { 
         text: "¿Deseas vender?", 
         svg: PawnShopBoyHeadIcon
+      },
+    ],
+  },
+  germisconv1: {
+    dialogos: [
+      { 
+        text: "ASafsagaags ... oye tu..", 
+        svg: GermisHeadIcon 
+      },
+      { 
+        text: "Eres la primera persona que entra en mucho tiempo...", 
+        svg: GermisHeadIcon
+      },
+      { 
+        text: "...", 
+        svg: MaiaHeadIcon 
+      },
+      { 
+        text: "aasdasgdhg... voy a tener que matarte..", 
+        svg: GermisHeadIcon 
+      },
+      { 
+        text: "Deseas combatir con Germis ?", 
+        svg: GermisHeadIcon 
+      },
+    ],
+  },
+  germisconv2: {
+    dialogos: [
+      { 
+        text: "Deseas combatir con Germis ?", 
+        svg: GermisHeadIcon 
+      },
+    ],
+  },
+  joxconv1: {
+    dialogos: [
+      { 
+        text: "Asi que casi matas a mi hermano.. interesante.", 
+        svg: JoxHeadIcon 
+      },
+      { 
+        text: "Los humanos son asquerosos. ", 
+        svg: JoxHeadIcon 
+      },
+      { 
+        text: "Aunque alguna vez yo tambien fui humano... ya ni lo recuerdo. ", 
+        svg: JoxHeadIcon 
+      },
+      { 
+        text: "Que? que quieres decir con eso ?", 
+        svg: MaiaHeadIcon 
+      },
+      { 
+        text: "Tendras que morir con la duda...", 
+        svg: JoxHeadIcon 
+      },
+      { 
+        text: "Deseas combatir con Jox ?", 
+        svg: JoxHeadIcon 
+      },
+    ],
+  },
+  joxconv2: {
+    dialogos: [
+      { 
+        text: "Deseas combatir con Jox ?", 
+        svg: JoxHeadIcon 
+      },
+    ],
+  },
+  gorjoxconv0: {
+    dialogos: [
+      { 
+        text: "asfdgasg... estupido humano...", 
+        svg: GermisHeadIcon 
+      },
+      { 
+        text: "Seras testigo de nuestro verdadero poder...", 
+        svg: GermisHeadIcon 
+      },
+      { 
+        text: "Sera mejor que te prepares.. ", 
+        svg: JoxHeadIcon 
+      },
+      { 
+        text: "Los hermanos te invitan a contemplar su forma definitiva..", 
+        svg: GermisHeadIcon 
+      },
+    ],
+  },
+  gorjoxconv1: {
+    dialogos: [
+      { 
+        text: "No creia que un humano tan insignificante como tu..", 
+        svg: JoxHeadIcon 
+      },
+      { 
+        text: "Nos daria problemas...", 
+        svg: JoxHeadIcon 
+      },
+      { 
+        text: "Mostremosle de que estamos hechos hermanito.", 
+        svg: GermisHeadIcon 
+      },
+      { 
+        text: "Si.. ", 
+        svg: JoxHeadIcon 
+      },
+      { 
+        text: "Los hermanos te invitan a contemplar su forma definitiva..", 
+        svg: JoxHeadIcon  
+      },
+    ],
+  },
+  gorjoxconv2: {
+    dialogos: [
+      { 
+        text: "Los hermanos te invitan a contemplar su forma definitiva..", 
+        svg: GermisHeadIcon 
+      },
+    ],
+  },
+  gorjoxconv3: {
+    dialogos: [
+      { 
+        text: "*gruñidos ...", 
+        svg: GorjoxHeadIcon 
+      },
+      { 
+        text: "Genial...", 
+        svg: MaiaHeadIcon 
+      },
+      { 
+        text: "Deseas combatir con Gorjox ?", 
+        svg: GorjoxHeadIcon 
+      },
+    ],
+  },
+  gorjoxconv4: {
+    dialogos: [
+      { 
+        text: "Deseas combatir con Gorjox ?", 
+        svg: GorjoxHeadIcon 
       },
     ],
   },

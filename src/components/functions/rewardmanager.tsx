@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import NewItemModal from '../modal/newitemmodal';
-import { CoinsIcon } from '../SvgExporter';
+import { CoinsIcon, RubiIcon, DiamondIcon,QuiverArrowIcon, HealthPotionIcon, PocketWatchIcon } from '../SvgExporter';
 import { markRewardAsProcessed } from '../../redux/rewardSlice';
 import { BoxesState } from '../../redux/boxesSlice'; 
 import { RewardsState } from '../../redux/rewardSlice';
@@ -14,12 +14,33 @@ interface RootState {
 const rewardsConfig: Record<string, any> = {
   barbox: {
     items: [
-      { icon: <CoinsIcon height="50" width="50" />, name: '10 Monedas', description: 'Premio de la caja del bar' },
+      { icon: <CoinsIcon height="50" width="50" />, name: '20 Monedas', description: '' },
     ]
   },
   cavebox1: {
     items: [
-      { icon: <CoinsIcon height="50" width="50" />, name: '50 Monedas', description: 'Recompensa de la cueva' },
+      { icon: <CoinsIcon height="50" width="50" />, name: '15 Monedas', description: '' },
+      { icon: <RubiIcon height="50" width="50" />, name: 'Rubi', description: 'Alguien podria querer comprarlo.' },
+    ]
+  },
+  cavebox2: {
+    items: [
+      { icon: <QuiverArrowIcon height="50" width="50" />, name: '3 Flechas', description: 'Ideales para contrataques.' },
+      { icon: <DiamondIcon height="50" width="50" />, name: 'Diamante', description: 'Alguien podria querer comprarlo.' },
+    ]
+  },
+  cavebox3: {
+    items: [
+      { icon: <HealthPotionIcon height="50" width="50" />, name: 'Frasco de salud', description: 'Aumenta el 50% de la salud.' },
+      { icon: <RubiIcon height="50" width="50" />, name: 'Rubi', description: 'Alguien podria querer comprarlo.' },
+    ]
+  },
+  cavebox4: {
+    items: [
+      { icon: <CoinsIcon height="50" width="50" />, name: '25 Monedas', description: '' },
+      { icon: <DiamondIcon height="50" width="50" />, name: '2 Diamantes', description: 'Alguien podria querer comprarlos.' },
+      { icon: <QuiverArrowIcon height="50" width="50" />, name: '5 Flechas', description: 'Ideales para contrataques.' },
+      { icon: <PocketWatchIcon height="50" width="50" />, name: 'Reloj de bolsillo', description: 'Podria tener un gran valor de venta.' },
     ]
   },
 };

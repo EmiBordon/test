@@ -93,7 +93,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
 
       <CodeModal
         visible={codeModalVisible}
-        codigo="381547260"
+        code="381547260"
         onClose={() => setCodeModalVisible(false)}
       />
     </View>

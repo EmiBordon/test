@@ -15,6 +15,8 @@ export interface BoxesState {
   barbox: boolean;
   cavebox1: boolean;
   cavebox2: boolean;
+  cavebox3: boolean;
+  cavebox4: boolean;
   prisionbox: boolean;
   mansionbox1: boolean;
   mansionbox2: boolean;
@@ -24,6 +26,8 @@ const initialState: BoxesState = {
   barbox: true,
   cavebox1: true,
   cavebox2: true,
+  cavebox3: true,
+  cavebox4: true,
   prisionbox: true,
   mansionbox1: true,
   mansionbox2: true,

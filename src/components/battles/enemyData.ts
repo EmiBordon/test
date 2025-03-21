@@ -1,44 +1,71 @@
 // src/data/enemyData.ts
 import { Enemy } from './enemyTypes';
+import { GermisIcon,JoxIcon,GorjoxIcon, MattIcon } from '../SvgExporter'; // Ajusta la ruta según tu estructura
+import { setMattState } from '../../redux/mattSlice';
+import { setCharacter } from '../../redux/charactersSlice';
 
 export const enemies: Enemy[] = [
-  {
+    {
+        name: "Matt",
+        health: 5,
+        initialdamage: 1,
+        victoryMessage: "Matt esta enojado porque lo golpeaste demasiado fuerte...",
+        defeatMessage: "Matt se siente completamente decepcionado de tu desempeño...",
+        arrowsRequired: 1,
+        description: "Matt no es un gran guerrero...",
+        icon: MattIcon,
+        onDefeat: () => setMattState(2),
+        phases: [
+          { threshold: 0, damage: 1, drawBarLevels: 2, drawBarDuration: 1500, moonTearPattern: 2, moonTearDifficulty: 2, gridLength: 2 },
+        ],
+      },  
+{
     name: "Germis",
     health: 10,
-    victoryMessage: "¡Derrotaste a Germis!",
-    defeatMessage: "Germis te venció...",
-    arrowsRequired: 3,
+    initialdamage: 2,
+    victoryMessage: "Estuviste por darle el golpe final a Germis, pero huyó...",
+    defeatMessage: "Germis te venció...vuelve a intentarlo",
+    arrowsRequired: 2,
+    description: "Es pequeño aunque aterrador, no parece muy peligroso...",
+    icon: GermisIcon,
+    onDefeat: () => (setCharacter({ key: 'germis', value: 2 })),
     phases: [
-      { threshold: 0.8, damage: 10, drawBarLevels: 3, drawBarDuration: 1500, moonTearPattern: 3, moonTearDifficulty: 3, gridLength: 3 },
-      { threshold: 0.5, damage: 2, drawBarLevels: 4, drawBarDuration: 1500, moonTearPattern: 3, moonTearDifficulty: 3, gridLength: 4 },
-      { threshold: 0.2, damage: 3, drawBarLevels: 5, drawBarDuration: 1500, moonTearPattern: 4, moonTearDifficulty: 3, gridLength: 4 },
-      { threshold: 0, damage: 4, drawBarLevels: 6, drawBarDuration: 1500, moonTearPattern: 4, moonTearDifficulty: 3.5, gridLength: 5 },
+      { threshold: 0, damage: 2, drawBarLevels: 3, drawBarDuration: 1500, moonTearPattern: 3, moonTearDifficulty: 3, gridLength: 3 },
     ],
   },
   {
     name: "Jox",
-    health: 150,
-    victoryMessage: "¡Jox ha caído!",
-    defeatMessage: "Jox te destruyó...",
-    arrowsRequired: 6,
+    health: 12,
+    initialdamage: 2,
+    victoryMessage: "Jox ha escapado con sus ultimas fuerzas...",
+    defeatMessage: "Jox te destruyó...vuelve a intentarlo",
+    arrowsRequired: 2,
+    description: "El hermano mayor de germis, no es mas poderoso pero si mas rapido...",
+    icon: JoxIcon,
+    onDefeat: () => (setCharacter({ key: 'jox', value: 2 })),
     phases: [
-      { threshold: 0.9, damage: 6, drawBarLevels: 1, drawBarDuration: 1100, moonTearPattern: 1, moonTearDifficulty: 1, gridLength: 3 },
-      { threshold: 0.6, damage: 10, drawBarLevels: 2, drawBarDuration: 900, moonTearPattern: 2, moonTearDifficulty: 2, gridLength: 4 },
-      { threshold: 0.4, damage: 14, drawBarLevels: 3, drawBarDuration: 700, moonTearPattern: 3, moonTearDifficulty: 3, gridLength: 5 },
-      { threshold: 0, damage: 20, drawBarLevels: 5, drawBarDuration: 500, moonTearPattern: 4, moonTearDifficulty: 5, gridLength: 6 },
+      { threshold: 0.9, damage: 2, drawBarLevels: 3, drawBarDuration: 1450, moonTearPattern: 3, moonTearDifficulty: 3.3, gridLength: 3 },
+      { threshold: 0.6, damage: 2, drawBarLevels: 3, drawBarDuration: 1450, moonTearPattern: 3, moonTearDifficulty: 3.3, gridLength: 3 },
+      { threshold: 0.4, damage: 2, drawBarLevels: 3, drawBarDuration: 1450, moonTearPattern: 3, moonTearDifficulty: 3.3, gridLength: 3 },
+      { threshold: 0, damage: 2, drawBarLevels: 4, drawBarDuration: 1450, moonTearPattern: 3, moonTearDifficulty: 3.4, gridLength: 4 },
     ],
   },
   {
     name: "Gorjox",
-    health: 250,
-    victoryMessage: "¡Gorjox no es rival para ti!",
-    defeatMessage: "Gorjox te aplastó sin piedad.",
-    arrowsRequired: 8,
+    health: 20,
+    initialdamage: 5,
+    victoryMessage: "Gorjox agoniza de dolor.. su sonido al morir hace eco en toda la cueva...",
+    defeatMessage: "Gorjox te aplastó sin piedad... vuelve a intentarlo",
+    arrowsRequired: 3,
+    description: "Una aterradora bestia de destruccion, aumenta su daño cuando se enfurece...",
+    icon: GorjoxIcon,
+    onDefeat: () => (setCharacter({ key: 'gorjox', value: 4 })),
     phases: [
-      { threshold: 0.95, damage: 8, drawBarLevels: 2, drawBarDuration: 1000, moonTearPattern: 1, moonTearDifficulty: 2, gridLength: 4 },
-      { threshold: 0.7, damage: 12, drawBarLevels: 3, drawBarDuration: 850, moonTearPattern: 2, moonTearDifficulty: 3, gridLength: 5 },
-      { threshold: 0.3, damage: 18, drawBarLevels: 4, drawBarDuration: 700, moonTearPattern: 3, moonTearDifficulty: 4, gridLength: 6 },
-      { threshold: 0, damage: 25, drawBarLevels: 5, drawBarDuration: 500, moonTearPattern: 4, moonTearDifficulty: 5, gridLength: 7 },
+        { threshold: 0.9, damage: 4, drawBarLevels: 3, drawBarDuration: 1450, moonTearPattern: 3, moonTearDifficulty: 3.2, gridLength: 3 },
+        { threshold: 0.6, damage: 4, drawBarLevels: 3, drawBarDuration: 1450, moonTearPattern: 3, moonTearDifficulty: 3.2, gridLength: 3 },
+        { threshold: 0.4, damage: 9, drawBarLevels: 4, drawBarDuration: 1450, moonTearPattern: 5, moonTearDifficulty: 3.8, gridLength: 8 },
+        { threshold: 0.2, damage: 4, drawBarLevels: 4, drawBarDuration: 1450, moonTearPattern: 3, moonTearDifficulty: 3.2, gridLength: 3 },
+        { threshold: 0, damage: 9, drawBarLevels: 4, drawBarDuration: 1450, moonTearPattern: 5, moonTearDifficulty: 3.8, gridLength: 8 },
     ],
   }
 ];

@@ -4,7 +4,7 @@ import {
   MattIcon, MaiaHeadIcon, HearthIcon, BrokenHearthIcon, MoonIcon, TearIcon, 
   GarbageIcon, ShieldIcon, WhiteSwordIcon, TextBubbleRightIcon, BowIcon, CrossBowIcon
 } from '../SvgExporter';
-import ShakyMattIcon, { ShakyMattIconRef } from '../characters/shakymatticon';
+import ShakyIcon, {ShakyIconRef} from '../characters/shakymatticon';
 import { useSelector, useDispatch } from 'react-redux';
 import DrawBar from '../functions/drawbar';
 import RandomSequenceGrid from '../functions/sequencegrid';
@@ -48,8 +48,8 @@ const BattleScreen: React.FC = () => {
   const { enemyName } = route.params as { enemyName: string };
   const currentEnemy = enemies.find(e => e.name === enemyName) || enemies[0];
   const [enemyCurrentHealth, setEnemyCurrentHealth] = useState(currentEnemy.health);
-  
-
+  const [showInfoButton, setShowInfoButton] = useState(true);
+  const [showEnemyInfo, setShowEnemyInfo] = useState(false);
   const [showDrawBar, setShowDrawBar] = useState(false);
   const [showShootingCircle, setShowShootingCircle] = useState(false);
   const [showRandomSequence, setShowRandomSequence] = useState(false);
@@ -69,7 +69,7 @@ const BattleScreen: React.FC = () => {
   const [showDefeat, setShowDefeat] = useState(false);
 
   // Refs para animaciones
-  const enemyIconRef = useRef<ShakyMattIconRef>(null);
+  const enemyIconRef = useRef<ShakyIconRef>(null);
   const maiaHeadIconRef = useRef<ShakyMaiaHeadIconRef>(null);
   const currentPhase = getCurrentPhase(currentEnemy, enemyCurrentHealth);
  // Bloquear botón "back" físico
@@ -174,6 +174,10 @@ const BattleScreen: React.FC = () => {
     setShowAttackButton(false);
     setShowDefenderButton(false);
     setShowDrawBar(true);
+    if(showEnemyInfo || showInfoButton){
+    setShowInfoButton(false);
+    setShowEnemyInfo(false);
+    }
   };
 
   const handleCounterPress = () => {
@@ -194,6 +198,10 @@ const BattleScreen: React.FC = () => {
       setShowMoonTear(true);
     }
   };
+  const handleInfoPress = () => {
+    setShowInfoButton(false);
+    setShowEnemyInfo(true);
+  };
 
   // Al presionar el botón OBJETO se abre el HealingModal
   const handleObjetoPress = () => {
@@ -209,7 +217,7 @@ const BattleScreen: React.FC = () => {
             <BrokenHearthIcon height={font(20)} width={font(20)} />
           </View>
           <View style={styles.enemyContainer}>
-            <MattIcon height={font(198)} width={font(198)} />
+            <currentEnemy.icon height={font(198)} width={font(198)} />
           </View>
           
         </View>
@@ -218,7 +226,7 @@ const BattleScreen: React.FC = () => {
         </View>
         <TouchableOpacity 
           style={styles.advanceButton} 
-          onPress={() => navigation.goBack()}
+          onPress={() => {navigation.goBack(); dispatch(currentEnemy.onDefeat?.());}}
         >
           <Text style={styles.advanceButtonText}>Avanzar</Text>
         </TouchableOpacity>
@@ -234,27 +242,13 @@ const BattleScreen: React.FC = () => {
             <HearthIcon height={font(20)} width={font(20)} />
           </View>
           <View style={styles.enemyContainer}>
-            <MattIcon height={font(198)} width={font(198)} />
+            <currentEnemy.icon height={font(198)} width={font(198)} />
           </View>
           
         </View>
         <View style={styles.winMessageContainer}>
           <Text style={styles.winMessage}>{currentEnemy.defeatMessage}</Text>
         </View>
-        <TouchableOpacity 
-          style={styles.advanceButton} 
-          onPress={() => {
-                    if (backup.healing && backup.maia && backup.weapons) {
-                      dispatch(setHealingState(backup.healing));
-                      dispatch(setMaiaState(backup.maia));
-                      dispatch(setWeaponsState(backup.weapons));
-                      navigation.goBack();
-                    }
-                    dispatch(restoreBackup());
-                  }}
-        >
-          <Text style={styles.advanceButtonText}>Reintentar</Text>
-        </TouchableOpacity>
         <TouchableOpacity 
           style={styles.advanceButton} 
           onPress={() => {
@@ -275,27 +269,54 @@ const BattleScreen: React.FC = () => {
 
   return (
     <View style={styles.container}>
-      {/* Parte superior: salud, diálogo y enemy */}
       <View style={styles.topContainer}>
-        <View style={styles.healthContainer}>
+        <View style={styles.damageContainer}>
           {showBrokenHearthEnemy ? (
             <BrokenHearthIcon height={font(20)} width={font(20)} />
           ) : (
             <HearthIcon height={font(20)} width={font(20)} />
           )}
           <Text style={styles.healthText}>
-            {enemyCurrentHealth}/{currentEnemy.health}
+            {enemyCurrentHealth}/{currentEnemy.health} 
+          </Text>
+          <Text style={styles.damageText}>
+            Daño: {currentPhase.damage}
           </Text>
         </View>
         <View style={styles.enemyContainer}>
           {showDamagedEnemy ? (
-            <ShakyMattIcon ref={enemyIconRef} height={font(198)} width={font(198)} />
+            <ShakyIcon ref={enemyIconRef} Icon={currentEnemy.icon} height={font(198)} width={font(198)} />
           ) : (
-            <MattIcon height={font(198)} width={font(198)} />
+            <currentEnemy.icon height={font(198)} width={font(198)} />
           )}
         </View>
+        {showInfoButton && (
+        <TouchableOpacity style={styles.infoButton} onPress={handleInfoPress}>
+            <View style={styles.buttonContent}>
+              <Text style={styles.infoButtonText}>INFO</Text>
+            </View>
+          </TouchableOpacity>)}
       </View>
-
+      {showEnemyInfo && (
+        <View style={styles.enemyInfoContainer}>
+          <View style={styles.enemyInfoTextContainer}>
+          <Text style={styles.enemyInfoText}>
+            Nombre: {currentEnemy.name}
+          </Text>
+          <Text style={styles.enemyInfoText}>
+            Daño: {currentEnemy.initialdamage}
+          </Text>
+          <Text style={styles.enemyInfoText}>
+            Defensa: {currentEnemy.arrowsRequired} {currentEnemy.arrowsRequired === 1 ? 'Flecha' : 'Flechas'} para contraatacar.
+          </Text>
+          <View style={ {height: '5%'} }></View>
+          <Text style={styles.enemyInfoText}>
+            {currentEnemy.description}
+          </Text>
+          </View>
+        </View>
+      )}
+      
       {/* Botones de acción en la esquina inferior izquierda */}
       {showAttackButton && (
         <View style={styles.actionButtonsContainer}>
@@ -399,7 +420,10 @@ const BattleScreen: React.FC = () => {
         onClose={() => setShowHealingModal(false)} 
         onHealingUsed={(used) => {
           if (used) {
-            // Al usar curación se oculta el botón de ATAQUE y se muestran DEFENSA y ARCO
+            if(showEnemyInfo || showInfoButton){
+              setShowInfoButton(false);
+              setShowEnemyInfo(false);
+              }
             setShowAttackButton(false);
             setShowDefenderButton(true);
           }
@@ -412,6 +436,7 @@ const BattleScreen: React.FC = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    
   },
   topContainer: {
     alignItems: 'center',
@@ -480,7 +505,8 @@ const styles = StyleSheet.create({
   winMessageContainer: {
     flex: 1,
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
+    
   },
   winMessage: {
     fontSize: font(23),
@@ -498,6 +524,45 @@ const styles = StyleSheet.create({
   advanceButtonText: {
     color: 'white',
     fontSize: font(18),
+  },
+  enemyInfoContainer:{
+    alignItems: 'center',
+    width: "100%",
+    height: "40%",
+    justifyContent: 'center',
+  },
+  enemyInfoTextContainer:{
+    paddingVertical: '4%',
+    justifyContent: 'center',
+    paddingHorizontal: '1%',
+    width: "95%",
+    borderWidth: 3,
+  },
+  enemyInfoText:{
+    fontSize: font(20),
+    fontWeight: 'bold',
+  },
+  infoButton: {
+    backgroundColor: 'black',
+    padding: "2%",
+    borderRadius: 5,
+    
+  },
+  infoButtonText: {
+    color: 'white',
+    fontSize: font(14),
+    fontWeight: 'bold',
+  },
+  damageContainer:{
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: "2%",
+    left:'8%',
+  },
+  damageText:{
+    fontSize: font(20),
+    fontWeight: 'bold',
+    left:'10%',
   },
 });
 

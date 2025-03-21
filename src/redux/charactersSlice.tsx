@@ -23,7 +23,7 @@ export interface CharactersState {
 const initialState: CharactersState = {
   shopgirl: 0,
   baris: 0,
-  germis: 1,
+  germis: 0,
   jox: 0,
   gorjox: 0,
   pawnshopboy:0,

@@ -85,11 +85,6 @@ const BarScreen = () => {
        boxKey="barbox"
         positionStyle={{ top: '45%', left: '25%' }}
       />
-      <SafeBox
-       boxKey="cavebox1"
-        positionStyle={{ top: '45%', left: '50%' }}
-        code="0234"
-       />
         </>
         ) : (
       <Pressable style={[styles.iconButton, iconStyle]} onPress={handleIconPress}>

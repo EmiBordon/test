@@ -71,7 +71,7 @@ const TutorialScreen = () => {
   const handleAccept = () => {
     dispatch(saveBackup({ healing, maia, weapons }));
     setModalVisible(false);
-    navigation.navigate('BattleScreen', { enemyName: 'Germis' });
+    navigation.navigate('BattleScreen', { enemyName: 'Matt' });
   };
 
   const handleIconPress = () => {
@@ -86,7 +86,7 @@ const TutorialScreen = () => {
         setModalVisible(true);
       }
     } else {
-      setConversationContent(conversations.homechessclose);
+      setConversationContent(conversations.mattconv3);
       setModal2Visible(true);
     }
   };

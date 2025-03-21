@@ -10,7 +10,7 @@ import { boxesActions } from './boxesActions';
 import { font } from './fontsize';
 
 interface CodeBoxProps {
-  boxKey: 'barbox' | 'cavebox1' | 'cavebox2' | 'prisionbox' | 'mansionbox1' | 'mansionbox2';
+  boxKey: 'barbox' | 'cavebox1' | 'cavebox2' | 'cavebox3' | 'cavebox4' | 'prisionbox' | 'mansionbox1' | 'mansionbox2';
   positionStyle: any;
   code: string;
 }

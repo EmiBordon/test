@@ -1,4 +1,4 @@
-// ShakyMaiaIcon.tsx
+// ShakyIcon.tsx
 import React, { useImperativeHandle, forwardRef } from 'react';
 import Animated, {
   useSharedValue,
@@ -6,19 +6,19 @@ import Animated, {
   withSequence,
   withTiming,
 } from 'react-native-reanimated';
-import { MattIcon } from '../SvgExporter';
 
-export interface ShakyMattIconRef {
+export interface ShakyIconRef {
   triggerShake: () => void;
 }
 
-interface ShakyMattIconProps {
+interface ShakyIconProps {
   height: number;
   width: number;
+  Icon: React.ElementType; // Recibe cualquier componente React (como un svg)
 }
 
-const ShakyMattIcon = forwardRef<ShakyMattIconRef, ShakyMattIconProps>(
-  ({ height, width }, ref) => {
+const ShakyIcon = forwardRef<ShakyIconRef, ShakyIconProps>(
+  ({ height, width, Icon }, ref) => {
     const shake = useSharedValue({ x: 0, y: 0 });
 
     const animatedStyle = useAnimatedStyle(() => ({
@@ -44,10 +44,10 @@ const ShakyMattIcon = forwardRef<ShakyMattIconRef, ShakyMattIconProps>(
 
     return (
       <Animated.View style={[animatedStyle, { pointerEvents: 'none' }]}>
-        <MattIcon height={height} width={width} />
+        <Icon height={height} width={width} />
       </Animated.View>
     );
   }
 );
 
-export default ShakyMattIcon;
+export default ShakyIcon;

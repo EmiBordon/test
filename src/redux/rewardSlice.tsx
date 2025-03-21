@@ -16,6 +16,8 @@ export interface RewardsState {
     barbox: boolean;
     cavebox1: boolean;
     cavebox2: boolean;
+    cavebox3: boolean;
+    cavebox4: boolean;
     prisionbox: boolean;
     mansionbox1: boolean;
     mansionbox2: boolean;
@@ -27,6 +29,8 @@ const initialState: RewardsState = {
     barbox: false,
     cavebox1: false,
     cavebox2: false,
+    cavebox3: false,
+    cavebox4: false,
     prisionbox: false,
     mansionbox1: false,
     mansionbox2: false,
