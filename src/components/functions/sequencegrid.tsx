@@ -16,16 +16,16 @@ const generateRandomArray = (length: number): number[] => {
 interface RandomSequenceGridProps {
   sequenceLength: number;
   onResult: (result: boolean) => void;
+  delay: number;
 }
 
-const RandomSequenceGrid: React.FC<RandomSequenceGridProps> = ({ sequenceLength, onResult }) => {
+const RandomSequenceGrid: React.FC<RandomSequenceGridProps> = ({ sequenceLength, onResult, delay }) => {
   const [randomArray, setRandomArray] = useState<number[]>([]);
   const [currentLit, setCurrentLit] = useState<number | null>(null);
   const [sequenceComplete, setSequenceComplete] = useState(false);
   const [currentInputIndex, setCurrentInputIndex] = useState(0);
   const [inputDisabled, setInputDisabled] = useState(false);
   const [pressedSquare, setPressedSquare] = useState<number | null>(null);
-  const delay = 500;
 
   const startSequence = () => {
     const arr = generateRandomArray(sequenceLength);
@@ -49,7 +49,7 @@ const RandomSequenceGrid: React.FC<RandomSequenceGridProps> = ({ sequenceLength,
 
   useEffect(() => {
     startSequence();
-  }, [sequenceLength]);
+  }, [sequenceLength, delay]);
 
   const handleSquarePress = (num: number) => {
     if (!sequenceComplete || inputDisabled) return;

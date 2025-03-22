@@ -16,7 +16,7 @@ export const enemies: Enemy[] = [
         icon: MattIcon,
         onDefeat: () => setMattState(2),
         phases: [
-          { threshold: 0, damage: 1, drawBarLevels: 2, drawBarDuration: 1500, moonTearPattern: 2, moonTearDifficulty: 2, gridLength: 2 },
+          { threshold: 0, damage: 1, drawBarLevels: 2, drawBarDuration: 1500, moonTearPattern: 2, moonTearDifficulty: 2, gridLength: 2 ,gridDelay: 500},
         ],
       },  
 {
@@ -30,7 +30,7 @@ export const enemies: Enemy[] = [
     icon: GermisIcon,
     onDefeat: () => (setCharacter({ key: 'germis', value: 2 })),
     phases: [
-      { threshold: 0, damage: 2, drawBarLevels: 3, drawBarDuration: 1500, moonTearPattern: 3, moonTearDifficulty: 3, gridLength: 3 },
+      { threshold: 0, damage: 2, drawBarLevels: 3, drawBarDuration: 1500, moonTearPattern: 3, moonTearDifficulty: 3, gridLength: 3 ,gridDelay: 480},
     ],
   },
   {
@@ -44,16 +44,16 @@ export const enemies: Enemy[] = [
     icon: JoxIcon,
     onDefeat: () => (setCharacter({ key: 'jox', value: 2 })),
     phases: [
-      { threshold: 0.9, damage: 2, drawBarLevels: 3, drawBarDuration: 1450, moonTearPattern: 3, moonTearDifficulty: 3.3, gridLength: 3 },
-      { threshold: 0.6, damage: 2, drawBarLevels: 3, drawBarDuration: 1450, moonTearPattern: 3, moonTearDifficulty: 3.3, gridLength: 3 },
-      { threshold: 0.4, damage: 2, drawBarLevels: 3, drawBarDuration: 1450, moonTearPattern: 3, moonTearDifficulty: 3.3, gridLength: 3 },
-      { threshold: 0, damage: 2, drawBarLevels: 4, drawBarDuration: 1450, moonTearPattern: 3, moonTearDifficulty: 3.4, gridLength: 4 },
+      { threshold: 0.9, damage: 2, drawBarLevels: 3, drawBarDuration: 1450, moonTearPattern: 3, moonTearDifficulty: 3.3, gridLength: 3, gridDelay: 480 },
+      { threshold: 0.6, damage: 2, drawBarLevels: 3, drawBarDuration: 1450, moonTearPattern: 3, moonTearDifficulty: 3.3, gridLength: 3, gridDelay: 480 },
+      { threshold: 0.4, damage: 2, drawBarLevels: 3, drawBarDuration: 1450, moonTearPattern: 3, moonTearDifficulty: 3.3, gridLength: 3, gridDelay: 480},
+      { threshold: 0, damage: 2, drawBarLevels: 4, drawBarDuration: 1450, moonTearPattern: 3, moonTearDifficulty: 3.4, gridLength: 4,gridDelay: 470 },
     ],
   },
   {
     name: "Gorjox",
     health: 20,
-    initialdamage: 5,
+    initialdamage: 4,
     victoryMessage: "Gorjox agoniza de dolor.. su sonido al morir hace eco en toda la cueva...",
     defeatMessage: "Gorjox te aplastó sin piedad... vuelve a intentarlo",
     arrowsRequired: 3,
@@ -61,11 +61,11 @@ export const enemies: Enemy[] = [
     icon: GorjoxIcon,
     onDefeat: () => (setCharacter({ key: 'gorjox', value: 4 })),
     phases: [
-        { threshold: 0.9, damage: 4, drawBarLevels: 3, drawBarDuration: 1450, moonTearPattern: 3, moonTearDifficulty: 3.2, gridLength: 3 },
-        { threshold: 0.6, damage: 4, drawBarLevels: 3, drawBarDuration: 1450, moonTearPattern: 3, moonTearDifficulty: 3.2, gridLength: 3 },
-        { threshold: 0.4, damage: 9, drawBarLevels: 4, drawBarDuration: 1450, moonTearPattern: 5, moonTearDifficulty: 3.8, gridLength: 8 },
-        { threshold: 0.2, damage: 4, drawBarLevels: 4, drawBarDuration: 1450, moonTearPattern: 3, moonTearDifficulty: 3.2, gridLength: 3 },
-        { threshold: 0, damage: 9, drawBarLevels: 4, drawBarDuration: 1450, moonTearPattern: 5, moonTearDifficulty: 3.8, gridLength: 8 },
+        { threshold: 0.9, damage: 4, drawBarLevels: 3, drawBarDuration: 1450, moonTearPattern: 3, moonTearDifficulty: 3.2, gridLength: 3,gridDelay: 480 },
+        { threshold: 0.6, damage: 4, drawBarLevels: 3, drawBarDuration: 1450, moonTearPattern: 3, moonTearDifficulty: 3.2, gridLength: 3,gridDelay: 480 },
+        { threshold: 0.4, damage: 9, drawBarLevels: 4, drawBarDuration: 1450, moonTearPattern: 5, moonTearDifficulty: 3.8, gridLength: 8 ,gridDelay: 300},
+        { threshold: 0.2, damage: 4, drawBarLevels: 4, drawBarDuration: 1450, moonTearPattern: 3, moonTearDifficulty: 3.2, gridLength: 3,gridDelay: 480 },
+        { threshold: 0, damage: 9, drawBarLevels: 4, drawBarDuration: 1450, moonTearPattern: 5, moonTearDifficulty: 3.8, gridLength: 8 ,gridDelay: 300},
     ],
   }
 ];

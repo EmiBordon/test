@@ -11,16 +11,19 @@ export interface Conversation {
 }
 
 export const conversations: {
-  homechessclose:Conversation;
+  homechestclose:Conversation;
   mattconv1: Conversation;
   mattconv2: Conversation;
   mattconv3: Conversation;
+  mattconv4: Conversation;
+  mattconv5: Conversation;
   shopgirlconv1: Conversation;
   pawnshopboyconv1:Conversation;
   sign1:Conversation;
   openbox:Conversation;
   barisconv1:Conversation;
   barisconv2:Conversation;
+  barisconv3:Conversation;
   caveclose1:Conversation;
   caveclose2:Conversation;
   caveclose3:Conversation;
@@ -38,64 +41,65 @@ export const conversations: {
   mattconv1: {
     dialogos: [
       { 
-        text: "Hola Matt, que has estado haciendo estos ultimos dias? ", 
-        svg: MaiaHeadIcon 
-      },
-      { 
-        text: "Pues, no mucho... ", 
+        text: "Oye hermana, el señor Baris necesita tu ayuda.. ", 
         svg: MattHeadIcon
       },
       { 
-        text: "Aún no puedo creer que Ovy haya sido capaz de matar al Rey Heat, es decir.. es nuestro hermano!", 
+        text: "Tu eres la mejor guerrera del pueblo actualmente, es importante tu ayuda.", 
+        svg: MattHeadIcon
+      },
+      { 
+        text: "Lo se, hace ya 6 meses comenzo la catastrofe.. los Bichos ya deben haber llegado al pueblo..", 
+        svg: MaiaHeadIcon 
+      },
+      
+      { 
+        text: "Aun no puedo creer que nuestro hermano haya sido el causante de todo esto.", 
         svg: MaiaHeadIcon 
       },
       { 
         text: "Es adoptado. ", 
+        svg: MattHeadIcon 
+      },
+      { 
+        text: "Que piensas hacer? Iras con el señor Baris?", 
+        svg: MattHeadIcon 
+      },
+      { 
+        text: "Si, por supuesto... ", 
+        svg: MaiaHeadIcon 
+      },
+      { 
+        text: "Esta bien, deberas estar bien equipada y preparada.", 
+        svg: MattHeadIcon 
+      },
+      { 
+        text: "Haremos un combate de entrenamiento, para que recuerdes como luchar.", 
+        svg: MattHeadIcon 
+      },
+      { 
+        text: "Aunque te recuerdo, la batalla se basa en 2 turnos, uno para atacar y otro para defender...", 
+        svg: MattHeadIcon 
+      },
+      { 
+        text: "En tu turno para ataque puedes atacar a tu oponente o usar algun objeto para aumentar tu salud..", 
+        svg: MattHeadIcon 
+      },
+      { 
+        text: "Cualquiera de las 2 acciones te haran perder el turno.", 
+        svg: MattHeadIcon 
+      },
+      { 
+        text: "Luego en tu turno de Defensa deberas elegir entre defenderte del ataque enemigo o usar el arco..", 
+        svg: MattHeadIcon 
+      },
+      { 
+        text: "Si atinas con el arco haras perder el turno al enemigo, aunque perderas flechas.. ", 
+        svg: MattHeadIcon 
+      },
+      { 
+        text: "Espero todo haya quedado claro hermanita, ahora luchemos!", 
         svg: MattHeadIcon
-      },
-      { 
-        text: "...", 
-        svg: Maia4HeadIcon 
-      },
-      { 
-        text: "En 2 dias será su ejecución, me gustaria al menos poder hablar una ultima vez con él.. ", 
-        svg: MaiaHeadIcon 
-      },
-      { 
-        text: "Que piensas hacer? Sabes que eso es imposible.", 
-        svg: MattHeadIcon 
-      },
-      { 
-        text: "Encontrare la forma de entrar a la prisión, quiero al menos que me mire a los ojos y me diga por que hizo lo que hizo. ", 
-        svg: MaiaHeadIcon 
-      },
-      { 
-        text: "Genial.. tu tambien tienes ganas de que te ejecuten.", 
-        svg: MattHeadIcon 
-      },
-      { 
-        text: "No te preocupes, le pedire ayuda a Joshua, el encontrara la forma de hacerme entrar.", 
-        svg: MaiaHeadIcon 
-      },
-      { 
-        text: "No voy a negarte que no tengo mucha fe en ti.. pero si quieres terminar como el estupido de Ovy, alla tú.", 
-        svg: MattHeadIcon 
-      },
-      { 
-        text: "Gracias por tu apoyo hermanito..", 
-        svg: Maia4HeadIcon 
-      },
-      { 
-        text: "En fin.. al menos quiero asegurarme de que mejoraste tus habilidades de combate, que te parece si practicamos?", 
-        svg: MattHeadIcon 
-      },
-      { 
-        text: "Ok, pero si te gano, me diras donde escondiste a Diana", 
-        svg: MaiaHeadIcon 
-      },
-      { 
-        text: "Esa estupida rata.. esta bien, lo prometo.", 
-        svg: MattHeadIcon 
       },
       { 
         text: "Deseas combatir con Matt?", 
@@ -114,17 +118,37 @@ export const conversations: {
   mattconv3: {
     dialogos: [
       { 
-        text: "Quizas esta funcionando", 
+        text: "Bien hecho hermana, aunque creo que te excediste..", 
         svg: MattHeadIcon 
       },
       { 
-        text: "...", 
+        text: "No seas marica.", 
         svg: MaiaHeadIcon
       },
       { 
-        text: "Genial", 
+        text: "En fin.. toma, deberias usar el mapa del pueblo para viajar. ", 
         svg: MattHeadIcon 
-      }
+      },
+      { 
+        text: "Gracias hermano, volvere pronto, cuidate.", 
+        svg: MaiaHeadIcon 
+      },
+    ],
+  },
+  mattconv4: {
+    dialogos: [
+      { 
+        text: "Ten mucho cuidado hermana...", 
+        svg: MattHeadIcon 
+      },
+    ],
+  },
+  mattconv5: {
+    dialogos: [
+      { 
+        text: "Espero hayas disfrutado la demo hermana.", 
+        svg: MattHeadIcon 
+      },
     ],
   },
   shopgirlconv1: {
@@ -147,10 +171,10 @@ export const conversations: {
       },
     ],
   },
-  homechessclose: {
+  homechestclose: {
     dialogos: [
       { 
-        text: "Es el baúl de Papá, Ovy tenia la llave...", 
+        text: "El viejo baúl de Papá.. Ovy escondio la llave hace mas de un año.", 
         svg: MaiaHeadIcon
       },
     ],
@@ -166,59 +190,48 @@ export const conversations: {
   barisconv1: {
     dialogos: [
       { 
-        text: "Ohh, pequeña Maia, en que puedo ayudarte?", 
+        text: "Ohh, pequeña Maia, que bueno que viniste.", 
         svg: BarisHeadIcon 
       },
       { 
-        text: "Hola señor Baris, seguro esta enterado de lo de mi hermano, verdad?", 
+        text: "Hola señor Baris, vine tan rapido como pude, que sucede?", 
         svg: MaiaHeadIcon
       },
       { 
-        text: "Ohh, si por supuesto... realmente es una pena, siempre fue un buen chico.", 
+        text: "Ohh, pequeña Maia, los Bichos comenzaron la invasion, recibimos noticias muy terribles...", 
         svg: BarisHeadIcon 
       },
       { 
-        text: "Crei que usted lo odiaba... ", 
+        text: "Al parecer estan arrasando con toda la prision..", 
+        svg: BarisHeadIcon 
+      },
+      { 
+        text: "No es posible, ahi se encuentra Ovy.", 
+        svg: MaiaHeadIcon
+      },
+      
+      { 
+        text: "Ohh, es una verdadera tragedia pequeña Maia, por eso necesitamos de tu ayuda.", 
+        svg: BarisHeadIcon 
+      },
+      { 
+        text: "Entiendo.. ire a la prision a combatir con los Bichos. ", 
         svg: MaiaHeadIcon
       },
       { 
-        text: "Ohh, para nada, solo era un niño un poco travieso...", 
+        text: "Ohh no, pequeña Maia, no es lo mas prudente, hay que actuar con inteligencia.", 
         svg: BarisHeadIcon 
       },
       { 
-        text: "Tus padres no sabian controlarlo, y el tenia una curiosa costumbre de robar en mi Bar...", 
-        svg: BarisHeadIcon 
+        text: "Necesito que recojas algo muy importante que hay en la Cueva del pueblo.", 
+        svg: BarisHeadIcon
       },
       { 
-        text: "Pero se que en el fondo solo fue un niño inconprendido.", 
-        svg: BarisHeadIcon 
+        text: "Es fundamental para volver a crear el sello magico contra los Bichos.", 
+        svg: BarisHeadIcon
       },
       { 
-        text: "Entiendo...  ", 
-        svg: MaiaHeadIcon
-      },
-      { 
-        text: "Señor Baris, yo queria pedirle un favor.", 
-        svg: MaiaHeadIcon 
-      },
-      { 
-        text: "Ohh, pequeña Maia, por supuesto, en que puedo ayudarte?", 
-        svg: BarisHeadIcon 
-      },
-      { 
-        text: "Yo necesito al menos hablar una ultima vez con Ovy...", 
-        svg: MaiaHeadIcon
-      },
-      { 
-        text: "Tengo entendido que usted hace años ayudo a obstuir los pasadizos que llevaban a los calabozos.", 
-        svg: MaiaHeadIcon
-      },
-      { 
-        text: "Ohh, pequeña Maia, no me gusta hacia donde va esta conversación.", 
-        svg: BarisHeadIcon 
-      },
-      { 
-        text: "Se lo pido por favor, necesito ir a esos pasadizos y entrar al calabozo donde tienen a Ovy.", 
+        text: "De acuerdo, ire a la cueva, que debo buscar.", 
         svg: MaiaHeadIcon
       },
       { 
@@ -230,23 +243,15 @@ export const conversations: {
         svg: BarisHeadIcon 
       },
       { 
-        text: "De acuerdo...voy a acceder solo porque se que eres una gran guerrera como tus padres..", 
+        text: "En la Cueva hay 2 Bichos pequeña Maia.. necesitamos su sangre..", 
         svg: BarisHeadIcon 
       },
       { 
-        text: "Primero deberas ir a la Cueva del pueblo, y deberas acabar con todos los bichos que se encuentran ahi.", 
+        text: "Tendras que combatir con ellos y traer una muestra de su sangre.", 
         svg: BarisHeadIcon 
       },
       { 
-        text: "Pero te advierto pequeña Maia, es una tarea muy arriesgada...", 
-        svg: BarisHeadIcon 
-      },
-      { 
-        text: "En caso de que aceptes, deberas volver aqui cuando hayas limpiado esa Cueva por completo, luego te dire como acceder a los pasadizos..", 
-        svg: BarisHeadIcon 
-      },
-      { 
-        text: "Se lo agradezco señor Baris.", 
+        text: "Cuente conmigo señor Baris.", 
         svg: MaiaHeadIcon 
       },
       { 
@@ -263,6 +268,14 @@ export const conversations: {
       },
     ],
   },
+  barisconv3: {
+    dialogos: [
+      { 
+        text: "Ohh, pequeña Maia, ya no hay mas nada que hacer aqui, esto solo es una Demo.", 
+        svg: BarisHeadIcon
+      },
+    ],
+  },
   caveclose1: {
     dialogos: [
       { 
@@ -274,7 +287,7 @@ export const conversations: {
   caveclose2: {
     dialogos: [
       { 
-        text: "Este Bicho no me deja avanzar...", 
+        text: "Debo acabar con este Bicho antes de continuar...", 
         svg: MaiaHeadIcon
       },
     ],
@@ -282,7 +295,7 @@ export const conversations: {
   caveclose3: {
     dialogos: [
       { 
-        text: "Este Bicho no me deja avanzar...", 
+        text: "Debo acabar con este Bicho antes de continuar...", 
         svg: MaiaHeadIcon
       },
     ],
@@ -306,7 +319,7 @@ export const conversations: {
         svg: GermisHeadIcon 
       },
       { 
-        text: "Eres la primera persona que entra en mucho tiempo...", 
+        text: "Acaso no leiste el cartel...", 
         svg: GermisHeadIcon
       },
       { 
@@ -346,11 +359,11 @@ export const conversations: {
         svg: JoxHeadIcon 
       },
       { 
-        text: "Que? que quieres decir con eso ?", 
+        text: "Que? Que quieres decir con eso ?", 
         svg: MaiaHeadIcon 
       },
       { 
-        text: "Tendras que morir con la duda...", 
+        text: "No voy a seguir hablando con un asqueroso humano...", 
         svg: JoxHeadIcon 
       },
       { 

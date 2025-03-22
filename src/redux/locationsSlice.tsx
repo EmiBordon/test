@@ -18,6 +18,9 @@ export interface LocationsState {
   bar: number;
   shop: number;
   home: number;
+  map1: boolean;
+  map2: boolean;
+  map3: boolean;
 }
 
 const initialState: LocationsState = {
@@ -27,17 +30,32 @@ const initialState: LocationsState = {
   bar: 0,
   shop: 0,
   home: 0,
+  map1: false,
+  map2: false,
+  map3: false,
 };
 
 const locationsSlice = createSlice({
   name: 'locations',
   initialState,
   reducers: {
-    setLocation: (state, action: PayloadAction<{ key: keyof LocationsState; value: number }>) => {
+    // Manejo de variables numéricas
+    setLocation: (state, action: PayloadAction<{ key: keyof Omit<LocationsState, 'map1' | 'map2' | 'map3'>; value: number }>) => {
       const { key, value } = action.payload;
       state[key] = value;
       saveState(state);
     },
+
+    // Manejo de las booleanas
+    setMapTrue: (state, action: PayloadAction<'map1' | 'map2' | 'map3'>) => {
+      state[action.payload] = true;
+      saveState(state);
+    },
+    setMapFalse: (state, action: PayloadAction<'map1' | 'map2' | 'map3'>) => {
+      state[action.payload] = false;
+      saveState(state);
+    },
+
     resetLocations: (state) => {
       Object.assign(state, initialState);
       saveState(state);
@@ -60,5 +78,5 @@ const saveState = async (state: LocationsState) => {
   }
 };
 
-export const { setLocation, resetLocations } = locationsSlice.actions;
+export const { setLocation, setMapTrue, setMapFalse, resetLocations } = locationsSlice.actions;
 export default locationsSlice.reducer;

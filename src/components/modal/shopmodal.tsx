@@ -55,7 +55,7 @@ const shopItems: Item[] = [
   { id: '3', name: 'Gran Frasco de Salud', price: 45, description: 'Aumenta el 100% de la Salud' },
   { id: '4', name: 'Pildoras', price: 50, description: 'Aumenta 5 puntos de Salud Total' },
   { id: '5', name: 'Flechas', amount: 'X3', price: 10, description: 'Flechas para contrarrestar ataques enemigos' },
-  { id: '6', name: 'Dagas', price: 70, description: 'Poderosas Dagas' },
+  { id: '6', name: 'Dagas', price: 70, description: 'Poderosas Dagas de combate, aumenta tu Daño a 3' },
 ];
 
 // Definimos un tipo para los componentes de ícono que reciben width y height.

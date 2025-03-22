@@ -62,8 +62,11 @@ const BarScreen = () => {
         setModal2Visible(true);
         dispatch(setCharacter({ key: 'baris', value: 1 }));
         dispatch(setLocation({ key: 'cave', value: 1 }));
-      } else {
+      } else if  (barisState === 1) {
         setConversationContent(conversations.barisconv2);
+        setModal2Visible(true);
+      }else if (barisState === 2) {
+        setConversationContent(conversations.barisconv3);
         setModal2Visible(true);
       }
     }

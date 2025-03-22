@@ -409,7 +409,8 @@ const BattleScreen: React.FC = () => {
         <View style={styles.overlay}>
           <RandomSequenceGrid
             sequenceLength={currentPhase.gridLength} 
-            onResult={handleDefenseResult} 
+            onResult={handleDefenseResult}
+            delay={currentPhase.gridDelay} 
           />
         </View>
       )}

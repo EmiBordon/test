@@ -32,18 +32,6 @@ import RewardManager from '../../components/functions/rewardmanager';
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
 
-/**
- * Configuración centralizada para cada ícono.
- * Cada objeto en "iconConfig" contiene:
- * - name: identificador único.
- * - component, height, width, style: para renderizar el ícono.
- * - appearances: array de configuraciones que indican:
- *      • en qué imagen (imageIndex) debe aparecer,
- *      • el estado requerido (requiredState) para que aparezca,
- *      • la conversación a mostrar,
- *      • (opcional) el valor a actualizar en el estado,
- *      • el tipo de modal a usar.
- */
 const iconConfig = [
   {
     name: 'germis',
@@ -272,6 +260,8 @@ const CaveScreen = () => {
           conversationContent === conversations.gorjoxconv4) {
           dispatch(saveBackup({ healing, maia, weapons }));
           setModal2Visible(false);
+          dispatch(setCharacter({ key: 'baris', value: 2 }));
+          dispatch(setCharacter({ key: 'baris', value: 4 }));
           navigation.navigate('BattleScreen', { enemyName: 'Gorjox' });
           }
   };
@@ -321,7 +311,7 @@ const CaveScreen = () => {
      )}
      {currentImageIndex === 3 && (
      <SafeBox 
-      boxKey='cavebox3'
+      boxKey='cavebox4'
       positionStyle={{ top: '60%', left: '70%' }}
       code="4587"
       />

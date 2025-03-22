@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -24,6 +24,8 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
   const dispatch = useDispatch();
   const [modalVisible, setModalVisible] = useState<boolean>(false);
   const [codeModalVisible, setCodeModalVisible] = useState<boolean>(false);
+  const [showResetButton, setShowResetButton] = useState(false);
+  const timerRef = useRef<NodeJS.Timeout | null>(null);
 
   // Obtenemos los estados que queremos guardar/restaurar
   const healing = useSelector((state: any) => state.healing);
@@ -31,71 +33,33 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
   const weapons = useSelector((state: any) => state.weapons);
   const backup = useSelector((state: any) => state.backup);
 
+  const handleLongPressIn = () => {
+    timerRef.current = setTimeout(() => {
+      setShowResetButton(true);
+    }, 3000); // 3 segundos
+  };
+
+  const handleLongPressOut = () => {
+    if (timerRef.current) {
+      clearTimeout(timerRef.current);
+      timerRef.current = null;
+    }
+  };
+
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Maia y La Fuente</Text>
       <FountainIcon height={"25%"} />
-
       <TouchableOpacity
         style={styles.button}
-        onPress={() => {
-          
-          navigation.replace("Tutorial");
-        }}
+        onPress={() => navigation.replace("Tutorial")}
+        onPressIn={handleLongPressIn}
+        onPressOut={handleLongPressOut}
       >
-        <Text style={styles.buttonText}>Nueva Partida</Text>
+        <Text style={styles.buttonText}>Jugar Demo</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity
-        style={styles.button}
-        onPress={() => {
-          
-          setCodeModalVisible(true);
-        }}
-      >
-        <Text style={styles.buttonText}>Pruebas</Text>
-      </TouchableOpacity>
-
-      {/* 🔵 GUARDAR ESTADOS */}
-      <TouchableOpacity
-        style={styles.button}
-        onPress={() => {
-         
-          dispatch(saveBackup({ healing, maia, weapons }));
-        }}
-      >
-        <Text style={styles.buttonText}>Guardar Estados</Text>
-      </TouchableOpacity>
-
-      {/* 🔵 CARGAR ESTADOS */}
-      <TouchableOpacity
-        style={styles.button}
-        onPress={() => {
-         
-          if (backup.healing && backup.maia && backup.weapons) {
-            dispatch(setHealingState(backup.healing));
-            dispatch(setMaiaState(backup.maia));
-            dispatch(setWeaponsState(backup.weapons));
-          }
-          dispatch(restoreBackup());
-        }}
-      >
-        <Text style={styles.buttonText}>Cargar Estados</Text>
-      </TouchableOpacity>
-
-      <ResetButton />
-
-      <ConversationModal
-        visible={modalVisible}
-        onClose={() => setModalVisible(false)}
-        conversation={conversations.mattconv1}
-      />
-
-      <CodeModal
-        visible={codeModalVisible}
-        code="381547260"
-        onClose={() => setCodeModalVisible(false)}
-      />
+      {showResetButton && <ResetButton />}
     </View>
   );
 };

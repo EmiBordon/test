@@ -8,6 +8,7 @@ export type EnemyPhase = {
   moonTearPattern: number;
   moonTearDifficulty: number;
   gridLength: number;
+  gridDelay: number;
   dialogue?: string;
 };
 

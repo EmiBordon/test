@@ -4,7 +4,10 @@ import {
   Key4Icon, 
   DiamondIcon, 
   RubiIcon, 
-  PocketWatchIcon 
+  PocketWatchIcon,
+  QuiverArrowIcon,
+  HealthPotionIcon,
+  BigHealthPotionIcon,
 } from './SvgExporter';
 
 // Define el estado de tu slice de objects
@@ -19,20 +22,30 @@ interface ObjectsState {
   keydoor2: number;
 }
 
-// Define RootState parcial solo para lo que vas a consumir
+// Define el estado de weapons y healing
+interface WeaponsState {
+  arrows: number;
+}
+interface HealingState {
+  healthpotion: number;
+  bighealthpotion: number;
+}
+
 interface RootState {
   objects: ObjectsState;
+  weapons: WeaponsState;
+  healing: HealingState;
 }
 
 // Objeto base
 export interface GameObject {
-    id: string;
-    name: string;
-    description?: string;
-    icon: React.ComponentType<any>;
-    state: number;
-    price?: number;
-  }
+  id: string;
+  name: string;
+  description?: string;
+  icon: React.ComponentType<any>;
+  state: number;
+  price?: number;
+}
 
 export const useObjects = () => {
   const {
@@ -46,6 +59,9 @@ export const useObjects = () => {
     keydoor2,
   } = useSelector((state: RootState) => state.objects);
 
+  const { arrows } = useSelector((state: RootState) => state.weapons);
+  const { healthpotion, bighealthpotion } = useSelector((state: RootState) => state.healing);
+
   const treasures: GameObject[] = [
     {
       id:'diamond',
@@ -53,7 +69,7 @@ export const useObjects = () => {
       description: 'Pequeño Diamante',
       icon: DiamondIcon,
       state: diamond,
-      price: 30, // Precio de ejemplo
+      price: 30,
     },
     {
       id:'rubi',
@@ -66,7 +82,7 @@ export const useObjects = () => {
     {
       id:'pocketwatch',
       name: 'Reloj de Bolsillo',
-      description: 'Reloj de Bolsillo',
+      description: 'Reloj de Bolsillo antiguo, una reliquia',
       icon: PocketWatchIcon,
       state: pocketwatch,
       price: 35,
@@ -111,5 +127,32 @@ export const useObjects = () => {
     },
   ];
 
-  return { treasures, keys };
+  const inventory: GameObject[] = [
+    {
+      id: 'arrows',
+      name: 'Flecha',
+      description: 'Flecha de combate y caza',
+      icon: QuiverArrowIcon,
+      state: arrows,
+      price: 2,
+    },
+    {
+      id: 'healthpotion',
+      name: 'Frasco de Salud',
+      description: 'Pequeño Frasco de Salud, se puede revender a guerreros',
+      icon: HealthPotionIcon,
+      state: healthpotion,
+      price: 15,
+    },
+    {
+      id: 'bighealthpotion',
+      name: 'Gran Frasco de Salud',
+      description: 'Un Gran Frasco de Salud, dificiles de conseguir',
+      icon: BigHealthPotionIcon,
+      state: bighealthpotion,
+      price: 30,
+    },
+  ];
+
+  return { treasures, keys, inventory };
 };

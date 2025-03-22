@@ -15,10 +15,10 @@ const Map1Modal = ({ visible, onClose, navigation }) => {
   // Configuración de cada ícono
   const iconsConfig = [
     { key: "house", icon: <HouseIcon width={font(55)} height={font(55)} />, text: "Casa", style: styles.iconHouse, action: () => { onClose(); navigation.replace("Tutorial"); } },
-    { key: "prison", icon: <PrisionIcon width={font(55)} height={font(55)} />, text: "Prisión", style: styles.iconPrison, action: () => Alert.alert("Prisión", "Este es el ícono de la prisión") },
+    { key: "prison", icon: <PrisionIcon width={font(60)} height={font(60)} />, text: "Prisión", style: styles.iconPrison, action: () => Alert.alert("Prision no disponible en la demo") },
     { key: "store", icon: <StoreIcon width={font(50)} height={font(50)} />, text: "Tienda", style: styles.iconStore, action: () => { onClose(); navigation.replace("Shop"); } },
     { key: "restaurant", icon: <RestaurantIcon width={font(55)} height={font(55)} />, text: "Bar", style: styles.iconRestaurant, action: () => { onClose(); navigation.replace("Bar"); } },
-    { key: "bigHouse", icon: <BigHouseIcon width={font(65)} height={font(65)} />, text: "Mansión", style: styles.iconBigHouse, action: () => Alert.alert("Mansión", "Este es el ícono de la mansión") },
+    { key: "bigHouse", icon: <BigHouseIcon width={font(65)} height={font(65)} />, text: "Mansión", style: styles.iconBigHouse, action: () => Alert.alert("Mansion no disponible en la demo") },
     { key: "cave", icon: <CaveIcon width={font(40)} height={font(40)} />, text: "Cueva", style: styles.iconCave, action: () => { onClose(); navigation.replace("Cave"); } },
     { key: "pawnShop", icon: <PawnShopIcon width={font(55)} height={font(55)} />, text: "Joyeria", style: styles.iconPawnShop, action: () => { onClose(); navigation.replace("PawnShop"); } },
   ];
@@ -89,7 +89,10 @@ const Map1Modal = ({ visible, onClose, navigation }) => {
           )}
 
           {/* Botón de cierre usando CrossIcon */}
-          <TouchableOpacity style={styles.closeButton} onPress={onClose}>
+          <TouchableOpacity style={styles.closeButton} onPress={() => { 
+                  onClose();
+                  resetSelection();
+                }}>
             <CrossIcon width={30} height={30} />
           </TouchableOpacity>
 

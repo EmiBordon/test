@@ -12,7 +12,7 @@ import { setMattState } from '../../redux/mattSlice';
 import { saveBackup } from "../../redux/backupSlice";
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../components/battles/types';
-
+import { setMapTrue } from '../../redux/locationsSlice';
 
 const icons = [
   { 
@@ -69,9 +69,16 @@ const TutorialScreen = () => {
   };
 
   const handleAccept = () => {
-    dispatch(saveBackup({ healing, maia, weapons }));
-    setModalVisible(false);
-    navigation.navigate('BattleScreen', { enemyName: 'Matt' });
+    if(conversationContent === conversations.mattconv1 ||
+      conversationContent === conversations.mattconv2 ){
+        dispatch(saveBackup({ healing, maia, weapons }));
+        setModalVisible(false);
+        navigation.navigate('BattleScreen', { enemyName: 'Matt' });
+      } else {
+        dispatch(setMattState(3));
+        setModalVisible(false);
+        dispatch(setMapTrue('map1'));
+      }
   };
 
   const handleIconPress = () => {
@@ -84,9 +91,21 @@ const TutorialScreen = () => {
       } else if (mattState === 1) {
         setConversationContent(conversations.mattconv2);
         setModalVisible(true);
+      }else if (mattState === 2) {
+        setConversationContent(conversations.mattconv3);
+        setModal2Visible(true);
+        dispatch(setMattState(3));
+        dispatch(setMapTrue('map1'));
+      }else if (mattState === 3) {
+        setConversationContent(conversations.mattconv4);
+        setModal2Visible(true);
+      }
+      else if (mattState === 4) {
+        setConversationContent(conversations.mattconv5);
+        setModal2Visible(true);
       }
     } else {
-      setConversationContent(conversations.mattconv3);
+      setConversationContent(conversations.homechestclose);
       setModal2Visible(true);
     }
   };

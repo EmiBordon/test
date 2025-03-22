@@ -13,6 +13,9 @@ import { useObjects, GameObject } from '../objects';
 import { decrementObject } from '../../redux/objectsSlice';
 import { incrementCoins } from '../../redux/coinsSlice';
 import { font } from '../functions/fontsize';
+import { decrementArrows } from '../../redux/weaponsSlice';
+import { decrementHealthPotion } from '../../redux/healingSlice';
+import { decrementBigHealthPotion } from '../../redux/healingSlice';
 
 interface CoinsState {
   coins: number;
@@ -28,37 +31,59 @@ interface PawnShopModalProps {
 }
 
 const PawnShopModal: React.FC<PawnShopModalProps> = ({ visible, onClose }) => {
-  // Obtenemos la cantidad de monedas del estado
   const coins = useSelector((state: RootState) => state.coins.coins);
   const dispatch = useDispatch();
+  const { treasures, inventory } = useObjects();
 
-  // Obtenemos la lista de tesoros (treasures). Asegurate de que cada objeto incluya la propiedad "price"
-  const { treasures } = useObjects();
-
-  // Filtramos para que solo se muestren los tesoros con state > 0
   const availableTreasures = treasures.filter(item => item.state > 0);
+  const availableInventory = inventory.filter(item => item.state > 0 && item.price);
 
-  // Computamos insufficientQuantity en base a la lista filtrada
-  const insufficientQuantity = availableTreasures.length === 0;
+  const combinedItems = [...availableTreasures, ...availableInventory];
+  const insufficientQuantity = combinedItems.length === 0;
 
-  // Estado para mostrar información del objeto seleccionado
   const [selectedInfo, setSelectedInfo] = useState<{ item: GameObject; index: number } | null>(null);
+  const [page, setPage] = useState(0);
+  const itemsPerPage = 4;
 
-  // Función para manejar la venta de un tesoro
   const handleSell = (item: GameObject, index: number) => {
     if (item.state > 0) {
       setSelectedInfo(null);
-      // Decrementa 1 unidad del objeto vendido.
-      dispatch(decrementObject({ key: item.id as any, amount: 1 }));
-      // Incrementa las monedas según el precio del objeto.
+      if (item.id === 'arrows') {
+        dispatch(decrementArrows(1));
+      } else if (item.id === 'healthpotion') {
+        dispatch(decrementHealthPotion(1));
+      } else if (item.id === 'bighealthpotion') {
+        dispatch(decrementBigHealthPotion(1));
+      } else {
+        dispatch(decrementObject({ key: item.id as any, amount: 1 }));
+      }
       dispatch(incrementCoins(item.price));
     }
   };
 
+  const handleNextPage = () => {
+    if ((page + 1) * itemsPerPage < combinedItems.length) {
+      setPage(page + 1);
+      setSelectedInfo(null);
+    }
+  };
+
+  const handlePrevPage = () => {
+    if (page > 0) {
+      setPage(page - 1);
+      setSelectedInfo(null);
+    }
+  };
+
+  const paginatedItems = combinedItems.slice(
+    page * itemsPerPage,
+    page * itemsPerPage + itemsPerPage
+  );
+
   const renderItem = ({ item, index }: { item: GameObject; index: number }) => {
     return (
       <View style={styles.itemContainer}>
-        <item.icon width={font(30)} height={font(30)} />
+        <item.icon width={font(35)} height={font(35)} />
         <View style={styles.itemInfo}>
           <Text style={styles.itemText}>{item.name}</Text>
           <Text style={styles.itemStateText}>Cantidad: {item.state}</Text>
@@ -87,6 +112,7 @@ const PawnShopModal: React.FC<PawnShopModalProps> = ({ visible, onClose }) => {
     <Modal animationType="slide" transparent visible={visible} onRequestClose={onClose}>
       <View style={styles.modalOverlay}>
         <View style={styles.modalContainer}>
+          
           <View style={styles.coinsBar}>
             <View style={styles.coinsContainer}>
               <CoinsIcon height={font(18)} width={font(18)} style={styles.coinsIcon} />
@@ -94,17 +120,48 @@ const PawnShopModal: React.FC<PawnShopModalProps> = ({ visible, onClose }) => {
             </View>
           </View>
           <Text style={styles.title}>JOYERIA</Text>
+          
           {insufficientQuantity ? (
-            <Text style={styles.errorText}>No tienes tesoros para vender</Text>
+            <Text style={styles.errorText}>No tienes objetos para vender</Text>
           ) : (
-            <FlatList
-              data={availableTreasures}
-              keyExtractor={(item) => item.name}
-              renderItem={renderItem}
-              style={{ flex: 1 }}
-            />
+            <>
+            
+              <FlatList
+                data={paginatedItems}
+                keyExtractor={(item) => item.name}
+                renderItem={renderItem}
+                style={{ flex: 1 }}
+              />
+              <View style={styles.paginationContainer}>
+                <TouchableOpacity
+                  style={styles.pageButton}
+                  onPress={handlePrevPage}
+                  disabled={page === 0}
+                >
+                  <Text style={[styles.pageButtonText, { color: page === 0 ? 'white' : 'black' }]}>{"<<"}</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={styles.pageButton}
+                  onPress={handleNextPage}
+                  disabled={(page + 1) * itemsPerPage >= combinedItems.length}
+                >
+                  <Text
+                    style={[
+                      styles.pageButtonText,
+                      {
+                        color:
+                          (page + 1) * itemsPerPage >= combinedItems.length
+                            ? 'white'
+                            : 'black',
+                      },
+                    ]}
+                  >
+                    {">>"}
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            </>
           )}
-          {/* Panel de información */}
           {selectedInfo && (
             <View style={styles.infoPanel}>
               <selectedInfo.item.icon width={font(50)} height={font(50)} />
@@ -121,6 +178,7 @@ const PawnShopModal: React.FC<PawnShopModalProps> = ({ visible, onClose }) => {
     </Modal>
   );
 };
+
 
 const styles = StyleSheet.create({
   modalOverlay: {
@@ -164,7 +222,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     paddingVertical: '3%',
-    borderBottomWidth: 1,
+    borderBottomWidth: font(1.3),
     borderColor: 'black',
   },
   itemInfo: {
@@ -228,6 +286,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: 'gray',
     borderRadius: 5,
+    marginBottom: '1%',
   },
   infoText: {
     flex: 1,
@@ -243,6 +302,25 @@ const styles = StyleSheet.create({
   },
   disabledButton: {
     backgroundColor: 'gray',
+  },
+  paginationContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignSelf: 'center',
+    position: 'absolute',
+    width:'100%',
+    bottom:'33%',
+    
+  },
+  pageButton: {
+    paddingHorizontal: '20%',
+    paddingVertical: '3%',
+    borderRadius: 5,
+    marginHorizontal: '20%',
+  },
+  pageButtonText: {
+    fontWeight: 'bold',
+    fontSize: font(20),
   },
 });
 

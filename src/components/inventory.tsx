@@ -32,86 +32,69 @@ interface MaiaState {
   maiahealth: number;
   maiacurrenthealth: number;
 }
-interface CoinsState{
+interface CoinsState {
   coins: number;
+}
+interface LocationsState {
+  map1: boolean;
+  map2: boolean;
+  map3: boolean;
 }
 interface RootState {
   maia: MaiaState;
-  coins:CoinsState;
-}
-
-// Tipado para las acciones del inventario
-type InventoryItem = "key2" | "chestClosed" | "chestOpen";
-type MapKey = "mapInv1" | "mapInv2" | "mapInv3";
-
-// Tipado para el estado de los mapas
-interface MapStates {
-  mapInv1: boolean;
-  mapInv2: boolean;
-  mapInv3: boolean;
+  coins: CoinsState;
+  locations: LocationsState;
 }
 
 const windowWidth = Dimensions.get("window").width;
 
 const Inventory: React.FC = () => {
-  // Obtenemos la salud actual y la salud máxima desde Redux
+  // Obtenemos la salud actual, monedas y mapas desde Redux
   const maiaHealth = useSelector((state: RootState) => state.maia.maiahealth);
   const maiaCurrentHealth = useSelector(
     (state: RootState) => state.maia.maiacurrenthealth
   );
   const coins = useSelector((state: RootState) => state.coins.coins);
 
-  // Estado para mostrar/ocultar las opciones del mapa
+  // Obtenemos el estado de los mapas desde Redux
+  const map1 = useSelector((state: RootState) => state.locations.map1);
+  const map2 = useSelector((state: RootState) => state.locations.map2);
+  const map3 = useSelector((state: RootState) => state.locations.map3);
+
   const [showMapOptions, setShowMapOptions] = useState<boolean>(false);
   const navigation = useNavigation<NavigationProp<any>>();
-  
-  // Estado para manejar el estado de los mapas
-  const [mapStates, setMapStates] = useState<MapStates>({
-    mapInv1: true,
-    mapInv2: false,
-    mapInv3: false,
-  });
 
-  // Estados para manejar la visibilidad de los modales
+  // Estados locales para modales
   const [map1ModalVisible, setMap1ModalVisible] = useState<boolean>(false);
   const [map2ModalVisible, setMap2ModalVisible] = useState<boolean>(false);
   const [bagPackModalVisible, setBagPackModalVisible] = useState<boolean>(false);
   const [notesModalVisible, setNotesModalVisible] = useState<boolean>(false);
 
-  // Alterna la visibilidad de las opciones del mapa
   const toggleMapOptions = (): void => {
     setShowMapOptions(!showMapOptions);
   };
 
-  // Maneja la acción de cada ítem del inventario
-  const handleItemPress = (item: InventoryItem): void => {
-    const messages: Record<InventoryItem, string> = {
-      key2: "Usaste la llave 2 🔑",
-      chestClosed: "El cofre está cerrado 🔒",
-      chestOpen: "Abriste el cofre 🎁",
-    };
-    Alert.alert("Inventario", messages[item]);
-  };
-
-  // Maneja la interacción con los mapas
-  const handleMapPress = (mapKey: MapKey): void => {
+  const handleMapPress = (mapKey: "map1" | "map2" | "map3"): void => {
+    const mapStates = { map1, map2, map3 };
     if (mapStates[mapKey]) {
-      if (mapKey === "mapInv1") {
+      if (mapKey === "map1") {
         setMap1ModalVisible(true);
-      } else if (mapKey === "mapInv2") {
+        setShowMapOptions(!showMapOptions);
+      } else if (mapKey === "map2") {
         setMap2ModalVisible(true);
+        setShowMapOptions(!showMapOptions);
       } else {
         Alert.alert("Inventario", `Usaste el ${mapKey} 🗺️`);
       }
     } else {
-      // Lógica para mapas bloqueados, si corresponde
+      // Mapa bloqueado
     }
   };
 
   return (
     <View style={styles.inventoryContainer}>
-       {/* Barra de vida en la parte superior derecha */}
-       <View style={styles.coinsBar}>
+      {/* Barra de monedas */}
+      <View style={styles.coinsBar}>
         <View style={styles.healthContainer}>
           <CoinsIcon height={font(18)} width={font(18)} style={styles.hearthIcon} />
           <Text style={styles.healthBarText}>
@@ -119,7 +102,8 @@ const Inventory: React.FC = () => {
           </Text>
         </View>
       </View>
-      {/* Barra de vida en la parte superior derecha */}
+
+      {/* Barra de vida */}
       <View style={styles.healthBar}>
         <View style={styles.healthContainer}>
           <HearthIcon height={font(18)} width={font(18)} style={styles.hearthIcon} />
@@ -129,7 +113,7 @@ const Inventory: React.FC = () => {
         </View>
       </View>
 
-      {/* Casillero 1 - Abrir la mochila */}
+      {/* Casillero 1 - Mochila */}
       <TouchableOpacity
         style={styles.slot}
         onPress={() => setBagPackModalVisible(true)}
@@ -137,39 +121,39 @@ const Inventory: React.FC = () => {
         <BagPackIcon width={font(40)} height={font(40)} />
       </TouchableOpacity>
 
-      {/* Casillero 2 - Mapa con opciones */}
+      {/* Casillero 2 - Mapas */}
       <View style={styles.mapContainer}>
         <TouchableOpacity style={styles.slot} onPress={toggleMapOptions}>
           <MapIcon width={font(40)} height={font(40)} />
         </TouchableOpacity>
         {showMapOptions && (
           <View style={styles.mapOptions}>
-            <TouchableOpacity onPress={() => handleMapPress("mapInv1")}>
+            <TouchableOpacity onPress={() => handleMapPress("map1")}>
               <MapInv1Icon
                 width={font(38)}
                 height={font(38)}
-                fill={mapStates.mapInv1 ? "black" : "gray"}
+                fill={map1 ? "black" : "gray"}
               />
             </TouchableOpacity>
-            <TouchableOpacity onPress={() => handleMapPress("mapInv2")}>
+            <TouchableOpacity onPress={() => handleMapPress("map2")}>
               <MapInv2Icon
                 width={font(38)}
                 height={font(38)}
-                fill={mapStates.mapInv2 ? "black" : "gray"}
+                fill={map2 ? "black" : "gray"}
               />
             </TouchableOpacity>
-            <TouchableOpacity onPress={() => handleMapPress("mapInv3")}>
+            <TouchableOpacity onPress={() => handleMapPress("map3")}>
               <MapInv3Icon
                 width={font(38)}
                 height={font(38)}
-                fill={mapStates.mapInv3 ? "black" : "gray"}
+                fill={map3 ? "black" : "gray"}
               />
             </TouchableOpacity>
           </View>
         )}
       </View>
 
-      {/* Casillero 3 - Abrir las notas */}
+      {/* Casillero 3 - Notas */}
       <TouchableOpacity
         style={styles.slot}
         onPress={() => setNotesModalVisible(true)}
@@ -177,12 +161,10 @@ const Inventory: React.FC = () => {
         <NoteBookIcon width={font(38)} height={font(38)} />
       </TouchableOpacity>
 
-      {/* Casillero 4 - Cofre abierto */}
+      {/* Casillero 4 - Cofre (a futuro) */}
       <TouchableOpacity
         style={styles.slot}
-        
       >
-       
       </TouchableOpacity>
 
       {/* Modales */}
