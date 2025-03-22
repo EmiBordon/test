@@ -251,7 +251,8 @@ const CaveScreen = () => {
       setModal2Visible(false);
       navigation.navigate('BattleScreen', { enemyName: 'Jox' });
       }else if (conversationContent === conversations.gorjoxconv1 ||
-        conversationContent === conversations.gorjoxconv2) {
+        conversationContent === conversations.gorjoxconv2||
+        conversationContent === conversations.gorjoxconv0) {
         dispatch(setCharacter({ key: 'germis', value: 4 }));
         dispatch(setCharacter({ key: 'jox', value: 4 }));
         dispatch(setCharacter({ key: 'gorjox', value: 1 }));
@@ -260,8 +261,6 @@ const CaveScreen = () => {
           conversationContent === conversations.gorjoxconv4) {
           dispatch(saveBackup({ healing, maia, weapons }));
           setModal2Visible(false);
-          dispatch(setCharacter({ key: 'baris', value: 2 }));
-          dispatch(setCharacter({ key: 'baris', value: 4 }));
           navigation.navigate('BattleScreen', { enemyName: 'Gorjox' });
           }
   };

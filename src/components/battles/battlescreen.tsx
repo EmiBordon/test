@@ -226,7 +226,10 @@ const BattleScreen: React.FC = () => {
         </View>
         <TouchableOpacity 
           style={styles.advanceButton} 
-          onPress={() => {navigation.goBack(); dispatch(currentEnemy.onDefeat?.());}}
+          onPress={() => {
+            navigation.goBack();
+            currentEnemy.onDefeatCallbacks?.forEach(cb => cb());
+          }}
         >
           <Text style={styles.advanceButtonText}>Avanzar</Text>
         </TouchableOpacity>

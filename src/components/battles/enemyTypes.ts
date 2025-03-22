@@ -22,5 +22,5 @@ export type Enemy = {
   phases: EnemyPhase[];
   description?: string;
   icon: React.ElementType;
-  onDefeat?: () => void; // Aquí le decimos que será un componente React, como un svg o un icono
+  onDefeatCallbacks?: (() => void)[]; // Aquí le decimos que será un componente React, como un svg o un icono
 };
