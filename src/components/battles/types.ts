@@ -8,3 +8,10 @@ export type RootStackParamList = {
     Shop: undefined;
     PawnShop: undefined;
   };
+  export type DefeatEvent = { 
+    type: 'dispatch', 
+    action: () => any // devuelve una acción redux 
+  } | { 
+    type: 'function', 
+    fn: () => void // función normal 
+  };

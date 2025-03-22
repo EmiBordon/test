@@ -28,7 +28,7 @@ export interface AgendaState {
 }
 
 const initialState: AgendaState = {
-  nota1: false,
+  nota1: true,
   nota2: false,
   nota3: false,
   nota4: false,

@@ -11,7 +11,7 @@ import img2 from '../../images/garabato2.jpg'; // ejemplo
 import img3 from '../../images/garabato3.jpg'; // ejemplo
 
 export const NOTES: Note[] = [
-  { id: 1, title: "Tutorial de Matt", images: [img1, img2, img3] },
+  { id: 1, title: "Informe sobre el Rey Heath", content:"7 de Julio del año 812: Lamentablemente, luego de 2 dias luchando por su vida, el Rey Heath ha fallecido.Es una tragica noticia que ha dejado a todos con mucho temor, ya que el sello magico que nos separo de Los Bichos por mas de 60 años, dependia exclusivamente de la vida del Rey."},
   { id: 2, title: "Título 2", content: "Este es el contenido de la nota 2.", images: [img3] },
   { id: 3, title: "Título 3", content: "Este es el contenido de la nota 3."},
   { id: 4, title: "Título 4", content: "Este es el contenido de la nota 4." },

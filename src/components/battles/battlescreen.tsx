@@ -228,7 +228,13 @@ const BattleScreen: React.FC = () => {
           style={styles.advanceButton} 
           onPress={() => {
             navigation.goBack();
-            currentEnemy.onDefeatCallbacks?.forEach(cb => cb());
+            currentEnemy.onDefeatCallbacks?.forEach(cb => {
+              if (cb.type === 'dispatch') {
+                dispatch(cb.action());
+              } else if (cb.type === 'function') {
+                cb.fn();
+              }
+            });
           }}
         >
           <Text style={styles.advanceButtonText}>Avanzar</Text>

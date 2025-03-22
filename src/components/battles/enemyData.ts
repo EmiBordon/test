@@ -4,25 +4,26 @@ import { GermisIcon,JoxIcon,GorjoxIcon, MattIcon } from '../SvgExporter'; // Aju
 import { setMattState } from '../../redux/mattSlice';
 import { setCharacter } from '../../redux/charactersSlice';
 
+
 export const enemies: Enemy[] = [
-    {
-        name: "Matt",
-        health: 5,
-        initialdamage: 1,
-        victoryMessage: "Matt esta enojado porque lo golpeaste demasiado fuerte...",
-        defeatMessage: "Matt se siente completamente decepcionado de tu desempeño...",
-        arrowsRequired: 1,
-        description: "Matt no es un gran guerrero...",
-        icon: MattIcon,
-        onDefeatCallbacks: [
-          () => setMattState(2), 
-        ],
-          phases: [
-            { threshold: 0, damage: 1, drawBarLevels: 2, drawBarDuration: 1500, moonTearPattern: 2, moonTearDifficulty: 2, gridLength: 2 ,gridDelay: 500},
-          ],
-        },  
-        
-{
+  {
+    name: "Matt",
+    health: 5,
+    initialdamage: 1,
+    victoryMessage: "Matt esta enojado porque lo golpeaste demasiado fuerte...",
+    defeatMessage: "Matt se siente completamente decepcionado de tu desempeño...",
+    arrowsRequired: 1,
+    description: "Matt no es un gran guerrero...",
+    icon: MattIcon,
+    onDefeatCallbacks: [
+      { type: 'dispatch', action: () => setMattState(2) },
+    ],
+    phases: [
+      { threshold: 0, damage: 1, drawBarLevels: 2, drawBarDuration: 1500, moonTearPattern: 2, moonTearDifficulty: 2, gridLength: 2 ,gridDelay: 500 },
+    ],
+  },  
+
+  {
     name: "Germis",
     health: 10,
     initialdamage: 2,
@@ -31,12 +32,14 @@ export const enemies: Enemy[] = [
     arrowsRequired: 2,
     description: "Es pequeño aunque aterrador, no parece muy peligroso...",
     icon: GermisIcon,
-    onDefeatCallbacks:[ () => (setCharacter({ key: 'germis', value: 2 }))
+    onDefeatCallbacks: [
+      { type: 'dispatch', action: () => setCharacter({ key: 'germis', value: 2 }) }
     ],
     phases: [
-      { threshold: 0, damage: 2, drawBarLevels: 3, drawBarDuration: 1500, moonTearPattern: 3, moonTearDifficulty: 3, gridLength: 3 ,gridDelay: 480},
+      { threshold: 0, damage: 2, drawBarLevels: 3, drawBarDuration: 1500, moonTearPattern: 3, moonTearDifficulty: 3, gridLength: 3 ,gridDelay: 480 },
     ],
   },
+
   {
     name: "Jox",
     health: 12,
@@ -46,16 +49,17 @@ export const enemies: Enemy[] = [
     arrowsRequired: 2,
     description: "El hermano mayor de germis, no es mas poderoso pero si mas rapido...",
     icon: JoxIcon,
-    onDefeatCallbacks:[ () => (setCharacter({ key: 'jox', value: 2 }))
-
+    onDefeatCallbacks: [
+      { type: 'dispatch', action: () => setCharacter({ key: 'jox', value: 2 }) }
     ],
     phases: [
       { threshold: 0.9, damage: 2, drawBarLevels: 3, drawBarDuration: 1450, moonTearPattern: 3, moonTearDifficulty: 3.3, gridLength: 3, gridDelay: 480 },
       { threshold: 0.6, damage: 2, drawBarLevels: 3, drawBarDuration: 1450, moonTearPattern: 3, moonTearDifficulty: 3.3, gridLength: 3, gridDelay: 480 },
-      { threshold: 0.4, damage: 2, drawBarLevels: 3, drawBarDuration: 1450, moonTearPattern: 3, moonTearDifficulty: 3.3, gridLength: 3, gridDelay: 480},
-      { threshold: 0, damage: 2, drawBarLevels: 4, drawBarDuration: 1450, moonTearPattern: 3, moonTearDifficulty: 3.4, gridLength: 4,gridDelay: 470 },
+      { threshold: 0.4, damage: 2, drawBarLevels: 3, drawBarDuration: 1450, moonTearPattern: 3, moonTearDifficulty: 3.3, gridLength: 3, gridDelay: 480 },
+      { threshold: 0, damage: 2, drawBarLevels: 4, drawBarDuration: 1450, moonTearPattern: 3, moonTearDifficulty: 3.4, gridLength: 4, gridDelay: 470 },
     ],
   },
+
   {
     name: "Gorjox",
     health: 20,
@@ -65,16 +69,17 @@ export const enemies: Enemy[] = [
     arrowsRequired: 3,
     description: "Una aterradora bestia de destruccion, aumenta su daño cuando se enfurece...",
     icon: GorjoxIcon,
-    onDefeatCallbacks:[ () => (setCharacter({ key: 'gorjox', value: 4 })),
-      () => (setCharacter({ key: 'baris', value: 2 })),
-      () => setMattState(4),
+    onDefeatCallbacks: [
+      { type: 'dispatch', action: () => setCharacter({ key: 'gorjox', value: 4 }) },
+      { type: 'dispatch', action: () => setCharacter({ key: 'baris', value: 2 }) },
+      { type: 'dispatch', action: () => setMattState(4) },
     ],
     phases: [
-        { threshold: 0.9, damage: 4, drawBarLevels: 3, drawBarDuration: 1450, moonTearPattern: 3, moonTearDifficulty: 3.2, gridLength: 3,gridDelay: 480 },
-        { threshold: 0.6, damage: 4, drawBarLevels: 3, drawBarDuration: 1450, moonTearPattern: 3, moonTearDifficulty: 3.2, gridLength: 3,gridDelay: 480 },
-        { threshold: 0.4, damage: 9, drawBarLevels: 4, drawBarDuration: 1450, moonTearPattern: 5, moonTearDifficulty: 3.8, gridLength: 8 ,gridDelay: 300},
-        { threshold: 0.2, damage: 4, drawBarLevels: 4, drawBarDuration: 1450, moonTearPattern: 3, moonTearDifficulty: 3.2, gridLength: 3,gridDelay: 480 },
-        { threshold: 0, damage: 9, drawBarLevels: 4, drawBarDuration: 1450, moonTearPattern: 5, moonTearDifficulty: 3.8, gridLength: 8 ,gridDelay: 300},
+      { threshold: 0.9, damage: 4, drawBarLevels: 3, drawBarDuration: 1450, moonTearPattern: 3, moonTearDifficulty: 3.2, gridLength: 3, gridDelay: 480 },
+      { threshold: 0.6, damage: 4, drawBarLevels: 3, drawBarDuration: 1450, moonTearPattern: 3, moonTearDifficulty: 3.2, gridLength: 3, gridDelay: 480 },
+      { threshold: 0.4, damage: 9, drawBarLevels: 4, drawBarDuration: 1450, moonTearPattern: 5, moonTearDifficulty: 3.8, gridLength: 8 ,gridDelay: 300 },
+      { threshold: 0.2, damage: 4, drawBarLevels: 4, drawBarDuration: 1450, moonTearPattern: 3, moonTearDifficulty: 3.2, gridLength: 3, gridDelay: 480 },
+      { threshold: 0, damage: 9, drawBarLevels: 4, drawBarDuration: 1450, moonTearPattern: 5, moonTearDifficulty: 3.8, gridLength: 8 ,gridDelay: 300 },
     ],
   }
 ];

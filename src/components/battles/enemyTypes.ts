@@ -1,4 +1,4 @@
-
+import { DefeatEvent } from "./types";
 
 export type EnemyPhase = {
   threshold: number; // % de la salud (por ejemplo: 0.8 significa health / 1.25)
@@ -19,8 +19,8 @@ export type Enemy = {
   victoryMessage: string;
   defeatMessage: string;
   arrowsRequired: number;
-  phases: EnemyPhase[];
   description?: string;
   icon: React.ElementType;
-  onDefeatCallbacks?: (() => void)[]; // Aquí le decimos que será un componente React, como un svg o un icono
+  onDefeatCallbacks?: DefeatEvent[];
+  phases: EnemyPhase[];
 };

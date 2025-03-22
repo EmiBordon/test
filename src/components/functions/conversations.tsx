@@ -202,12 +202,12 @@ export const conversations: {
         svg: BarisHeadIcon 
       },
       { 
-        text: "Al parecer estan arrasando con toda la prision..", 
+        text: "Al parecer se han avistado 2 Bichos en la pequeña Cueva del pueblo", 
         svg: BarisHeadIcon 
       },
       { 
-        text: "No es posible, ahi se encuentra Ovy.", 
-        svg: MaiaHeadIcon
+        text: "Por suerte no hay ningun herido, y han puesto un cartel para prohibir la entrada.", 
+        svg: BarisHeadIcon
       },
       
       { 
@@ -215,23 +215,7 @@ export const conversations: {
         svg: BarisHeadIcon 
       },
       { 
-        text: "Entiendo.. ire a la prision a combatir con los Bichos. ", 
-        svg: MaiaHeadIcon
-      },
-      { 
-        text: "Ohh no, pequeña Maia, no es lo mas prudente, hay que actuar con inteligencia.", 
-        svg: BarisHeadIcon 
-      },
-      { 
-        text: "Necesito que recojas algo muy importante que hay en la Cueva del pueblo.", 
-        svg: BarisHeadIcon
-      },
-      { 
-        text: "Es fundamental para volver a crear el sello magico contra los Bichos.", 
-        svg: BarisHeadIcon
-      },
-      { 
-        text: "De acuerdo, ire a la cueva, que debo buscar.", 
+        text: "Entiendo.. ire a la Cueva a combatir con los Bichos. ", 
         svg: MaiaHeadIcon
       },
       { 
@@ -243,11 +227,7 @@ export const conversations: {
         svg: BarisHeadIcon 
       },
       { 
-        text: "En la Cueva hay 2 Bichos pequeña Maia.. necesitamos su sangre..", 
-        svg: BarisHeadIcon 
-      },
-      { 
-        text: "Tendras que combatir con ellos y traer una muestra de su sangre.", 
+        text: "Tendras que tener mucho cuidado pequeña Maia.", 
         svg: BarisHeadIcon 
       },
       { 
@@ -263,7 +243,7 @@ export const conversations: {
   barisconv2: {
     dialogos: [
       { 
-        text: "Ohh, pequeña Maia, la Cueva es muy peligrosa, tendras que tener mucho cuidado...", 
+        text: "Ohh, pequeña Maia, prometeme que tendras mucho cuidado...", 
         svg: BarisHeadIcon
       },
     ],
@@ -279,7 +259,7 @@ export const conversations: {
   caveclose1: {
     dialogos: [
       { 
-        text: "No deberia entrar ahi...", 
+        text: "Que extraño.. por que habria peligro de entrar a la Cueva?", 
         svg: MaiaHeadIcon
       },
     ],
