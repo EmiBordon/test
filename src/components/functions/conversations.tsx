@@ -122,7 +122,7 @@ export const conversations: {
         svg: MattHeadIcon 
       },
       { 
-        text: "No seas marica.", 
+        text: "No seas llorón.", 
         svg: MaiaHeadIcon
       },
       { 

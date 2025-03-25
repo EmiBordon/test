@@ -2,15 +2,7 @@ import React, { useState, useRef } from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 
-// Redux slices
-import { incrementGrapes, incrementHealthPotion, incrementBigHealthPotion, incrementPills, setHealingState } from "../redux/healingSlice";
-import { setMaiaState } from "../redux/maiaSlice";
-import { setWeaponsState } from "../redux/weaponsSlice";
-import { saveBackup, restoreBackup } from "../redux/backupSlice";
 
-// Otros imports
-import ConversationModal from "../components/modal/conversationmodal";
-import { conversations } from "../components/functions/conversations";
 import { FountainIcon, PillsIcon, CoinsIcon } from "../components/SvgExporter";
 import ResetButton from "../components/functions/resetbutton";
 // Importamos nuestro CodeModal
@@ -52,7 +44,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
       <FountainIcon height={"25%"} />
       <TouchableOpacity
         style={styles.button}
-        onPress={() => navigation.replace("Tutorial")}
+        onPress={() => {navigation.replace("Tutorial");}}
         onPressIn={handleLongPressIn}
         onPressOut={handleLongPressOut}
       >

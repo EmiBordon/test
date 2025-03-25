@@ -12,6 +12,7 @@ import { setLocation } from '../../redux/locationsSlice';
 import Box from '../../components/functions/boxicon'; // <-- nuevo componente
 import SafeBox from '../../components/functions/safeboxicon';
 import RewardManager from '../../components/functions/rewardmanager';
+import { incrementObjective } from '../../redux/objectivesSlice';
 
 
 const icons = [
@@ -60,6 +61,7 @@ const BarScreen = () => {
       if (barisState === 0) {
         setConversationContent(conversations.barisconv1);
         setModal2Visible(true);
+        dispatch(incrementObjective());
         dispatch(setCharacter({ key: 'baris', value: 1 }));
         dispatch(setLocation({ key: 'cave', value: 1 }));
       } else if  (barisState === 1) {

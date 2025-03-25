@@ -7,7 +7,7 @@ import {
   Text,
   Dimensions,
 } from "react-native";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import {
   MapIcon,
   ChestOpenIcon,
@@ -19,13 +19,17 @@ import {
   DianaIcon,
   HearthIcon,
   CoinsIcon,
+  RadarIcon,
 } from "../components/SvgExporter";
 import Map1Modal from "../components/modal/map1modal";
 import Map2Modal from "../components/modal/map2modal";
 import BagPackModal from "../components/modal/bagpackmodal";
 import NotesModal from "../components/modal/notesmodal";
+import GridModal from "../components/modal/gridmodal"; // Modal que muestra el minimapa
 import { NavigationProp, useNavigation } from "@react-navigation/native";
 import { font } from "./functions/fontsize";
+import Objectives from "./objetivesbutton";
+import { incrementObjective } from "../redux/objectivesSlice";
 
 // Tipado para el estado de Redux
 interface MaiaState {
@@ -46,17 +50,32 @@ interface RootState {
   locations: LocationsState;
 }
 
+// Props para Inventory: se requieren highlightedSquares y whiteSquare
+interface InventoryProps {
+  highlightedSquares: number[];
+  whiteSquare: number;
+  sSquares:number;
+  tSquares:number;
+  mSquares:number; 
+}
+
 const windowWidth = Dimensions.get("window").width;
 
-const Inventory: React.FC = () => {
-  // Obtenemos la salud actual, monedas y mapas desde Redux
+const Inventory: React.FC<InventoryProps> = ({
+  highlightedSquares,
+  whiteSquare,
+  tSquares,
+  sSquares,
+  mSquares,
+}) => {
+  const dispatch = useDispatch();
   const maiaHealth = useSelector((state: RootState) => state.maia.maiahealth);
   const maiaCurrentHealth = useSelector(
     (state: RootState) => state.maia.maiacurrenthealth
   );
   const coins = useSelector((state: RootState) => state.coins.coins);
 
-  // Obtenemos el estado de los mapas desde Redux
+  // Estados de mapas desde Redux
   const map1 = useSelector((state: RootState) => state.locations.map1);
   const map2 = useSelector((state: RootState) => state.locations.map2);
   const map3 = useSelector((state: RootState) => state.locations.map3);
@@ -69,6 +88,7 @@ const Inventory: React.FC = () => {
   const [map2ModalVisible, setMap2ModalVisible] = useState<boolean>(false);
   const [bagPackModalVisible, setBagPackModalVisible] = useState<boolean>(false);
   const [notesModalVisible, setNotesModalVisible] = useState<boolean>(false);
+  const [gridModalVisible, setGridModalVisible] = useState<boolean>(false);
 
   const toggleMapOptions = (): void => {
     setShowMapOptions(!showMapOptions);
@@ -92,101 +112,128 @@ const Inventory: React.FC = () => {
   };
 
   return (
-    <View style={styles.inventoryContainer}>
-      {/* Barra de monedas */}
-      <View style={styles.coinsBar}>
-        <View style={styles.healthContainer}>
-          <CoinsIcon height={font(18)} width={font(18)} style={styles.hearthIcon} />
-          <Text style={styles.healthBarText}>
-            {coins}
-          </Text>
-        </View>
+    <>
+      <View style={styles.objectivesContainer}>
+        <Objectives />
       </View>
-
-      {/* Barra de vida */}
-      <View style={styles.healthBar}>
-        <View style={styles.healthContainer}>
-          <HearthIcon height={font(18)} width={font(18)} style={styles.hearthIcon} />
-          <Text style={styles.healthBarText}>
-            {maiaCurrentHealth}/{maiaHealth}
-          </Text>
-        </View>
-      </View>
-
-      {/* Casillero 1 - Mochila */}
-      <TouchableOpacity
-        style={styles.slot}
-        onPress={() => setBagPackModalVisible(true)}
-      >
-        <BagPackIcon width={font(40)} height={font(40)} />
-      </TouchableOpacity>
-
-      {/* Casillero 2 - Mapas */}
-      <View style={styles.mapContainer}>
-        <TouchableOpacity style={styles.slot} onPress={toggleMapOptions}>
-          <MapIcon width={font(40)} height={font(40)} />
-        </TouchableOpacity>
-        {showMapOptions && (
-          <View style={styles.mapOptions}>
-            <TouchableOpacity onPress={() => handleMapPress("map1")}>
-              <MapInv1Icon
-                width={font(38)}
-                height={font(38)}
-                fill={map1 ? "black" : "gray"}
-              />
-            </TouchableOpacity>
-            <TouchableOpacity onPress={() => handleMapPress("map2")}>
-              <MapInv2Icon
-                width={font(38)}
-                height={font(38)}
-                fill={map2 ? "black" : "gray"}
-              />
-            </TouchableOpacity>
-            <TouchableOpacity onPress={() => handleMapPress("map3")}>
-              <MapInv3Icon
-                width={font(38)}
-                height={font(38)}
-                fill={map3 ? "black" : "gray"}
-              />
-            </TouchableOpacity>
+      <View style={styles.inventoryContainer}>
+        {/* Barra de monedas */}
+        <View style={styles.coinsBar}>
+          <View style={styles.healthContainer}>
+            <CoinsIcon
+              height={font(18)}
+              width={font(18)}
+              style={styles.hearthIcon}
+            />
+            <Text style={styles.healthBarText}>{coins}</Text>
           </View>
-        )}
+        </View>
+
+        {/* Barra de vida */}
+        <View style={styles.healthBar}>
+          <View style={styles.healthContainer}>
+            <HearthIcon
+              height={font(18)}
+              width={font(18)}
+              style={styles.hearthIcon}
+            />
+            <Text style={styles.healthBarText}>
+              {maiaCurrentHealth}/{maiaHealth}
+            </Text>
+          </View>
+        </View>
+
+        {/* Casillero 1 - Mochila */}
+        <TouchableOpacity
+          style={styles.slot}
+          onPress={() => setBagPackModalVisible(true)}
+        >
+          <BagPackIcon width={font(40)} height={font(40)} />
+        </TouchableOpacity>
+
+        {/* Casillero 2 - Mapas */}
+        <View style={styles.mapContainer}>
+          <TouchableOpacity style={styles.slot} onPress={toggleMapOptions}>
+            <MapIcon width={font(40)} height={font(40)} />
+          </TouchableOpacity>
+          {showMapOptions && (
+            <View style={styles.mapOptions}>
+              <TouchableOpacity onPress={() => handleMapPress("map1")}>
+                <MapInv1Icon
+                  width={font(38)}
+                  height={font(38)}
+                  fill={map1 ? "black" : "gray"}
+                />
+              </TouchableOpacity>
+              <TouchableOpacity onPress={() => handleMapPress("map2")}>
+                <MapInv2Icon
+                  width={font(38)}
+                  height={font(38)}
+                  fill={map2 ? "black" : "gray"}
+                />
+              </TouchableOpacity>
+              <TouchableOpacity onPress={() => handleMapPress("map3")}>
+                <MapInv3Icon
+                  width={font(38)}
+                  height={font(38)}
+                  fill={map3 ? "black" : "gray"}
+                />
+              </TouchableOpacity>
+            </View>
+          )}
+        </View>
+
+        {/* Casillero 3 - Notas */}
+        <TouchableOpacity
+          style={styles.slot}
+          onPress={() => setNotesModalVisible(true)}
+        >
+          <NoteBookIcon width={font(38)} height={font(38)} />
+        </TouchableOpacity>
+
+        {/* Casillero 4 - GridModal (minimapa) */}
+        <TouchableOpacity
+          style={styles.slot}
+          onPress={() => setGridModalVisible(true)}
+        >
+          <RadarIcon width={font(38)} height={font(38)} />
+        </TouchableOpacity>
+
+        {/* Otro casillero adicional */}
+        <TouchableOpacity style={styles.slot}>
+          {/* Contenido o funcionalidad a futuro */}
+        </TouchableOpacity>
+
+        {/* Modales */}
+        <Map1Modal
+          visible={map1ModalVisible}
+          onClose={() => setMap1ModalVisible(false)}
+          navigation={navigation}
+        />
+        <Map2Modal
+          visible={map2ModalVisible}
+          onClose={() => setMap2ModalVisible(false)}
+          navigation={navigation}
+        />
+        <BagPackModal
+          visible={bagPackModalVisible}
+          onClose={() => setBagPackModalVisible(false)}
+        />
+        <NotesModal
+          visible={notesModalVisible}
+          onClose={() => setNotesModalVisible(false)}
+        />
+        <GridModal
+          visible={gridModalVisible}
+          onClose={() => setGridModalVisible(false)}
+          highlightedSquares={highlightedSquares}
+          whiteSquare={whiteSquare}
+          sSquares={sSquares}
+          mSquares={mSquares}
+          tSquares={tSquares}
+        />
       </View>
-
-      {/* Casillero 3 - Notas */}
-      <TouchableOpacity
-        style={styles.slot}
-        onPress={() => setNotesModalVisible(true)}
-      >
-        <NoteBookIcon width={font(38)} height={font(38)} />
-      </TouchableOpacity>
-
-      {/* Casillero 4 - Cofre (a futuro) */}
-      <TouchableOpacity
-        style={styles.slot}
-      >
-      </TouchableOpacity>
-
-      {/* Modales */}
-      <Map1Modal
-        visible={map1ModalVisible}
-        onClose={() => setMap1ModalVisible(false)}
-        navigation={navigation}
-      />
-      <Map2Modal
-        visible={map2ModalVisible}
-        onClose={() => setMap2ModalVisible(false)}
-        navigation={navigation}
-      />
-      <BagPackModal
-        visible={bagPackModalVisible}
-        onClose={() => setBagPackModalVisible(false)}
-      />
-      <NotesModal
-        visible={notesModalVisible}
-        onClose={() => setNotesModalVisible(false)}
-      />
-    </View>
+    </>
   );
 };
 
@@ -195,7 +242,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     bottom: 0,
     width: windowWidth,
-    height: '9%',
+    height: "9%",
     backgroundColor: "rgba(0, 0, 0, 0.8)",
     flexDirection: "row",
     justifyContent: "space-around",
@@ -217,7 +264,7 @@ const styles = StyleSheet.create({
   },
   mapOptions: {
     position: "absolute",
-    top: '-80%',
+    top: "-80%",
     flexDirection: "row",
     backgroundColor: "rgba(255, 255, 255, 0.9)",
     padding: 5,
@@ -228,16 +275,16 @@ const styles = StyleSheet.create({
   },
   healthBar: {
     position: "absolute",
-    top: '-40%',
-    right: '5%',
-    padding: '-3%',
+    top: "-40%",
+    right: "5%",
+    padding: "-3%",
   },
   healthContainer: {
     flexDirection: "row",
     alignItems: "center",
   },
   hearthIcon: {
-    marginRight: '5%',
+    marginRight: "5%",
   },
   healthBarText: {
     color: "black",
@@ -246,9 +293,15 @@ const styles = StyleSheet.create({
   },
   coinsBar: {
     position: "absolute",
-    top: '-70%',
-    right: '5%',
-    padding: '-3%',
+    top: "-70%",
+    right: "5%",
+    padding: "-3%",
+  },
+  objectivesContainer: {
+    position: "absolute",
+    top: "9%",
+    alignItems: "center",
+    right: "5%",
   },
 });
 

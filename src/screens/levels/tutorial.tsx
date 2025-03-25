@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, StyleSheet, Pressable, Image, BackHandler } from 'react-native';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import { MaiaIcon, MattIcon, DoorIcon, ChestCloseIcon, ArrowIcon } from '../../components/SvgExporter';
@@ -13,6 +13,7 @@ import { saveBackup } from "../../redux/backupSlice";
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../components/battles/types';
 import { setMapTrue } from '../../redux/locationsSlice';
+import { incrementObjective } from '../../redux/objectivesSlice';
 
 const icons = [
   { 
@@ -36,15 +37,23 @@ const TutorialScreen = () => {
   const [modalVisible, setModalVisible] = useState(false);
   const [modal2Visible, setModal2Visible] = useState(false);
   const [conversationContent, setConversationContent] = useState<Conversation | null>(null);
-  
+  const[currentSquare,setCurrentSquare ]= useState(7);
+
   const dispatch = useDispatch();
   const mattState = useSelector((state: any) => state.matt.value);
   const healing = useSelector((state: any) => state.healing);
   const maia = useSelector((state: any) => state.maia);
   const weapons = useSelector((state: any) => state.weapons);
-
   
 
+  
+ useEffect(() => {
+  if (currentIconIndex === 0) {
+    setCurrentSquare(7);
+  }else {
+    setCurrentSquare(8);
+  }  
+  }, [currentIconIndex]);
   // Bloquear botón "back" físico
   useFocusEffect(
       React.useCallback(() => {
@@ -84,8 +93,10 @@ const TutorialScreen = () => {
   const handleIconPress = () => {
     const { component: CurrentIcon } = icons[currentIconIndex];
     if (CurrentIcon === MattIcon) {
+      setCurrentSquare(7);
       if (mattState === 0) {
         setConversationContent(conversations.mattconv1);
+        dispatch(incrementObjective());
         dispatch(setMattState(1));
         setModalVisible(true);
       } else if (mattState === 1) {
@@ -96,6 +107,7 @@ const TutorialScreen = () => {
         setModal2Visible(true);
         dispatch(setMattState(3));
         dispatch(setMapTrue('map1'));
+        dispatch(incrementObjective());
       }else if (mattState === 3) {
         setConversationContent(conversations.mattconv4);
         setModal2Visible(true);
@@ -107,6 +119,7 @@ const TutorialScreen = () => {
     } else {
       setConversationContent(conversations.homechestclose);
       setModal2Visible(true);
+      
     }
   };
 
@@ -133,7 +146,13 @@ const TutorialScreen = () => {
         <MaiaIcon height={160} width={160} />
       </View>
 
-      <Inventory />
+      <Inventory 
+      highlightedSquares={[7,8]}
+      whiteSquare={currentSquare}
+      sSquares={55}
+      tSquares={9}
+      mSquares={3}
+      />
       <Location text="Casa" />
 
       {modalVisible && (

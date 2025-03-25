@@ -3,6 +3,7 @@ import { Enemy } from './enemyTypes';
 import { GermisIcon,JoxIcon,GorjoxIcon, MattIcon } from '../SvgExporter'; // Ajusta la ruta según tu estructura
 import { setMattState } from '../../redux/mattSlice';
 import { setCharacter } from '../../redux/charactersSlice';
+import { incrementObjective } from '../../redux/objectivesSlice';
 
 
 export const enemies: Enemy[] = [
@@ -73,6 +74,7 @@ export const enemies: Enemy[] = [
       { type: 'dispatch', action: () => setCharacter({ key: 'gorjox', value: 4 }) },
       { type: 'dispatch', action: () => setCharacter({ key: 'baris', value: 2 }) },
       { type: 'dispatch', action: () => setMattState(4) },
+      { type: 'dispatch', action: () => incrementObjective()},
     ],
     phases: [
       { threshold: 0.9, damage: 4, drawBarLevels: 3, drawBarDuration: 1450, moonTearPattern: 3, moonTearDifficulty: 3.2, gridLength: 3, gridDelay: 480 },

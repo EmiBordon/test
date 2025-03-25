@@ -100,6 +100,8 @@ import PawnShopBoyHeadSvg from '../assets/pawnshopboyhead.svg';
 import DiamondSvg from '../assets/diamond.svg';
 import RubiSvg from '../assets/rubi.svg';
 import PocketWatchSvg from '../assets/pocketwatch.svg';
+import ObjetivesSvg from '../assets/objetives.svg';
+import RadarSvg from '../assets/radar.svg';
 
 const ArrowIcon = (props: any) => <ArrowSvg {...props} />;
 const ChestOpenIcon = (props: any) => <ChestOpenSvg {...props} />;
@@ -202,6 +204,9 @@ const PawnShopBoyHeadIcon = (props: any) => <PawnShopBoyHeadSvg {...props} />;
 const DiamondIcon = (props: any) => <DiamondSvg {...props} />;
 const RubiIcon = (props: any) => <RubiSvg {...props} />;
 const PocketWatchIcon = (props: any) => <PocketWatchSvg {...props} />;
+const ObjetivesIcon = (props: any) => <ObjetivesSvg {...props} />;
+const RadarIcon = (props: any) => <RadarSvg {...props} />;
+
 
 export { 
   ArrowIcon, 
@@ -305,4 +310,6 @@ export {
   DiamondIcon,
   RubiIcon,
   PocketWatchIcon,
+  ObjetivesIcon,
+  RadarIcon,
 };
