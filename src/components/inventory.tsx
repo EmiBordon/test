@@ -30,6 +30,7 @@ import { NavigationProp, useNavigation } from "@react-navigation/native";
 import { font } from "./functions/fontsize";
 import Objectives from "./objetivesbutton";
 import { incrementObjective } from "../redux/objectivesSlice";
+import GridTouchable from "./gridtouchable";
 
 // Tipado para el estado de Redux
 interface MaiaState {
@@ -55,6 +56,7 @@ interface InventoryProps {
   highlightedSquares: number[];
   whiteSquare: number;
   sSquares:number;
+  minisSquares:number;
   tSquares:number;
   mSquares:number; 
 }
@@ -66,6 +68,7 @@ const Inventory: React.FC<InventoryProps> = ({
   whiteSquare,
   tSquares,
   sSquares,
+  minisSquares,
   mSquares,
 }) => {
   const dispatch = useDispatch();
@@ -113,6 +116,14 @@ const Inventory: React.FC<InventoryProps> = ({
 
   return (
     <>
+    <GridTouchable
+    onPress={() => setGridModalVisible(true)}
+    highlightedSquares={highlightedSquares}
+    whiteSquare={whiteSquare}
+    sSquares={minisSquares}
+    mSquares={mSquares}
+    tSquares={tSquares}
+    />
       <View style={styles.objectivesContainer}>
         <Objectives />
       </View>
@@ -191,14 +202,7 @@ const Inventory: React.FC<InventoryProps> = ({
           <NoteBookIcon width={font(38)} height={font(38)} />
         </TouchableOpacity>
 
-        {/* Casillero 4 - GridModal (minimapa) */}
-        <TouchableOpacity
-          style={styles.slot}
-          onPress={() => setGridModalVisible(true)}
-        >
-          <RadarIcon width={font(38)} height={font(38)} />
-        </TouchableOpacity>
-
+       
         {/* Otro casillero adicional */}
         <TouchableOpacity style={styles.slot}>
           {/* Contenido o funcionalidad a futuro */}
@@ -301,7 +305,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     top: "9%",
     alignItems: "center",
-    right: "5%",
+    left: "3%",
   },
 });
 

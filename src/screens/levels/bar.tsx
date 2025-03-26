@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, StyleSheet, Pressable, Image, BackHandler } from 'react-native';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import { MaiaIcon, ArrowIcon, BarisIcon } from '../../components/SvgExporter';
@@ -42,7 +42,7 @@ const BarScreen = () => {
   const [currentIconIndex, setCurrentIconIndex] = useState(0);
   const [modal2Visible, setModal2Visible] = useState(false);
   const [conversationContent, setConversationContent] = useState<Conversation | null>(null);
-
+  const [currentSquare,setCurrentSquare ]= useState(7);
   const dispatch = useDispatch();
   const barisState = useSelector((state: any) => state.characters.baris);
 
@@ -80,6 +80,14 @@ const BarScreen = () => {
     ? require('../../images/bar.jpg')
     : require('../../images/bardoor.jpg');
 
+   useEffect(() => {
+     if (currentIconIndex === 0) {
+       setCurrentSquare(7);
+     }else {
+       setCurrentSquare(8);
+     }  
+     }, [currentIconIndex]); 
+
   return (
     <View style={styles.container}>
       <Image source={backgroundImage} style={styles.backgroundImage} />
@@ -110,7 +118,14 @@ const BarScreen = () => {
         <MaiaIcon height={160} width={160} />
       </View>
 
-      <Inventory />
+      <Inventory 
+      highlightedSquares={[7,8,5]}
+      whiteSquare={currentSquare}
+      minisSquares={16}
+      sSquares={55}
+      tSquares={9}
+      mSquares={3}
+      />
       <Location text="Bar" />
       
       <RewardManager />

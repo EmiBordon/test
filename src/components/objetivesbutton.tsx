@@ -40,23 +40,22 @@ const Objectives = () => {
 
   return (
     <View style={styles.container}>
-      {/* Objetivo a la izquierda */}
-      {showObjective && (
-        <View style={styles.textContainer}>
-          <Text style={styles.objectiveText}>Objetivo: {objectiveDescription}</Text>
-        </View>
-      )}
-         {isNewObjective && (
-          <View style={styles.newObjectiveBadge}>
-            <Text style={styles.newObjectiveText}>NUEVO OBJETIVO!</Text>
-          </View>
-        )}
-      {/* Ícono con mensaje debajo */}
       <View style={styles.iconContainer}>
         <TouchableOpacity onPress={handlePress} style={styles.button}>
           <ObjetivesIcon width={font(36)} height={font(36)} />
         </TouchableOpacity>
-       
+  
+        {isNewObjective && (
+          <View style={styles.newObjectiveBadge}>
+            <Text style={styles.newObjectiveText}>NUEVO OBJETIVO!</Text>
+          </View>
+        )}
+  
+        {showObjective && (
+          <View style={styles.textContainer}>
+            <Text style={styles.objectiveText}>Objetivo: {objectiveDescription}</Text>
+          </View>
+        )}
       </View>
     </View>
   );
@@ -67,28 +66,28 @@ export default Objectives;
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
-    //alignItems: 'center',
   },
   iconContainer: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
     position: 'relative',
-    alignItems: 'center',
-    
   },
   button: {
-    left: '15%',
-    backgroundColor:"white",
+    backgroundColor: 'white',
     borderRadius: font(1000),
+    padding: font(5),
   },
   newObjectiveBadge: {
     position: 'absolute',
-    top: font(42), // Debajo del ícono
+    top: font(42), // debajo del botón
+    left: font(30), // desplazado a la derecha
     backgroundColor: 'black',
     borderRadius: font(5),
     height: font(25),
     width: font(140),
     paddingHorizontal: font(10),
     paddingVertical: font(3),
-    right: font(1),
+    zIndex: 2,
   },
   newObjectiveText: {
     color: 'white',
@@ -97,7 +96,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   textContainer: {
-    marginRight: font(10),
+    marginLeft: font(10), // para que esté a la derecha del botón
     paddingHorizontal: font(15),
     paddingVertical: font(8),
     backgroundColor: 'black',

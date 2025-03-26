@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   StyleSheet,
@@ -150,7 +150,7 @@ const CaveScreen = () => {
   const [modalVisible, setModalVisible] = useState(false);
   const [modal2Visible, setModal2Visible] = useState(false);
   const [conversationContent, setConversationContent] = useState<Conversation | null>(null);
-
+  const [currentSquare,setCurrentSquare ]= useState(7);
   const dispatch = useDispatch();
   const caveState = useSelector((state: any) => state.locations.cave);
   const germisState = useSelector((state: any) => state.characters.germis);
@@ -285,6 +285,19 @@ const CaveScreen = () => {
     });
   };
 
+  useEffect(() => {
+    if (currentImageIndex === 0) {
+      setCurrentSquare(22);
+    }else if (currentImageIndex === 1){
+      setCurrentSquare(17);
+    } else if (currentImageIndex === 2){
+      setCurrentSquare(12);
+    }  
+    else {
+      setCurrentSquare(7);
+    } 
+    }, [currentImageIndex]);
+
   return (
     <View style={styles.container}>
      {currentImageIndex === 0 && (
@@ -342,7 +355,14 @@ const CaveScreen = () => {
       <View style={styles.maiaContainer}>
         <MaiaIcon height={160} width={160} />
       </View>
-      <Inventory />
+      <Inventory 
+      highlightedSquares={[22,17,12,7]}
+      whiteSquare={currentSquare}
+      sSquares={50}
+      minisSquares={12}
+      tSquares={25}
+      mSquares={5}
+      />
       <RewardManager />
       <Location text={locationName[currentLocationIndex].text} />
       {modal2Visible && (

@@ -39,10 +39,10 @@ const GridModal: React.FC<GridModalProps> = ({
                 {
                   backgroundColor:
                     index === whiteSquare
-                      ? 'rgba(255, 255, 255, 0.82)'
+                      ? 'rgba(0, 0, 0, 0.93)'
                       : highlightedSquares.includes(index)
-                      ? 'rgba(88, 88, 88, 0.81)'
-                      : 'black',
+                      ? 'rgba(88, 88, 88, 0.93)'
+                      : 'rgba(0, 0, 0, 0)',
                   width: squareSize,
                   height: squareSize,
                 },
@@ -65,15 +65,15 @@ const styles = StyleSheet.create({
   grid: {
     flexWrap: 'wrap',
     flexDirection: 'row',
-    backgroundColor: 'black',
-    borderRadius: font(10),
+    backgroundColor: 'rgba(0, 0, 0, 0)',
+    
   },
   square: {
     padding: 0,
     margin: 0,
-    borderWidth: font(1.2),
-    borderColor: 'black',
-    borderRadius: font(10),
+    borderWidth: font(1),
+    borderColor: 'rgba(0, 0, 0, 0)',
+    borderRadius: font(12),
   },
 });
 

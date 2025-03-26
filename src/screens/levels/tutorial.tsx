@@ -37,7 +37,7 @@ const TutorialScreen = () => {
   const [modalVisible, setModalVisible] = useState(false);
   const [modal2Visible, setModal2Visible] = useState(false);
   const [conversationContent, setConversationContent] = useState<Conversation | null>(null);
-  const[currentSquare,setCurrentSquare ]= useState(7);
+  const [currentSquare,setCurrentSquare ]= useState(7);
 
   const dispatch = useDispatch();
   const mattState = useSelector((state: any) => state.matt.value);
@@ -89,6 +89,10 @@ const TutorialScreen = () => {
         dispatch(setMapTrue('map1'));
       }
   };
+  const handleClose = () => {
+    setModal2Visible(false)
+  };
+
 
   const handleIconPress = () => {
     const { component: CurrentIcon } = icons[currentIconIndex];
@@ -150,6 +154,7 @@ const TutorialScreen = () => {
       highlightedSquares={[7,8]}
       whiteSquare={currentSquare}
       sSquares={55}
+      minisSquares={16}
       tSquares={9}
       mSquares={3}
       />
@@ -167,7 +172,7 @@ const TutorialScreen = () => {
         <ConversationModal 
           visible={modal2Visible}  
           conversation={conversationContent}
-          onClose={() => setModal2Visible(false)}
+          onClose={handleClose}
         />
       )}
     </View>
