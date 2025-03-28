@@ -1,6 +1,6 @@
 import React from 'react';
 import { Sign2Icon,MaiaHeadIcon, MattHeadIcon, Maia4HeadIcon, DianaHeadIcon, Maia2HeadIcon, Maia3HeadIcon, ShopGirlHeadIcon 
-  ,BoxIcon, BarisHeadIcon, GermisHeadIcon, JoxHeadIcon,GorjoxHeadIcon, PawnShopBoyHeadIcon
+  ,BoxIcon, BarisHeadIcon, GermisHeadIcon, JoxHeadIcon,GorjoxHeadIcon, PawnShopBoyHeadIcon, DeathHeadIcon
 } from "../SvgExporter";
 
 export interface Conversation {
@@ -24,6 +24,7 @@ export const conversations: {
   barisconv1:Conversation;
   barisconv2:Conversation;
   barisconv3:Conversation;
+  barclose:Conversation;
   caveclose1:Conversation;
   caveclose2:Conversation;
   caveclose3:Conversation;
@@ -36,6 +37,7 @@ export const conversations: {
   gorjoxconv2:Conversation;
   gorjoxconv3:Conversation;
   gorjoxconv4:Conversation;
+  deathconv1:Conversation;
 
 } = {
   mattconv1: {
@@ -255,11 +257,19 @@ export const conversations: {
         svg: BarisHeadIcon
       },
     ],
+  }, 
+  barclose: {
+    dialogos: [
+      { 
+        text: "Al parecer esta cerrada...", 
+        svg: MaiaHeadIcon
+      },
+    ],
   },
   caveclose1: {
     dialogos: [
       { 
-        text: "Que extraño.. por que habria peligro de entrar a la Cueva?", 
+        text: "No deberia entrar ahi..", 
         svg: MaiaHeadIcon
       },
     ],
@@ -433,6 +443,34 @@ export const conversations: {
       { 
         text: "Deseas combatir con Gorjox ?", 
         svg: GorjoxHeadIcon 
+      },
+    ],
+  },
+  deathconv1: {
+    dialogos: [
+      { 
+        text: "...", 
+        svg: DeathHeadIcon 
+      },
+      { 
+        text: "ey...", 
+        svg: DeathHeadIcon 
+      },
+      { 
+        text: "entregame tu alma...", 
+        svg: DeathHeadIcon 
+      },
+      { 
+        text: "y a cambio ...", 
+        svg: DeathHeadIcon 
+      },
+      { 
+        text: "me aseguraré de protegerte...", 
+        svg: DeathHeadIcon 
+      },
+      { 
+        text: "aceptas?", 
+        svg: DeathHeadIcon 
       },
     ],
   },

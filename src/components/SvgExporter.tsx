@@ -82,6 +82,7 @@ import PillsSvg from '../assets/pills.svg';
 import GermisSvg from '../assets/germis.svg';
 import JoxSvg from '../assets/jox.svg';
 import GorjoxSvg from '../assets/gorjox.svg';
+import GorjoxFurySvg from '../assets/gorjoxfury.svg';
 import ChestSvg from '../assets/chest.svg';
 import BoxSvg from '../assets/box.svg';
 import QuestionSvg from '../assets/question.svg';
@@ -102,6 +103,8 @@ import RubiSvg from '../assets/rubi.svg';
 import PocketWatchSvg from '../assets/pocketwatch.svg';
 import ObjetivesSvg from '../assets/objetives.svg';
 import RadarSvg from '../assets/radar.svg';
+import DeathSvg from '../assets/death.svg';
+import DeathHeadSvg from '../assets/deathhead.svg';
 
 const ArrowIcon = (props: any) => <ArrowSvg {...props} />;
 const ChestOpenIcon = (props: any) => <ChestOpenSvg {...props} />;
@@ -186,6 +189,7 @@ const PillsIcon = (props: any) => <PillsSvg {...props} />;
 const GermisIcon = (props: any) => <GermisSvg {...props} />;
 const JoxIcon = (props: any) => <JoxSvg {...props} />;
 const GorjoxIcon = (props: any) => <GorjoxSvg {...props} />;
+const GorjoxFuryIcon = (props: any) => <GorjoxFurySvg {...props} />;
 const ChestIcon = (props: any) => <ChestSvg {...props} />;
 const BoxIcon = (props: any) => <BoxSvg {...props} />;
 const QuestionIcon = (props: any) => <QuestionSvg {...props} />;
@@ -206,7 +210,8 @@ const RubiIcon = (props: any) => <RubiSvg {...props} />;
 const PocketWatchIcon = (props: any) => <PocketWatchSvg {...props} />;
 const ObjetivesIcon = (props: any) => <ObjetivesSvg {...props} />;
 const RadarIcon = (props: any) => <RadarSvg {...props} />;
-
+const DeathIcon = (props: any) => <DeathSvg {...props} />;
+const DeathHeadIcon = (props: any) => <DeathHeadSvg {...props} />;
 
 export { 
   ArrowIcon, 
@@ -312,4 +317,7 @@ export {
   PocketWatchIcon,
   ObjetivesIcon,
   RadarIcon,
+  GorjoxFuryIcon,
+  DeathIcon,
+  DeathHeadIcon,
 };

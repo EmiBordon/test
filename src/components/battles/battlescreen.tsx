@@ -217,7 +217,7 @@ const BattleScreen: React.FC = () => {
             <BrokenHearthIcon height={font(20)} width={font(20)} />
           </View>
           <View style={styles.enemyContainer}>
-            <currentEnemy.icon height={font(198)} width={font(198)} />
+            <currentPhase.icon height={font(198)} width={font(198)} />
           </View>
           
         </View>
@@ -251,7 +251,7 @@ const BattleScreen: React.FC = () => {
             <HearthIcon height={font(20)} width={font(20)} />
           </View>
           <View style={styles.enemyContainer}>
-            <currentEnemy.icon height={font(198)} width={font(198)} />
+            <currentPhase.icon height={font(198)} width={font(198)} />
           </View>
           
         </View>
@@ -294,9 +294,9 @@ const BattleScreen: React.FC = () => {
         </View>
         <View style={styles.enemyContainer}>
           {showDamagedEnemy ? (
-            <ShakyIcon ref={enemyIconRef} Icon={currentEnemy.icon} height={font(198)} width={font(198)} />
+            <ShakyIcon ref={enemyIconRef} Icon={currentPhase.icon} height={font(198)} width={font(198)} />
           ) : (
-            <currentEnemy.icon height={font(198)} width={font(198)} />
+            <currentPhase.icon height={font(198)} width={font(198)} />
           )}
         </View>
         {showInfoButton && (

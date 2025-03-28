@@ -10,6 +10,7 @@ export type EnemyPhase = {
   gridLength: number;
   gridDelay: number;
   dialogue?: string;
+  icon: React.ElementType;
 };
 
 export type Enemy = {
@@ -20,7 +21,6 @@ export type Enemy = {
   defeatMessage: string;
   arrowsRequired: number;
   description?: string;
-  icon: React.ElementType;
-  onDefeatCallbacks?: DefeatEvent[];
+   onDefeatCallbacks?: DefeatEvent[];
   phases: EnemyPhase[];
 };

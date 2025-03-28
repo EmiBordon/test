@@ -18,6 +18,7 @@ export interface CharactersState {
   jox: number;
   gorjox: number;
   pawnshopboy:number;
+  death:number;
 }
 
 const initialState: CharactersState = {
@@ -27,6 +28,7 @@ const initialState: CharactersState = {
   jox: 0,
   gorjox: 0,
   pawnshopboy:0,
+  death:1,
 };
 
 const charactersSlice = createSlice({

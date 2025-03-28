@@ -54,6 +54,8 @@ const BarScreen = () => {
     setCurrentIconIndex((prevIndex) => (prevIndex - 1 + icons.length) % icons.length);
   };
 
+  
+
  
   const handleIconPress = () => {
     const { component: CurrentIcon } = icons[currentIconIndex];
@@ -73,9 +75,15 @@ const BarScreen = () => {
       }
     }
   };
-
+  
+  
   const { component: CurrentIcon, height, width, style: iconStyle } = icons[currentIconIndex];
-
+  const handleImagePress = () => {
+    if (CurrentIcon !== BarisIcon) {
+      setConversationContent(conversations.barclose);
+      setModal2Visible(true);
+  }};
+  
   const backgroundImage = (CurrentIcon === BarisIcon)
     ? require('../../images/bar.jpg')
     : require('../../images/bardoor.jpg');
@@ -91,7 +99,7 @@ const BarScreen = () => {
   return (
     <View style={styles.container}>
       <Image source={backgroundImage} style={styles.backgroundImage} />
-      
+      <Pressable style={styles.buttonImage} onPress={handleImagePress} />
       {CurrentIcon === 'BoxIcon' ? (
       <>
       <Box
@@ -147,6 +155,7 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '40%',
   },
+  buttonImage: { width: '100%', height: '40%' },
   iconButton: {
     position: 'absolute',
   },

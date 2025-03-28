@@ -14,8 +14,7 @@ import {
   GermisIcon,
   JoxIcon,
   GorjoxIcon,
-  SignIcon,
-  DeathIcon
+  SignIcon
 } from '../../components/SvgExporter';
 import Inventory from '../../components/inventory';
 import Location from '../../components/functions/location';
@@ -32,15 +31,15 @@ import SafeBox from '../../components/functions/safeboxicon';
 import RewardManager from '../../components/functions/rewardmanager';
 import { font } from '../../components/functions/fontsize';
 
-
+const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
 
 const iconConfig = [
   {
     name: 'germis',
     component: GermisIcon,
-    height: font(120),
-    width: font(120),
-    style: { top: '35%', left: '50%' },
+    height: SCREEN_HEIGHT * 0.15,
+    width: SCREEN_WIDTH * 0.3,
+    style: { top: '35%', left: '10%' },
     appearances: [
       {
         imageIndex: 1,
@@ -74,9 +73,9 @@ const iconConfig = [
   {
     name: 'jox',
     component: JoxIcon,
-    height: font(125),
-    width: font(125),
-    style: { top: '35%', left: '10%' },
+    height: SCREEN_HEIGHT * 0.18,
+    width: SCREEN_WIDTH * 0.3,
+    style: { top: '35%', left: '60%' },
     appearances: [
       {
         imageIndex: 2,
@@ -109,8 +108,8 @@ const iconConfig = [
   {
     name: 'gorjox',
     component: GorjoxIcon,
-    height: font(130),
-    width: font(130),
+    height: SCREEN_HEIGHT * 0.5,
+    width: SCREEN_WIDTH * 0.5,
     style: { top: '20%', left: '40%' },
     appearances: [
       {
@@ -127,33 +126,18 @@ const iconConfig = [
         modalType: 'modal2'
       },
     ]
-  },
-  {
-    name: 'death',
-    component: DeathIcon,
-    height: font(160),
-    width: font(160),
-    style: { top: '35%', left: '20%' },
-    appearances: [
-      {
-        imageIndex: 4,
-        requiredState: 1,
-        conversation: conversations.deathconv1,
-        modalType: 'modal2'
-      },
-    ]
-  },
+  }
 ];
 
 // Configuración del SignIcon (se mantiene separado)
 const signIconData = {
   component: SignIcon,
-  height: font(100),
-  width: font(100),
-  style: { top: '40%', left: '70%' }
+  height: SCREEN_HEIGHT * 0.25,
+  width: SCREEN_WIDTH * 0.25,
+  style: { top: '35%', left: '70%' }
 };
 
-const CaveScreen = () => {
+const PrisionScreen = () => {
   useFocusEffect(
     React.useCallback(() => {
       const backHandler = BackHandler.addEventListener('hardwareBackPress', () => true);
@@ -174,7 +158,6 @@ const CaveScreen = () => {
   const germisState = useSelector((state: any) => state.characters.germis);
   const joxState = useSelector((state: any) => state.characters.jox);
   const gorjoxState = useSelector((state: any) => state.characters.gorjox);
-  const deathState = useSelector((state: any) => state.characters.death);
   const healing = useSelector((state: any) => state.healing);
   const maia = useSelector((state: any) => state.maia);
   const weapons = useSelector((state: any) => state.weapons);
@@ -183,8 +166,7 @@ const CaveScreen = () => {
   const characterStates = {
     germis: germisState,
     jox: joxState,
-    gorjox: gorjoxState,
-    death:deathState,
+    gorjox: gorjoxState
   };
 
   // Función que obtiene la configuración de aparición para un ícono dado el nombre y la imagen actual.
@@ -300,18 +282,7 @@ const CaveScreen = () => {
           dispatch(saveBackup({ healing, maia, weapons }));
           setModal2Visible(false);
           navigation.navigate('BattleScreen', { enemyName: 'Gorjox' });
-          }else if (conversationContent === conversations.deathconv1 ||
-            conversationContent === conversations.gorjoxconv4) {
-              dispatch(setCharacter({ key: 'death', value: 2 }));
-            }
-  };
-  const handleClose = () => {
-    if (conversationContent === conversations.deathconv1 ) {
-    setModal2Visible(false);
-    dispatch(setCharacter({ key: 'death', value: 0 }));
-    } else {
-      setModal2Visible(false);
-    }
+          }
   };
 
   // Renderiza los íconos de acuerdo a la configuración y la imagen actual
@@ -436,7 +407,7 @@ const CaveScreen = () => {
         <ConversationChoiceModal
           visible={modal2Visible}
           conversation={conversationContent}
-          onClose={handleClose}
+          onClose={() => setModal2Visible(false)}
           onAccept={handleAccept}
         />
       )}
@@ -499,4 +470,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default CaveScreen;
+export default PrisionScreen;

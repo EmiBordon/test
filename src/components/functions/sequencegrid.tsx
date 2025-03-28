@@ -114,8 +114,9 @@ const RandomSequenceGrid: React.FC<RandomSequenceGridProps> = ({ sequenceLength,
 const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
-    width: '60%',
-    height: '35%',
+    //width: '60%',
+    //height: '35%',
+    //backgroundColor:'red'
   },
   title: {
     fontSize: font(18),
@@ -125,7 +126,7 @@ const styles = StyleSheet.create({
     width: CONTAINER_WIDTH,
     flexDirection: 'row',
     flexWrap: 'wrap',
-    top: "5%",
+    
   },
   square: {
     width: SQUARE_SIZE,
