@@ -17,6 +17,10 @@ export interface BoxesState {
   cavebox2: boolean;
   cavebox3: boolean;
   cavebox4: boolean;
+  germisbox:boolean;
+  joxbox:boolean;
+  gorjoxbox:boolean;
+  riffbox:boolean;
   prisionbox: boolean;
   mansionbox1: boolean;
   mansionbox2: boolean;
@@ -28,6 +32,10 @@ const initialState: BoxesState = {
   cavebox2: true,
   cavebox3: true,
   cavebox4: true,
+  germisbox:true,
+  joxbox:true,
+  gorjoxbox:true,
+  riffbox:true,
   prisionbox: true,
   mansionbox1: true,
   mansionbox2: true,

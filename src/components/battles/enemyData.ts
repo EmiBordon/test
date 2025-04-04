@@ -1,6 +1,6 @@
 // src/data/enemyData.ts
 import { Enemy } from './enemyTypes';
-import { GermisIcon,JoxIcon,GorjoxIcon, MattIcon, GorjoxFuryIcon } from '../SvgExporter'; // Ajusta la ruta según tu estructura
+import { GermisIcon,JoxIcon,GorjoxIcon, MattIcon, GorjoxFuryIcon, RiffIcon } from '../SvgExporter'; // Ajusta la ruta según tu estructura
 import { setMattState } from '../../redux/mattSlice';
 import { setCharacter } from '../../redux/charactersSlice';
 import { incrementObjective } from '../../redux/objectivesSlice';
@@ -80,5 +80,22 @@ export const enemies: Enemy[] = [
       { threshold: 0.2, damage: 4, drawBarLevels: 4, drawBarDuration: 1450, moonTearPattern: 3, moonTearDifficulty: 3.2, gridLength: 3, gridDelay: 480,icon: GorjoxIcon },
       { threshold: 0, damage: 9, drawBarLevels: 4, drawBarDuration: 1450, moonTearPattern: 5, moonTearDifficulty: 3.8, gridLength: 8 ,gridDelay: 300,icon: GorjoxFuryIcon },
     ],
-  }
+  },
+  {
+    name: "Riff",
+    health: 6,
+    initialdamage: 1,
+    victoryMessage: "Riff llora de dolor mientras se desintegra...",
+    defeatMessage: "Riff acabo contigo, se siente muy triste y arrepentido.",
+    arrowsRequired: 1,
+    description: "Riff es un Bicho debil.. aunque bastante rapido.",
+    
+    onDefeatCallbacks: [
+      { type: 'dispatch', action: () => setCharacter({ key: 'riff', value: 2 }) },
+    ],
+    phases: [
+      { threshold: 0, damage: 1, drawBarLevels: 2, drawBarDuration: 1500, moonTearPattern: 6, moonTearDifficulty: 3, gridLength: 6 ,gridDelay: 400, icon: RiffIcon, },
+    ],
+  },  
+
 ];

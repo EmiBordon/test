@@ -1,6 +1,6 @@
 import React from 'react';
 import { Sign2Icon,MaiaHeadIcon, MattHeadIcon, Maia4HeadIcon, DianaHeadIcon, Maia2HeadIcon, Maia3HeadIcon, ShopGirlHeadIcon 
-  ,BoxIcon, BarisHeadIcon, GermisHeadIcon, JoxHeadIcon,GorjoxHeadIcon, PawnShopBoyHeadIcon, DeathHeadIcon
+  ,BoxIcon, BarisHeadIcon, GermisHeadIcon, JoxHeadIcon,GorjoxHeadIcon, PawnShopBoyHeadIcon, DeathHeadIcon, RiffIcon
 } from "../SvgExporter";
 
 export interface Conversation {
@@ -28,6 +28,8 @@ export const conversations: {
   caveclose1:Conversation;
   caveclose2:Conversation;
   caveclose3:Conversation;
+  riffconv1:Conversation;
+  riffconv2:Conversation;
   germisconv1:Conversation;
   germisconv2:Conversation;
   joxconv1:Conversation;
@@ -471,6 +473,34 @@ export const conversations: {
       { 
         text: "aceptas?", 
         svg: DeathHeadIcon 
+      },
+    ],
+  },
+  riffconv1: {
+    dialogos: [
+      { 
+        text: "Oye.. eres un humano.", 
+        svg: RiffIcon 
+      },
+      { 
+        text: "Significa que me mataras? ", 
+        svg: RiffIcon 
+      },
+      { 
+        text: "Por favor no lo hagas, no hice nada malo. ", 
+        svg: RiffIcon  
+      },
+      { 
+        text: "Deseas combatir con Riff ?", 
+        svg: RiffIcon 
+      },
+    ],
+  },
+  riffconv2: {
+    dialogos: [
+      { 
+        text: "Deseas combatir con Riff ?", 
+        svg: RiffIcon 
       },
     ],
   },

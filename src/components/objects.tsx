@@ -15,11 +15,11 @@ interface ObjectsState {
   diamond: number;
   rubi: number;
   pocketwatch: number;
-  keychest1: number;
-  keychest2: number;
-  keychest3: number;
-  keydoor1: number;
-  keydoor2: number;
+  barkey: boolean;
+  prisionkey1: boolean;
+  prisionkey2: boolean;
+  keydoor1: boolean;
+  keydoor2: boolean;
 }
 
 // Define el estado de weapons y healing
@@ -43,7 +43,7 @@ export interface GameObject {
   name: string;
   description?: string;
   icon: React.ComponentType<any>;
-  state: number;
+  state: number | boolean;
   price?: number;
 }
 
@@ -52,9 +52,9 @@ export const useObjects = () => {
     diamond,
     rubi,
     pocketwatch,
-    keychest1,
-    keychest2,
-    keychest3,
+    barkey,
+    prisionkey1,
+    prisionkey2,
     keydoor1,
     keydoor2,
   } = useSelector((state: RootState) => state.objects);
@@ -91,25 +91,25 @@ export const useObjects = () => {
 
   const keys: GameObject[] = [
     {
-      id:'keychest1',
-      name: 'keychest1',
-      description: 'Key to open chest 1.',
+      id:'barkey',
+      name: 'Llave del Bar',
+      description: '',
       icon: Key1Icon,
-      state: keychest1,
+      state: barkey,
     },
     {
-      id:'keychest2',
-      name: 'keychest2',
+      id:'prisionkey1',
+      name: 'Llave de la Prision',
       description: 'Key to open chest 2.',
       icon: Key1Icon,
-      state: keychest2,
+      state: prisionkey1,
     },
     {
-      id:'keychest3',
-      name: 'keychest3',
+      id:'prisionkey2',
+      name: 'Llave de la Celda',
       description: 'Key to open chest 3.',
       icon: Key1Icon,
-      state: keychest3,
+      state: prisionkey2,
     },
     {
       id:'keydoor1',

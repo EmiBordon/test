@@ -7,6 +7,7 @@ export type RootStackParamList = {
     Bar: undefined;
     Shop: undefined;
     PawnShop: undefined;
+    Prision: undefined;
   };
   export type DefeatEvent = { 
     type: 'dispatch', 

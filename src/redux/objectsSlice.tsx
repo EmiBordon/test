@@ -15,34 +15,42 @@ export interface ObjectsState {
   diamond: number;
   rubi: number;
   pocketwatch: number;
-  keychest1: number;
-  keychest2: number;
-  keychest3:number;
-  keydoor1: number;
-  keydoor2: number;
+  barkey: boolean;
+  prisionkey1: boolean;
+  prisionkey2: boolean;
+  keydoor1: boolean;
+  keydoor2: boolean;
 }
 
 const initialState: ObjectsState = {
   diamond: 0,
   rubi: 0,
   pocketwatch: 0,
-  keychest1: 0,
-  keychest2: 0,
-  keychest3: 0,
-  keydoor1: 0,
-  keydoor2: 0,
+  barkey: false,
+  prisionkey1: true,
+  prisionkey2: true,
+  keydoor1: false,
+  keydoor2: false,
 };
 
 const objectsSlice = createSlice({
   name: 'objects',
   initialState,
   reducers: {
-    incrementObject: (state, action: PayloadAction<{ key: keyof ObjectsState; amount: number }>) => {
+    incrementObject: (state, action: PayloadAction<{ key: 'diamond' | 'rubi' | 'pocketwatch'; amount: number }>) => {
       state[action.payload.key] += action.payload.amount;
       saveState(state);
     },
-    decrementObject: (state, action: PayloadAction<{ key: keyof ObjectsState; amount: number }>) => {
+    decrementObject: (state, action: PayloadAction<{ key: 'diamond' | 'rubi' | 'pocketwatch'; amount: number }>) => {
       state[action.payload.key] -= action.payload.amount;
+      saveState(state);
+    },
+    setKeyTrue: (state, action: PayloadAction<'barkey' | 'prisionkey1' | 'prisionkey2' | 'keydoor1' | 'keydoor2'>) => {
+      state[action.payload] = true;
+      saveState(state);
+    },
+    setKeyFalse: (state, action: PayloadAction<'barkey' | 'prisionkey1' | 'prisionkey2' | 'keydoor1' | 'keydoor2'>) => {
+      state[action.payload] = false;
       saveState(state);
     },
     resetObjects: (state) => {
@@ -68,5 +76,12 @@ const saveState = async (state: ObjectsState) => {
   }
 };
 
-export const { incrementObject, decrementObject, resetObjects } = objectsSlice.actions;
+export const {
+  incrementObject,
+  decrementObject,
+  setKeyTrue,
+  setKeyFalse,
+  resetObjects
+} = objectsSlice.actions;
+
 export default objectsSlice.reducer;

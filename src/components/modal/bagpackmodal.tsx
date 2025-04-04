@@ -184,7 +184,7 @@ const BagPackModal: React.FC<BagPackModalProps> = ({ visible, onClose }) => {
                   <View key={index} style={styles.objectListItem}>
                     <obj.icon style={styles.objectIcon} width={font(30)} height={font(30)} />
                     <Text style={styles.objectListText}>
-                      {obj.name} ({obj.state})
+                      {obj.name} {obj.state}
                     </Text>
                   </View>
                 ))}

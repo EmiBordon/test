@@ -18,6 +18,10 @@ export interface RewardsState {
     cavebox2: boolean;
     cavebox3: boolean;
     cavebox4: boolean;
+    germisbox:boolean;
+    joxbox:boolean;
+    gorjoxbox:boolean;
+    riffbox:boolean;
     prisionbox: boolean;
     mansionbox1: boolean;
     mansionbox2: boolean;
@@ -31,6 +35,10 @@ const initialState: RewardsState = {
     cavebox2: false,
     cavebox3: false,
     cavebox4: false,
+    germisbox:false,
+    joxbox:false,
+    gorjoxbox:false,
+    riffbox:false,
     prisionbox: false,
     mansionbox1: false,
     mansionbox2: false,

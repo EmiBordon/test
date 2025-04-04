@@ -15,7 +15,7 @@ const Map1Modal = ({ visible, onClose, navigation }) => {
   // Configuración de cada ícono
   const iconsConfig = [
     { key: "house", icon: <HouseIcon width={font(55)} height={font(55)} />, text: "Casa", style: styles.iconHouse, action: () => { onClose(); navigation.replace("Tutorial"); } },
-    { key: "prison", icon: <PrisionIcon width={font(60)} height={font(60)} />, text: "Prisión", style: styles.iconPrison, action: () => Alert.alert("Prision no disponible en la demo") },
+    { key: "prison", icon: <PrisionIcon width={font(60)} height={font(60)} />, text: "Prisión", style: styles.iconPrison, action: () => { onClose(); navigation.replace("Prision"); } },
     { key: "store", icon: <StoreIcon width={font(50)} height={font(50)} />, text: "Tienda", style: styles.iconStore, action: () => { onClose(); navigation.replace("Shop"); } },
     { key: "restaurant", icon: <RestaurantIcon width={font(55)} height={font(55)} />, text: "Bar", style: styles.iconRestaurant, action: () => { onClose(); navigation.replace("Bar"); } },
     { key: "bigHouse", icon: <BigHouseIcon width={font(65)} height={font(65)} />, text: "Mansión", style: styles.iconBigHouse, action: () => Alert.alert("Mansion no disponible en la demo") },

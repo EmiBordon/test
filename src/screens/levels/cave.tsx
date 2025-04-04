@@ -15,7 +15,8 @@ import {
   JoxIcon,
   GorjoxIcon,
   SignIcon,
-  DeathIcon
+  DeathIcon,
+  RiffIcon
 } from '../../components/SvgExporter';
 import Inventory from '../../components/inventory';
 import Location from '../../components/functions/location';
@@ -109,9 +110,9 @@ const iconConfig = [
   {
     name: 'gorjox',
     component: GorjoxIcon,
-    height: font(130),
-    width: font(130),
-    style: { top: '20%', left: '40%' },
+    height: font(170),
+    width: font(170),
+    style: { top: '35%', left: '40%' },
     appearances: [
       {
         imageIndex: 3,
@@ -139,6 +140,28 @@ const iconConfig = [
         imageIndex: 4,
         requiredState: 1,
         conversation: conversations.deathconv1,
+        modalType: 'modal2'
+      },
+    ]
+  },
+  {
+    name: 'riff',
+    component: RiffIcon,
+    height: font(90),
+    width: font(90),
+    style: { top: '35%', left: '29%' },
+    appearances: [
+      {
+        imageIndex: 5,
+        requiredState: 0,
+        updateState: 1,
+        conversation: conversations.riffconv1,
+        modalType: 'modal2'
+      },
+      {
+        imageIndex: 5,
+        requiredState: 1,
+        conversation: conversations.riffconv2,
         modalType: 'modal2'
       },
     ]
@@ -175,6 +198,7 @@ const CaveScreen = () => {
   const joxState = useSelector((state: any) => state.characters.jox);
   const gorjoxState = useSelector((state: any) => state.characters.gorjox);
   const deathState = useSelector((state: any) => state.characters.death);
+  const riffState = useSelector((state: any) => state.characters.riff);
   const healing = useSelector((state: any) => state.healing);
   const maia = useSelector((state: any) => state.maia);
   const weapons = useSelector((state: any) => state.weapons);
@@ -185,6 +209,7 @@ const CaveScreen = () => {
     jox: joxState,
     gorjox: gorjoxState,
     death:deathState,
+    riff:riffState,
   };
 
   // Función que obtiene la configuración de aparición para un ícono dado el nombre y la imagen actual.
@@ -300,10 +325,17 @@ const CaveScreen = () => {
           dispatch(saveBackup({ healing, maia, weapons }));
           setModal2Visible(false);
           navigation.navigate('BattleScreen', { enemyName: 'Gorjox' });
-          }else if (conversationContent === conversations.deathconv1 ||
-            conversationContent === conversations.gorjoxconv4) {
+          }else if (conversationContent === conversations.deathconv1 )
+             {
               dispatch(setCharacter({ key: 'death', value: 2 }));
-            }
+              setModal2Visible(false);
+            }else if (conversationContent === conversations.riffconv1 || 
+              conversationContent === conversations.riffconv2  )
+              {
+                dispatch(saveBackup({ healing, maia, weapons }));
+               setModal2Visible(false);
+               navigation.navigate('BattleScreen', { enemyName: 'Riff' });
+             }
   };
   const handleClose = () => {
     if (conversationContent === conversations.deathconv1 ) {

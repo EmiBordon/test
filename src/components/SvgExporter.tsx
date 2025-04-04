@@ -105,6 +105,11 @@ import ObjetivesSvg from '../assets/objetives.svg';
 import RadarSvg from '../assets/radar.svg';
 import DeathSvg from '../assets/death.svg';
 import DeathHeadSvg from '../assets/deathhead.svg';
+import RiffSvg from '../assets/riff.svg';
+import TimSvg from '../assets/tim.svg';
+import TimHeadSvg from '../assets/timhead.svg';
+import BadTimSvg from '../assets/badtim.svg';
+import BadTimHeadSvg from '../assets/badtimhead.svg';
 
 const ArrowIcon = (props: any) => <ArrowSvg {...props} />;
 const ChestOpenIcon = (props: any) => <ChestOpenSvg {...props} />;
@@ -212,6 +217,11 @@ const ObjetivesIcon = (props: any) => <ObjetivesSvg {...props} />;
 const RadarIcon = (props: any) => <RadarSvg {...props} />;
 const DeathIcon = (props: any) => <DeathSvg {...props} />;
 const DeathHeadIcon = (props: any) => <DeathHeadSvg {...props} />;
+const RiffIcon = (props: any) => <RiffSvg {...props} />;
+const TimIcon = (props: any) => <TimSvg {...props} />;
+const BadTimIcon = (props: any) => <BadTimSvg {...props} />;
+const TimHeadIcon = (props: any) => <TimHeadSvg {...props} />;
+const BadTimHeadIcon = (props: any) => <BadTimHeadSvg {...props} />;
 
 export { 
   ArrowIcon, 
@@ -320,4 +330,9 @@ export {
   GorjoxFuryIcon,
   DeathIcon,
   DeathHeadIcon,
+  RiffIcon,
+  TimIcon,
+  TimHeadIcon,
+  BadTimIcon,
+  BadTimHeadIcon,
 };

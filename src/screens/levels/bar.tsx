@@ -13,13 +13,14 @@ import Box from '../../components/functions/boxicon'; // <-- nuevo componente
 import SafeBox from '../../components/functions/safeboxicon';
 import RewardManager from '../../components/functions/rewardmanager';
 import { incrementObjective } from '../../redux/objectivesSlice';
+import { font } from '../../components/functions/fontsize';
 
 
 const icons = [
   { 
     component: BarisIcon, 
-    height: 150, 
-    width: 150, 
+    height: font(145), 
+    width: font(145), 
     style: { top: '43%', left: '40%' } 
   },
   { 
@@ -113,17 +114,22 @@ const BarScreen = () => {
       </Pressable>
       )}
 
-      <View style={styles.sideIcons}>
-        <Pressable style={styles.arrowButton} onPress={handlePrevIcon}>
-          <ArrowIcon style={styles.leftArrow} height={50} width={50} />
-        </Pressable>
-        <Pressable style={styles.arrowButton} onPress={handleNextIcon}>
-          <ArrowIcon height={50} width={50} />
+        {currentIconIndex !== 0 &&(
+      <View style={styles.leftIcons}>
+          <Pressable style={styles.arrowButton} onPress={handlePrevIcon}>
+          <ArrowIcon style={styles.leftArrow} height={font(45)} width={font(45)} />
         </Pressable>
       </View>
-
+        )}
+      {currentIconIndex === 0 &&(
+      <View style={styles.rightIcons}>
+        <Pressable style={styles.arrowButton} onPress={handleNextIcon}>
+          <ArrowIcon height={font(45)} width={font(45)} />
+        </Pressable>
+      </View>
+      )}
       <View style={styles.maiaContainer}>
-        <MaiaIcon height={160} width={160} />
+        <MaiaIcon height={font(150)} width={font(150)} />
       </View>
 
       <Inventory 
@@ -159,20 +165,30 @@ const styles = StyleSheet.create({
   iconButton: {
     position: 'absolute',
   },
-  sideIcons: {
+  leftIcons: {
     flexDirection: 'row',
-    width: '100%',
-    justifyContent: 'space-between',
     position: 'absolute',
     top: '50%',
+    left: 0, // Alinea el contenedor al borde derecho
     paddingHorizontal: '2%',
+    justifyContent: 'flex-end', // Alinea los íconos a la derecha dentro del contenedor
+    width: 'auto', // O eliminá la propiedad 'width' si no hace falta ocupar todo el ancho
+  },
+  rightIcons: {
+    flexDirection: 'row',
+    position: 'absolute',
+    top: '50%',
+    right: 0, // Alinea el contenedor al borde derecho
+    paddingHorizontal: '2%',
+    justifyContent: 'flex-end', // Alinea los íconos a la derecha dentro del contenedor
+    width: 'auto', // O eliminá la propiedad 'width' si no hace falta ocupar todo el ancho
   },
   leftArrow: {
     transform: [{ scaleX: -1 }],
   },
   arrowButton: {
-    width: 50,
-    height: 50,
+    width: font(45),
+    height: font(45),
   },
   maiaContainer: {
     position: 'absolute',

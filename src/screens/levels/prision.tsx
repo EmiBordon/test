@@ -14,7 +14,8 @@ import {
   GermisIcon,
   JoxIcon,
   GorjoxIcon,
-  SignIcon
+  SignIcon,
+  TimIcon
 } from '../../components/SvgExporter';
 import Inventory from '../../components/inventory';
 import Location from '../../components/functions/location';
@@ -31,18 +32,18 @@ import SafeBox from '../../components/functions/safeboxicon';
 import RewardManager from '../../components/functions/rewardmanager';
 import { font } from '../../components/functions/fontsize';
 
-const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
+
 
 const iconConfig = [
   {
-    name: 'germis',
-    component: GermisIcon,
-    height: SCREEN_HEIGHT * 0.15,
-    width: SCREEN_WIDTH * 0.3,
-    style: { top: '35%', left: '10%' },
+    name: 'tim',
+    component: TimIcon,
+    height: font(130),
+    width: font(130),
+    style: { top: '39%', left: '10%' },
     appearances: [
       {
-        imageIndex: 1,
+        imageIndex: 5,
         requiredState: 0,
         conversation: conversations.germisconv1,
         updateState: 1,
@@ -52,90 +53,14 @@ const iconConfig = [
         imageIndex: 1,
         requiredState: 1,
         conversation: conversations.germisconv2,
-        // No actualizamos el estado en este paso
-        modalType: 'modal2'
-      },
-      {
-        imageIndex: 3,
-        requiredState: 2,
-        conversation: conversations.gorjoxconv0,
-        updateState: 3,
-        modalType: 'modal2'
-      },
-      {
-        imageIndex: 3,
-        requiredState: 3,
-        conversation: conversations.gorjoxconv2,
         modalType: 'modal2'
       },
     ]
   },
-  {
-    name: 'jox',
-    component: JoxIcon,
-    height: SCREEN_HEIGHT * 0.18,
-    width: SCREEN_WIDTH * 0.3,
-    style: { top: '35%', left: '60%' },
-    appearances: [
-      {
-        imageIndex: 2,
-        requiredState: 0,
-        conversation: conversations.joxconv1,
-        updateState: 1,
-        modalType: 'modal2'
-      },
-      {
-        imageIndex: 2,
-        requiredState: 1,
-        conversation: conversations.joxconv2,
-        modalType: 'modal2'
-      },
-      {
-        imageIndex: 3,
-        requiredState: 2,
-        conversation: conversations.gorjoxconv1,
-        updateState: 3,
-        modalType: 'modal2'
-      },
-      {
-        imageIndex: 3,
-        requiredState: 3,
-        conversation: conversations.gorjoxconv2,
-        modalType: 'modal2'
-      },
-    ]
-  },
-  {
-    name: 'gorjox',
-    component: GorjoxIcon,
-    height: SCREEN_HEIGHT * 0.5,
-    width: SCREEN_WIDTH * 0.5,
-    style: { top: '20%', left: '40%' },
-    appearances: [
-      {
-        imageIndex: 3,
-        requiredState: 1,
-        conversation: conversations.gorjoxconv3,
-        updateState: 2,
-        modalType: 'modal2'
-      },
-      {
-        imageIndex: 3,
-        requiredState: 2,
-        conversation: conversations.gorjoxconv4,
-        modalType: 'modal2'
-      },
-    ]
-  }
 ];
 
 // Configuración del SignIcon (se mantiene separado)
-const signIconData = {
-  component: SignIcon,
-  height: SCREEN_HEIGHT * 0.25,
-  width: SCREEN_WIDTH * 0.25,
-  style: { top: '35%', left: '70%' }
-};
+
 
 const PrisionScreen = () => {
   useFocusEffect(
@@ -154,7 +79,10 @@ const PrisionScreen = () => {
   const [currentSquare,setCurrentSquare ]= useState(7);
   const [currentIconIndex, setCurrentIconIndex] = useState(0);
   const dispatch = useDispatch();
-  const caveState = useSelector((state: any) => state.locations.cave);
+  const prisionState = useSelector((state: any) => state.locations.prision);
+  const prisionkey1State = useSelector((state: any) => state.objects.prisionkey1);
+  const prisionkey2State = useSelector((state: any) => state.objects.prisionkey2);
+  const timState = useSelector((state: any) => state.characters.tim);
   const germisState = useSelector((state: any) => state.characters.germis);
   const joxState = useSelector((state: any) => state.characters.jox);
   const gorjoxState = useSelector((state: any) => state.characters.gorjox);
@@ -166,7 +94,8 @@ const PrisionScreen = () => {
   const characterStates = {
     germis: germisState,
     jox: joxState,
-    gorjox: gorjoxState
+    gorjox: gorjoxState,
+    tim:timState,
   };
 
   // Función que obtiene la configuración de aparición para un ícono dado el nombre y la imagen actual.
@@ -196,63 +125,88 @@ const PrisionScreen = () => {
 
   // Manejador para la imagen de fondo
   const handleImagePress = () => {
-    if (currentImageIndex === 0 && caveState === 0) {
+    if (currentImageIndex === 0 && prisionkey1State === false) {
       setModalVisible(true);
       setConversationContent(conversations.caveclose1);
-    } else if (currentImageIndex === 1 && germisState < 2) {
+    }else if (currentImageIndex === 7 && prisionkey2State === false) {
       setModalVisible(true);
-      setConversationContent(conversations.caveclose2);
-    } else if (currentImageIndex === 2 && joxState < 2) {
-      setModalVisible(true);
-      setConversationContent(conversations.caveclose3);
+      setConversationContent(conversations.caveclose1);
     } else {
       handleNextImage();
     }
   };
 
   const locationName = [
-    { text: "Entrada de La Cueva" },
-    { text: "Interior de La Cueva" },
+    { text: "Prision" },
+    { text: "Interior de la Prision" },
     
   ];
 
+
   const backgroundImages = [
-    require('../../images/cave1.jpg'),
-    require('../../images/cave7.jpg'),
-    require('../../images/cave3.jpg'),
-    require('../../images/cave6.jpg'),
-    require('../../images/cave2.jpg'),
-    require('../../images/cave4.jpg'),
+    require('../../images/prison1.jpg'),
+    require('../../images/prison2.jpg'),
+    require('../../images/prison3.jpg'),
+    require('../../images/prison4.jpg'),
+    require('../../images/prison5.jpg'),
+    require('../../images/prison6.jpg'),
+    require('../../images/prison7.jpg'),
+    require('../../images/prison8.jpg'),
+    require('../../images/prison9.jpg'),
   ];
+
+  const navigationStates = {
+    0: { next: 1, square: 22, locationIndex: 0 },
+    1: { next: 2, prev: 0, square: 17, locationIndex: 1 },
+    2: {prev: 1, square: 12 },
+    3: { prev: 8, square: 3 },
+    4: {  prev: 7, square: 16 },
+    5: { prev: 7, square: 10 },
+    6: { next: 8, prev: 2, square: 13 },
+    7: { next: 5, prev: 4, square: 15 },
+    8: { next: 3, prev: 6, square: 8 }
+  };
   const handleNextIcon = () => {
-    if (currentImageIndex == 2) {
-      setCurrentImageIndex(5);
+    if (currentImageIndex == 7) {
+      setCurrentImageIndex(4);
    } else if (currentImageIndex == 4) {
     setCurrentImageIndex(1);
- }
+ }else if (currentImageIndex == 2) {
+  setCurrentImageIndex(6);
+}
   };
 
   const handlePrevIcon = () => {
     if (currentImageIndex == 1) {
        setCurrentImageIndex(4);
-    } else if (currentImageIndex == 5) {
-      setCurrentImageIndex(2);
-   }
+    } else if (currentImageIndex == 4) {
+      setCurrentImageIndex(7);
+   }else if (currentImageIndex == 6) {
+    setCurrentImageIndex(2);
+ }
   };
 
   const handleNextImage = () => {
-    if ((currentImageIndex > -1) && (currentImageIndex < 3)) {
-      setCurrentImageIndex(currentImageIndex + 1);
-      setCurrentLocationIndex(1);
+    const currentState = navigationStates[currentImageIndex];
+    if (currentState?.next !== undefined) {
+      const nextIndex = currentState.next;
+      setCurrentImageIndex(nextIndex);
+      setCurrentSquare(navigationStates[nextIndex]?.square ?? -1);
+      if (navigationStates[nextIndex]?.locationIndex !== undefined) {
+        setCurrentLocationIndex(navigationStates[nextIndex].locationIndex);
+      }
     }
   };
 
   const handlePrevImage = () => {
-    if (currentImageIndex !== 0) {
-      setCurrentImageIndex(currentImageIndex - 1);
-    }
-    if (currentImageIndex == 1) {
-      setCurrentLocationIndex(0);
+    const currentState = navigationStates[currentImageIndex];
+    if (currentState?.prev !== undefined) {
+      const prevIndex = currentState.prev;
+      setCurrentImageIndex(prevIndex);
+      setCurrentSquare(navigationStates[prevIndex]?.square ?? -1);
+      if (navigationStates[prevIndex]?.locationIndex !== undefined) {
+        setCurrentLocationIndex(navigationStates[prevIndex].locationIndex);
+      }
     }
   };
 
@@ -310,42 +264,50 @@ const PrisionScreen = () => {
       setCurrentSquare(22);
     }else if (currentImageIndex === 1){
       setCurrentSquare(17);
-    } else if (currentImageIndex === 2){
-      setCurrentSquare(12);
     } else if (currentImageIndex === 4){
       setCurrentSquare(16);
-    } else if (currentImageIndex === 5){
+    } else if (currentImageIndex === 6){
       setCurrentSquare(13);
-    } 
+    } else if (currentImageIndex === 2){
+      setCurrentSquare(12); 
+    } else if (currentImageIndex === 7){
+      setCurrentSquare(15); 
+    }else if (currentImageIndex === 5){
+      setCurrentSquare(10); 
+    }else if (currentImageIndex === 3){
+      setCurrentSquare(3); 
+    }else if (currentImageIndex === 8){
+      setCurrentSquare(8); 
+    }
     else {
-      setCurrentSquare(7);
+      setCurrentSquare(22);
     } 
     }, [currentImageIndex]);
 
   return (
     <View style={styles.container}>
-     {currentImageIndex === 0 && (
+     {currentImageIndex === 12 && (
      <CodeBox 
       boxKey='cavebox1'
       positionStyle={{ top: '40%', left: '22%' }}
       code="028173456"
       />
      )}
-     {currentImageIndex === 1 && (
+     {currentImageIndex === 12 && (
      <Box 
       boxKey='cavebox2'
       positionStyle={{ top: '60%', left: '70%' }}
       
       />
      )}
-     {currentImageIndex === 2 && (
+     {currentImageIndex === 22 && (
      <CodeBox 
       boxKey='cavebox3'
       positionStyle={{ top: '60%', left: '30%' }}
       code="302845617"
       />
      )}
-     {currentImageIndex === 3 && (
+     {currentImageIndex === 32 && (
      <SafeBox 
       boxKey='cavebox4'
       positionStyle={{ top: '60%', left: '70%' }}
@@ -355,35 +317,27 @@ const PrisionScreen = () => {
       <Image source={backgroundImages[currentImageIndex]} style={styles.backgroundImage} />
       {/* Presionando la imagen se ejecuta handleImagePress */}
       <Pressable style={styles.buttonImage} onPress={handleImagePress} />
-      {/* SignIcon (se muestra en la primera imagen) */}
-      {currentImageIndex === 0 && (
-        <Pressable
-          style={[styles.iconButton, signIconData.style]}
-          onPress={() => {
-            setModalVisible(true);
-            setConversationContent(conversations.sign1);
-          }}
-        >
-          <signIconData.component height={signIconData.height} width={signIconData.width} />
-        </Pressable>
-      )}
+     
+        
+      
       {/* Render de los íconos configurados */}
       {renderIcons()}
-      {(currentImageIndex > 0) && (currentImageIndex < 4) &&(
+      {((currentImageIndex == 1) || (currentImageIndex == 5)|| (currentImageIndex == 2)|| (currentImageIndex == 3)
+      || (currentImageIndex == 8)) &&(
         <View style={styles.backIcons}>
           <Pressable style={styles.arrowButton} onPress={handlePrevImage}>
             <ArrowIcon style={styles.backArrow} height={font(45)} width={font(45)} />
           </Pressable>
         </View>
       )}
-          {((currentImageIndex == 2)||(currentImageIndex == 4) )&& (
+          {((currentImageIndex == 2)||(currentImageIndex == 4)||(currentImageIndex == 7 ) )&& (
             <View style={styles.rightIcons}>
               <Pressable style={styles.arrowButton} onPress={handleNextIcon}>
                 <ArrowIcon height={font(45)} width={font(45)} />
               </Pressable>
             </View>
             )}
-          {((currentImageIndex == 1)||(currentImageIndex == 5) )&& (
+          {((currentImageIndex == 1)||(currentImageIndex == 4)||(currentImageIndex == 6) )&& (
             <View style={styles.leftIcons}>
               <Pressable style={styles.arrowButton} onPress={handlePrevIcon}>
                 <ArrowIcon style={styles.leftArrow} height={font(45)} width={font(45)} />
@@ -394,7 +348,7 @@ const PrisionScreen = () => {
         <MaiaIcon height={font(150)} width={font(150)} />
       </View>
       <Inventory 
-      highlightedSquares={[22,17,12,7,13,16]}
+      highlightedSquares={[22,17,12,13,16,15,10,8,3]}
       whiteSquare={currentSquare}
       sSquares={50}
       minisSquares={12}
@@ -427,9 +381,9 @@ const styles = StyleSheet.create({
   backgroundImage: {
     ...StyleSheet.absoluteFillObject,
     width: '100%',
-    height: '30%'
+    height: '35%'
   },
-  buttonImage: { width: '100%', height: '30%' },
+  buttonImage: { width: '100%', height: '35%' },
   iconButton: { position: 'absolute' },
   backIcons: {
     flexDirection: 'row',

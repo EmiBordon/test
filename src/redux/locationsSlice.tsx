@@ -30,7 +30,7 @@ const initialState: LocationsState = {
   bar: 0,
   shop: 0,
   home: 0,
-  map1: false,
+  map1: true,
   map2: false,
   map3: false,
 };

@@ -17,8 +17,10 @@ export interface CharactersState {
   germis: number;
   jox: number;
   gorjox: number;
+  riff: number;
   pawnshopboy:number;
   death:number;
+  tim:number;
 }
 
 const initialState: CharactersState = {
@@ -27,8 +29,10 @@ const initialState: CharactersState = {
   germis: 0,
   jox: 0,
   gorjox: 0,
+  riff: 0,
   pawnshopboy:0,
   death:1,
+  tim: 0,
 };
 
 const charactersSlice = createSlice({
