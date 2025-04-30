@@ -31,7 +31,7 @@ import { font } from "./functions/fontsize";
 import Objectives from "./objetivesbutton";
 import { incrementObjective } from "../redux/objectivesSlice";
 import GridTouchable from "./gridtouchable";
-
+import HealthBar from "./healthbar";
 // Tipado para el estado de Redux
 interface MaiaState {
   maiahealth: number;
@@ -73,9 +73,7 @@ const Inventory: React.FC<InventoryProps> = ({
 }) => {
   const dispatch = useDispatch();
   const maiaHealth = useSelector((state: RootState) => state.maia.maiahealth);
-  const maiaCurrentHealth = useSelector(
-    (state: RootState) => state.maia.maiacurrenthealth
-  );
+  const maiaCurrentHealth = useSelector((state: RootState) => state.maia.maiacurrenthealth);
   const coins = useSelector((state: RootState) => state.coins.coins);
 
   // Estados de mapas desde Redux
@@ -142,16 +140,7 @@ const Inventory: React.FC<InventoryProps> = ({
 
         {/* Barra de vida */}
         <View style={styles.healthBar}>
-          <View style={styles.healthContainer}>
-            <HearthIcon
-              height={font(18)}
-              width={font(18)}
-              style={styles.hearthIcon}
-            />
-            <Text style={styles.healthBarText}>
-              {maiaCurrentHealth}/{maiaHealth}
-            </Text>
-          </View>
+          <HealthBar/>
         </View>
 
         {/* Casillero 1 - Mochila */}
@@ -280,7 +269,7 @@ const styles = StyleSheet.create({
   healthBar: {
     position: "absolute",
     top: "-40%",
-    right: "5%",
+    right: "0%",
     padding: "-3%",
   },
   healthContainer: {

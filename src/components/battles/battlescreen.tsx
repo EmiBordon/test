@@ -1,8 +1,9 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, BackHandler } from 'react-native';
 import { 
-  MattIcon, MaiaHeadIcon, HearthIcon, BrokenHearthIcon, MoonIcon, TearIcon, 
-  GarbageIcon, ShieldIcon, WhiteSwordIcon, TextBubbleRightIcon, BowIcon, CrossBowIcon
+  MaiaHeadIcon, HearthIcon, BrokenHearthIcon, MoonIcon, TearIcon, 
+  GarbageIcon, ShieldIcon, WhiteSwordIcon,BowIcon, CrossBowIcon, DevilHearthIcon, DevilHalfHearthIcon,
+  DevilBrokenHearthIcon, HalfHearthIcon
 } from '../SvgExporter';
 import ShakyIcon, {ShakyIconRef} from '../characters/shakymatticon';
 import { useSelector, useDispatch } from 'react-redux';
@@ -24,6 +25,7 @@ import { enemies } from './enemyData';
 import { getCurrentPhase } from './enemyLogic';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from './types';
+import HealthBar from '../healthbar';
 
 const BattleScreen: React.FC = () => {
   const route = useRoute<RouteProp<RootStackParamList, 'BattleScreen'>>();
@@ -364,14 +366,7 @@ const BattleScreen: React.FC = () => {
       {/* Contenedor de Maia en la esquina inferior derecha */}
       <View style={styles.maiaContainer}>
         <View style={styles.healthContainer}>
-          {showBrokenHearthMaia ? (
-            <BrokenHearthIcon height={font(20)} width={font(20)} />
-          ) : (
-            <HearthIcon height={font(20)} width={font(20)} />
-          )}
-          <Text style={styles.healthText}>
-            {maiaCurrentHealth}/{maiaHealth}
-          </Text>
+          <HealthBar/>
         </View>
         <View style={styles.maiaIconBox}>
           {showDamagedMaia ? (

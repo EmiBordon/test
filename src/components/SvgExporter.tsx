@@ -64,6 +64,10 @@ import QuiverSvg from '../assets/quiver.svg';
 import BowArrowSvg from '../assets/bowarrow.svg';
 import HearthSvg from '../assets/hearth.svg';
 import BrokenHearthSvg from '../assets/brokenhearth.svg';
+import HalfHearthSvg from '../assets/halfhearth.svg';
+import DevilHearthSvg from '../assets/devilhearth.svg';
+import DevilBrokenHearthSvg from '../assets/devilbrokenhearth.svg';
+import DevilHalfHearthSvg from '../assets/devilhalfhearth.svg';
 import TearSvg from '../assets/tear.svg';
 import MoonSvg from '../assets/moon.svg';
 import ShieldSvg from '../assets/shield.svg';
@@ -176,6 +180,10 @@ const BowArrowIcon = (props: any) => <BowArrowSvg {...props} />;
 const QuiverArrowIcon = (props: any) => <QuiverSvg {...props} />;
 const HearthIcon = (props: any) => <HearthSvg {...props} />;
 const BrokenHearthIcon = (props: any) => <BrokenHearthSvg {...props} />;
+const HalfHearthIcon = (props: any) => <HalfHearthSvg {...props} />;
+const DevilHearthIcon = (props: any) => <DevilHearthSvg {...props} />;
+const DevilBrokenHearthIcon = (props: any) => <DevilBrokenHearthSvg {...props} />;
+const DevilHalfHearthIcon = (props: any) => <DevilHalfHearthSvg {...props} />;
 const TearIcon = (props: any) => <TearSvg {...props} />;
 const MoonIcon = (props: any) => <MoonSvg {...props} />;
 const ShieldIcon = (props: any) => <ShieldSvg {...props} />;
@@ -335,4 +343,8 @@ export {
   TimHeadIcon,
   BadTimIcon,
   BadTimHeadIcon,
+  HalfHearthIcon,
+  DevilHearthIcon,
+  DevilBrokenHearthIcon,
+  DevilHalfHearthIcon
 };

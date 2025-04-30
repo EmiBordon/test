@@ -28,7 +28,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
   const handleLongPressIn = () => {
     timerRef.current = setTimeout(() => {
       setShowResetButton(true);
-    }, 3000); // 3 segundos
+    }, 800); // 3 segundos
   };
 
   const handleLongPressOut = () => {
