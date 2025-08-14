@@ -114,6 +114,15 @@ import TimSvg from '../assets/tim.svg';
 import TimHeadSvg from '../assets/timhead.svg';
 import BadTimSvg from '../assets/badtim.svg';
 import BadTimHeadSvg from '../assets/badtimhead.svg';
+import RotateDiceSvg from '../assets/rotatedice.svg';
+import Dice1Svg from '../assets/dice1.svg';
+import Dice2Svg from '../assets/dice2.svg';
+import Dice3Svg from '../assets/dice3.svg';
+import Dice4Svg from '../assets/dice4.svg';
+import Dice5Svg from '../assets/dice5.svg';
+import Dice6Svg from '../assets/dice6.svg';
+import Dice666Svg from '../assets/dice666.svg';
+import DoubleDiceSvg from '../assets/doubledice.svg';
 
 const ArrowIcon = (props: any) => <ArrowSvg {...props} />;
 const ChestOpenIcon = (props: any) => <ChestOpenSvg {...props} />;
@@ -230,6 +239,15 @@ const TimIcon = (props: any) => <TimSvg {...props} />;
 const BadTimIcon = (props: any) => <BadTimSvg {...props} />;
 const TimHeadIcon = (props: any) => <TimHeadSvg {...props} />;
 const BadTimHeadIcon = (props: any) => <BadTimHeadSvg {...props} />;
+const RotateDiceIcon = (props: any) => <RotateDiceSvg {...props} />;
+const Dice1Icon = (props: any) => <Dice1Svg {...props} />;
+const Dice2Icon = (props: any) => <Dice2Svg {...props} />;
+const Dice3Icon = (props: any) => <Dice3Svg {...props} />;
+const Dice4Icon = (props: any) => <Dice4Svg {...props} />;
+const Dice5Icon = (props: any) => <Dice5Svg {...props} />;
+const Dice6Icon = (props: any) => <Dice6Svg {...props} />;
+const Dice666Icon = (props: any) => <Dice666Svg {...props} />;
+const DoubleDiceIcon = (props: any) => <DoubleDiceSvg {...props} />;
 
 export { 
   ArrowIcon, 
@@ -346,5 +364,14 @@ export {
   HalfHearthIcon,
   DevilHearthIcon,
   DevilBrokenHearthIcon,
-  DevilHalfHearthIcon
+  DevilHalfHearthIcon,
+  RotateDiceIcon,
+  Dice1Icon,
+  Dice2Icon,
+  Dice3Icon,
+  Dice4Icon,
+  Dice5Icon,
+  Dice6Icon,
+  Dice666Icon,
+  DoubleDiceIcon
 };

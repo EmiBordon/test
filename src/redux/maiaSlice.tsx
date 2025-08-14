@@ -19,8 +19,8 @@ export interface MaiaState {
 }
 
 const initialState: MaiaState = {
-  maiahealth: 4,
-  maiacurrenthealth: 4,
+  maiahealth: 6,
+  maiacurrenthealth: 6,
 };
 
 const maiaSlice = createSlice({

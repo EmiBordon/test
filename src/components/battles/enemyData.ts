@@ -9,7 +9,7 @@ import { incrementObjective } from '../../redux/objectivesSlice';
 export const enemies: Enemy[] = [
   {
     name: "Matt",
-    health: 5,
+    health: 26,
     initialdamage: 1,
     victoryMessage: "Matt esta enojado porque lo golpeaste demasiado fuerte...",
     defeatMessage: "Matt se siente completamente decepcionado de tu desempeño...",

@@ -5,8 +5,9 @@ import { useDispatch, useSelector } from "react-redux";
 
 import { FountainIcon, PillsIcon, CoinsIcon } from "../components/SvgExporter";
 import ResetButton from "../components/functions/resetbutton";
-// Importamos nuestro CodeModal
+// Importamos nuestro CodeModal y DiceModal
 import CodeModal from "../components/modal/codemodal";
+import DiceModal from "../components/modal/dicemodal";
 
 interface HomeScreenProps {
   navigation: any;
@@ -16,6 +17,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
   const dispatch = useDispatch();
   const [modalVisible, setModalVisible] = useState<boolean>(false);
   const [codeModalVisible, setCodeModalVisible] = useState<boolean>(false);
+  const [diceModalVisible, setDiceModalVisible] = useState<boolean>(false);
   const [showResetButton, setShowResetButton] = useState(false);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -51,7 +53,19 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
         <Text style={styles.buttonText}>Jugar Demo</Text>
       </TouchableOpacity>
 
+      <TouchableOpacity
+        style={[styles.button, styles.diceButton]}
+        onPress={() => setDiceModalVisible(true)}
+      >
+        <Text style={styles.buttonText}>Probar Dado</Text>
+      </TouchableOpacity>
+
       {showResetButton && <ResetButton />}
+      
+      <DiceModal 
+        visible={diceModalVisible} 
+        onClose={() => setDiceModalVisible(false)} 
+      />
     </View>
   );
 };
@@ -78,6 +92,11 @@ const styles = StyleSheet.create({
     borderColor: "#000",
     borderRadius: 10,
     backgroundColor: "transparent",
+  },
+  diceButton: {
+    marginTop: "3%",
+    borderColor: "#4CAF50",
+    backgroundColor: "rgba(76, 175, 80, 0.1)",
   },
   buttonText: {
     color: "#000",

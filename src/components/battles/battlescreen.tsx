@@ -26,6 +26,7 @@ import { getCurrentPhase } from './enemyLogic';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from './types';
 import HealthBar from '../healthbar';
+import EnemyHealthBar from '../enemyhealthbar';
 
 const BattleScreen: React.FC = () => {
   const route = useRoute<RouteProp<RootStackParamList, 'BattleScreen'>>();
@@ -215,9 +216,7 @@ const BattleScreen: React.FC = () => {
     return (
       <View style={styles.container}>
         <View style={styles.topContainer}>
-        <View style={styles.healthContainer}>
-            <BrokenHearthIcon height={font(20)} width={font(20)} />
-          </View>
+       
           <View style={styles.enemyContainer}>
             <currentPhase.icon height={font(198)} width={font(198)} />
           </View>
@@ -249,9 +248,6 @@ const BattleScreen: React.FC = () => {
     return (
       <View style={styles.container}>
         <View style={styles.topContainer}>
-        <View style={styles.healthContainer}>
-            <HearthIcon height={font(20)} width={font(20)} />
-          </View>
           <View style={styles.enemyContainer}>
             <currentPhase.icon height={font(198)} width={font(198)} />
           </View>
@@ -282,17 +278,7 @@ const BattleScreen: React.FC = () => {
     <View style={styles.container}>
       <View style={styles.topContainer}>
         <View style={styles.damageContainer}>
-          {showBrokenHearthEnemy ? (
-            <BrokenHearthIcon height={font(20)} width={font(20)} />
-          ) : (
-            <HearthIcon height={font(20)} width={font(20)} />
-          )}
-          <Text style={styles.healthText}>
-            {enemyCurrentHealth}/{currentEnemy.health} 
-          </Text>
-          <Text style={styles.damageText}>
-            Daño: {currentPhase.damage}
-          </Text>
+            <EnemyHealthBar enemyHealth={currentEnemy.health} enemyCurrentHealth={enemyCurrentHealth}/>
         </View>
         <View style={styles.enemyContainer}>
           {showDamagedEnemy ? (
@@ -364,11 +350,13 @@ const BattleScreen: React.FC = () => {
       )}
 
       {/* Contenedor de Maia en la esquina inferior derecha */}
-      <View style={styles.maiaContainer}>
+    <View style={styles.maiaContainer}>
+      
+      <View style={styles.maiaIconBox}>
         <View style={styles.healthContainer}>
           <HealthBar/>
         </View>
-        <View style={styles.maiaIconBox}>
+      
           {showDamagedMaia ? (
             <ShakyMaiaHeadIcon ref={maiaHeadIconRef} height={font(99)} width={font(99)} />
           ) : (
@@ -453,9 +441,11 @@ const styles = StyleSheet.create({
   },
   
   healthContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: "2%",
+    position: 'absolute',
+    bottom: "50%",
+    //right: "3%",
+    marginBottom:'50%',
+    
   },
   healthText: {
     fontSize: font(19),
@@ -485,18 +475,22 @@ const styles = StyleSheet.create({
   },
   maiaContainer: {
     position: 'absolute',
-    bottom: "5%",
+    bottom: "0%",
     right: "3%",
     alignItems: 'center',
+    justifyContent: 'center',
+    //backgroundColor:'red',
+    
   },
   maiaIconBox: {
-    width: "110%",
-    height: "90%",
+    //width: "110%",
+    //height: "90%",
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: "1%",
+    marginTop: "3%",
     borderColor: 'black',
-    borderWidth: 3,
+    borderWidth: font(3),
+    
   },
   overlay: {
     position: 'absolute',
@@ -561,8 +555,9 @@ const styles = StyleSheet.create({
   damageContainer:{
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: "2%",
-    left:'8%',
+    marginBottom: "-2%",
+    marginTop: "-6%",
+    left:'1%',
   },
   damageText:{
     fontSize: font(20),
