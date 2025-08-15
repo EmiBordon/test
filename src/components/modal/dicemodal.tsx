@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   Animated,
   Easing,
+  Alert,
 } from 'react-native';
 import { 
   RotateDiceIcon, 
@@ -17,7 +18,13 @@ import {
   Dice5Icon, 
   Dice6Icon,
   Dice666Icon,
-  DoubleDiceIcon 
+  DoubleDiceIcon,
+  BlackDice1Icon,
+  BlackDice2Icon,
+  BlackDice3Icon,
+  BlackDice4Icon,
+  BlackDice5Icon,
+  BlackDice6Icon
 } from '../SvgExporter';
 
 interface DiceModalProps {
@@ -32,12 +39,20 @@ const DiceModal: React.FC<DiceModalProps> = ({ visible, onClose }) => {
   const [showResult, setShowResult] = useState(false);
   const [isTwoDiceMode, setIsTwoDiceMode] = useState(false);
   const [is666Mode, setIs666Mode] = useState(false);
+  const [blackDiceResult, setBlackDiceResult] = useState<number>(1);
+  const [blackDiceAnimating, setBlackDiceAnimating] = useState(false);
+  const [blackDiceShown, setBlackDiceShown] = useState(false);
+  const [gamePhase, setGamePhase] = useState<'blackdice' | 'choosing' | 'playing' | 'result'>('blackdice');
+  const [gameResult, setGameResult] = useState<'win' | 'lose' | 'tie' | null>(null);
   const translateY = useRef(new Animated.Value(0)).current;
   const rotateZ = useRef(new Animated.Value(0)).current;
   const scale = useRef(new Animated.Value(1)).current;
   const translateY2 = useRef(new Animated.Value(0)).current;
   const rotateZ2 = useRef(new Animated.Value(0)).current;
   const scale2 = useRef(new Animated.Value(1)).current;
+  const blackTranslateY = useRef(new Animated.Value(0)).current;
+  const blackRotateZ = useRef(new Animated.Value(0)).current;
+  const blackScale = useRef(new Animated.Value(1)).current;
 
   // Función para generar número aleatorio del 1 al 6
   const rollDice = (): number => {
@@ -63,10 +78,154 @@ const DiceModal: React.FC<DiceModalProps> = ({ visible, onClose }) => {
     }
   };
 
+  // Función para obtener el icono negro correspondiente al número
+  const getBlackDiceIcon = (number: number, size: number = 80) => {
+    const iconProps = { width: size, height: size };
+    
+    switch (number) {
+      case 1: return <BlackDice1Icon {...iconProps} />;
+      case 2: return <BlackDice2Icon {...iconProps} />;
+      case 3: return <BlackDice3Icon {...iconProps} />;
+      case 4: return <BlackDice4Icon {...iconProps} />;
+      case 5: return <BlackDice5Icon {...iconProps} />;
+      case 6: return <BlackDice6Icon {...iconProps} />;
+      default: return <BlackDice1Icon {...iconProps} />;
+    }
+  };
+
+  // Función para comparar resultados y determinar el ganador
+  const compareResults = (playerResult: number, blackResult: number) => {
+    if (playerResult > blackResult) {
+      return 'win';
+    } else if (playerResult < blackResult) {
+      return 'lose';
+    } else {
+      return 'tie';
+    }
+  };
+
+  // Función para manejar el final del juego
+  const handleGameEnd = (result: 'win' | 'lose' | 'tie') => {
+    setGameResult(result);
+    // NO cambiar la fase inmediatamente, mantener 'playing' para mostrar resultados
+    
+    // Esperar 1 segundo mostrando los resultados
+    setTimeout(() => {
+      if (result === 'tie') {
+        // En caso de empate, reiniciar
+        setGamePhase('blackdice');
+        setBlackDiceShown(false);
+        setShowResult(false);
+        setGameResult(null);
+        startBlackDiceAnimation();
+      } else if (result === 'win') {
+        // Mostrar alerta de victoria
+        Alert.alert(
+          '¡Felicidades!',
+          '¡Has ganado la partida!',
+          [
+            {
+              text: 'Aceptar',
+              onPress: () => onClose()
+            }
+          ]
+        );
+      } else {
+        // Mostrar alerta de derrota
+        Alert.alert(
+          'Has perdido',
+          'El dado negro ha ganado esta vez.',
+          [
+            {
+              text: 'Intentar de nuevo',
+              onPress: () => onClose()
+            }
+          ]
+        );
+      }
+    }, 1000);
+  };
+
+  // Función para animar el BlackDice
+  const startBlackDiceAnimation = () => {
+    setBlackDiceAnimating(true);
+    
+    // Generar resultado del BlackDice
+    const newBlackResult = rollDice();
+    
+    // Reset values para BlackDice
+    blackTranslateY.setValue(0);
+    blackRotateZ.setValue(0);
+    blackScale.setValue(1);
+
+    // Crear animaciones para el BlackDice (misma lógica que los dados normales)
+    const blackDiceAnimations = [
+      // Fase 1: Elevación con rotación continua
+      Animated.parallel([
+        Animated.timing(blackTranslateY, {
+          toValue: -120,
+          duration: 1200,
+          easing: Easing.out(Easing.quad),
+          useNativeDriver: true,
+        }),
+        Animated.timing(blackScale, {
+          toValue: 1.3,
+          duration: 600,
+          easing: Easing.out(Easing.quad),
+          useNativeDriver: true,
+        }),
+        Animated.timing(blackRotateZ, {
+          toValue: 6,
+          duration: 1200,
+          easing: Easing.linear,
+          useNativeDriver: true,
+        }),
+      ]),
+      // Fase 2: Caída con rotación continua
+      Animated.parallel([
+        Animated.timing(blackTranslateY, {
+          toValue: 0,
+          duration: 1000,
+          easing: Easing.bounce,
+          useNativeDriver: true,
+        }),
+        Animated.timing(blackScale, {
+          toValue: 1,
+          duration: 800,
+          easing: Easing.out(Easing.quad),
+          useNativeDriver: true,
+        }),
+        Animated.timing(blackRotateZ, {
+          toValue: 10,
+          duration: 1000,
+          easing: Easing.linear,
+          useNativeDriver: true,
+        }),
+      ]),
+      // Fase 3: Detener rotación
+      Animated.timing(blackRotateZ, {
+        toValue: 12,
+        duration: 200,
+        easing: Easing.out(Easing.quad),
+        useNativeDriver: true,
+      }),
+    ];
+
+    // Ejecutar animación del BlackDice
+    Animated.sequence(blackDiceAnimations).start(() => {
+      setBlackDiceAnimating(false);
+      setBlackDiceResult(newBlackResult);
+      setBlackDiceShown(true);
+      setGamePhase('choosing');
+      blackRotateZ.setValue(0);
+    });
+  };
+
   const startDiceAnimation = (twoDice: boolean = false, is666: boolean = false) => {
     setIsTwoDiceMode(twoDice);
     setIs666Mode(is666);
     setShowResult(false);
+    setGamePhase('playing');
     
     // Dar tiempo al estado para actualizarse antes de iniciar la animación
     setTimeout(() => {
@@ -203,10 +362,10 @@ const DiceModal: React.FC<DiceModalProps> = ({ visible, onClose }) => {
         rotateZ.setValue(0);
         rotateZ2.setValue(0);
         
-        // Cerrar el modal automáticamente después de 2 segundos
-        setTimeout(() => {
-          onClose();
-        }, 2000);
+        // Comparar resultado (suma de dos dados vs blackDice)
+        const playerTotal = newResult1 + newResult2;
+        const result = compareResults(playerTotal, blackDiceResult);
+        handleGameEnd(result);
       });
     } else {
       // Ejecutar solo el primer dado
@@ -216,10 +375,9 @@ const DiceModal: React.FC<DiceModalProps> = ({ visible, onClose }) => {
         setShowResult(true);
         rotateZ.setValue(0);
         
-        // Cerrar el modal automáticamente después de 2 segundos
-        setTimeout(() => {
-          onClose();
-        }, 2000);
+        // Comparar resultado (un dado vs blackDice)
+        const result = compareResults(newResult1, blackDiceResult);
+        handleGameEnd(result);
       });
     }
     }, 50); // 50ms delay para permitir que React actualice el estado
@@ -234,6 +392,16 @@ const DiceModal: React.FC<DiceModalProps> = ({ visible, onClose }) => {
       setDiceResult2(1);
       setIsTwoDiceMode(false);
       setIs666Mode(false);
+      setBlackDiceResult(1);
+      setBlackDiceAnimating(false);
+      setBlackDiceShown(false);
+      setGamePhase('blackdice');
+      setGameResult(null);
+      
+      // Iniciar animación del BlackDice después de un pequeño delay
+      setTimeout(() => {
+        startBlackDiceAnimation();
+      }, 300);
     }
   }, [visible]);
 
@@ -263,6 +431,19 @@ const DiceModal: React.FC<DiceModalProps> = ({ visible, onClose }) => {
     ],
   };
 
+  const blackRotateInterpolate = blackRotateZ.interpolate({
+    inputRange: [0, 1],
+    outputRange: ['0deg', '360deg'],
+  });
+
+  const blackAnimatedStyle = {
+    transform: [
+      { translateY: blackTranslateY },
+      { rotate: blackRotateInterpolate },
+      { scale: blackScale },
+    ],
+  };
+
   return (
     <Modal
       animationType="fade"
@@ -271,68 +452,98 @@ const DiceModal: React.FC<DiceModalProps> = ({ visible, onClose }) => {
       onRequestClose={onClose}
     >
       <View style={styles.centeredView}>
-        {isTwoDiceMode ? (
-          <>
-            <View style={styles.twoDiceContainer}>
-              <View style={styles.singleDiceContainer}>
-                <Animated.View style={[styles.diceWrapper, animatedStyle]}>
-                  {isAnimating ? (
-                    <RotateDiceIcon width={60} height={60} />
-                  ) : (
-                    getDiceIcon(diceResult, 60)
-                  )}
-                </Animated.View>
-              </View>
-              <View style={styles.singleDiceContainer}>
-                <Animated.View style={[styles.diceWrapper, animatedStyle2]}>
-                  {isAnimating ? (
-                    <RotateDiceIcon width={60} height={60} />
-                  ) : (
-                    getDiceIcon(diceResult2, 60)
-                  )}
-                </Animated.View>
-              </View>
-            </View>
-            {showResult && (
-              <Text style={styles.sumText}>
-                Suma: {diceResult + diceResult2}
-              </Text>
-            )}
-          </>
-        ) : (
-          <View style={styles.diceContainer}>
-            <Animated.View style={[styles.diceWrapper, animatedStyle]}>
-              {isAnimating ? (
-                <RotateDiceIcon width={80} height={80} />
+        <View style={styles.modalContent}>
+          {/* Fase inicial: Solo BlackDice centrado */}
+          {gamePhase === 'blackdice' && (
+            <View style={styles.blackDiceContainer}>
+            <Animated.View style={[styles.diceWrapper, blackAnimatedStyle]}>
+              {blackDiceAnimating ? (
+                <BlackDice1Icon width={60} height={60} />
               ) : (
-                getDiceIcon(diceResult, 80, is666Mode)
+                getBlackDiceIcon(blackDiceResult, 60)
               )}
             </Animated.View>
           </View>
         )}
 
-        {!isAnimating && !showResult && (
-          <View style={styles.buttonContainer}>
-            <TouchableOpacity
-              style={[styles.button, styles.rollTwoButton]}
-              onPress={() => startDiceAnimation(true, false)}
-            >
-              <DoubleDiceIcon width={55} height={55} />
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={[styles.button, styles.rollButton]}
-              onPress={() => startDiceAnimation(false, false)}
-            >
-              <Dice1Icon width={40} height={40} />
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={[styles.button, styles.roll666Button]}
-              onPress={() => startDiceAnimation(false, true)}
-            >
-              <Dice666Icon width={40} height={40} />
-            </TouchableOpacity>
+        {/* Fase de elección: BlackDice arriba, botones abajo */}
+        {gamePhase === 'choosing' && (
+          <>
+            <View style={styles.blackDiceContainer}>
+              <Animated.View style={[styles.diceWrapper, blackAnimatedStyle]}>
+                {getBlackDiceIcon(blackDiceResult, 60)}
+              </Animated.View>
+            </View>
+            <View style={styles.buttonContainer}>
+              <TouchableOpacity
+                style={[styles.button, styles.rollTwoButton]}
+                onPress={() => startDiceAnimation(true, false)}
+              >
+                <DoubleDiceIcon width={55} height={55} />
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[styles.button, styles.rollButton]}
+                onPress={() => startDiceAnimation(false, false)}
+              >
+                <Dice1Icon width={40} height={40} />
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[styles.button, styles.roll666Button]}
+                onPress={() => startDiceAnimation(false, true)}
+              >
+                <Dice666Icon width={40} height={40} />
+              </TouchableOpacity>
+            </View>
+          </>
+        )}
+
+        {/* Fase de juego: Comparación horizontal */}
+        {gamePhase === 'playing' && (
+          <View style={styles.comparisonContainer}>
+            {/* BlackDice a la izquierda */}
+            <View style={styles.leftDiceContainer}>
+              <View style={[styles.diceWrapper, styles.staticDice]}>
+                {getBlackDiceIcon(blackDiceResult, 70)}
+              </View>
+            </View>
+
+            {/* Dados del jugador a la derecha */}
+            <View style={styles.rightDiceContainer}>
+              {isTwoDiceMode ? (
+                <View style={styles.playerTwoDiceContainer}>
+                  <View style={styles.playerFirstDiceContainer}>
+                    <Animated.View style={[styles.diceWrapper, animatedStyle]}>
+                      {isAnimating ? (
+                        <RotateDiceIcon width={50} height={50} />
+                      ) : (
+                        getDiceIcon(diceResult, 50)
+                      )}
+                    </Animated.View>
+                  </View>
+                  <View style={styles.playerSecondDiceContainer}>
+                    <Animated.View style={[styles.diceWrapper, animatedStyle2]}>
+                      {isAnimating ? (
+                        <RotateDiceIcon width={50} height={50} />
+                      ) : (
+                        getDiceIcon(diceResult2, 50)
+                      )}
+                    </Animated.View>
+                  </View>
+
+                </View>
+              ) : (
+                <Animated.View style={[styles.diceWrapper, animatedStyle]}>
+                  {isAnimating ? (
+                    <RotateDiceIcon width={70} height={70} />
+                  ) : (
+                    getDiceIcon(diceResult, 70, is666Mode)
+                  )}
+                </Animated.View>
+              )}
+            </View>
           </View>
         )}
+        </View>
       </View>
     </Modal>
   );
@@ -344,7 +555,13 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
     alignItems: 'center',
     backgroundColor: 'transparent',
-    paddingBottom: 50,
+  },
+  modalContent: {
+    width: '100%',
+    height: '30%',
+    backgroundColor: 'white',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   diceContainer: {
     height: 150,
@@ -377,6 +594,11 @@ const styles = StyleSheet.create({
     marginBottom: 15,
     textAlign: 'center',
   },
+  blackDiceContainer: {
+    alignItems: 'center',
+    marginBottom: 20,
+    paddingTop: 10,
+  },
   buttonContainer: {
     flexDirection: 'row',
     justifyContent: 'space-around',
@@ -406,6 +628,37 @@ const styles = StyleSheet.create({
   roll666Button: {
     backgroundColor: 'white',
     borderColor: 'black',
+  },
+  comparisonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignItems: 'center',
+    width: '90%',
+    paddingHorizontal: 20,
+  },
+  leftDiceContainer: {
+    alignItems: 'center',
+    flex: 1,
+  },
+  rightDiceContainer: {
+    alignItems: 'center',
+    flex: 1,
+  },
+
+  staticDice: {
+    // Estilo para dados estáticos (sin animación)
+  },
+  playerTwoDiceContainer: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    justifyContent: 'center',
+  },
+  playerFirstDiceContainer: {
+    marginRight: 5,
+  },
+  playerSecondDiceContainer: {
+    marginTop: 15,
+    marginLeft: 5,
   },
 });
 

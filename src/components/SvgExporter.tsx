@@ -123,6 +123,13 @@ import Dice5Svg from '../assets/dice5.svg';
 import Dice6Svg from '../assets/dice6.svg';
 import Dice666Svg from '../assets/dice666.svg';
 import DoubleDiceSvg from '../assets/doubledice.svg';
+import BlackDice1Svg from '../assets/blackdice1.svg';
+import BlackDice2Svg from '../assets/blackdice2.svg';
+import BlackDice3Svg from '../assets/blackdice3.svg';
+import BlackDice4Svg from '../assets/blackdice4.svg';
+import BlackDice5Svg from '../assets/blackdice5.svg';
+import BlackDice6Svg from '../assets/blackdice6.svg';
+import EqualSvg from '../assets/equal.svg';
 
 const ArrowIcon = (props: any) => <ArrowSvg {...props} />;
 const ChestOpenIcon = (props: any) => <ChestOpenSvg {...props} />;
@@ -248,6 +255,13 @@ const Dice5Icon = (props: any) => <Dice5Svg {...props} />;
 const Dice6Icon = (props: any) => <Dice6Svg {...props} />;
 const Dice666Icon = (props: any) => <Dice666Svg {...props} />;
 const DoubleDiceIcon = (props: any) => <DoubleDiceSvg {...props} />;
+const BlackDice1Icon = (props: any) => <BlackDice1Svg {...props} />;
+const BlackDice2Icon = (props: any) => <BlackDice2Svg {...props} />;
+const BlackDice3Icon = (props: any) => <BlackDice3Svg {...props} />;
+const BlackDice4Icon = (props: any) => <BlackDice4Svg {...props} />;
+const BlackDice5Icon = (props: any) => <BlackDice5Svg {...props} />;
+const BlackDice6Icon = (props: any) => <BlackDice6Svg {...props} />;
+const EqualIcon = (props: any) => <EqualSvg {...props} />;
 
 export { 
   ArrowIcon, 
@@ -373,5 +387,12 @@ export {
   Dice5Icon,
   Dice6Icon,
   Dice666Icon,
-  DoubleDiceIcon
+  DoubleDiceIcon,
+  BlackDice1Icon,
+  BlackDice2Icon,
+  BlackDice3Icon,
+  BlackDice4Icon,
+  BlackDice5Icon,
+  BlackDice6Icon,
+  EqualIcon,
 };
