@@ -7,7 +7,6 @@ import {
   TouchableOpacity,
   Animated,
   Easing,
-  Alert,
 } from 'react-native';
 import { 
   RotateDiceIcon, 
@@ -26,10 +25,11 @@ import {
   BlackDice5Icon,
   BlackDice6Icon
 } from '../SvgExporter';
+import { font } from '../functions/fontsize';
 
 interface DiceModalProps {
   visible: boolean;
-  onClose: () => void;
+  onClose: (playerWon?: boolean) => void;
 }
 
 const DiceModal: React.FC<DiceModalProps> = ({ visible, onClose }) => {
@@ -61,7 +61,7 @@ const DiceModal: React.FC<DiceModalProps> = ({ visible, onClose }) => {
 
   // Función para obtener el icono correspondiente al número
   const getDiceIcon = (number: number, size: number = 80, is666: boolean = false) => {
-    const iconProps = { width: size, height: size };
+    const iconProps = { width: font(size), height: font(size) };
     
     if (is666 && number === 6) {
       return <Dice666Icon {...iconProps} />;
@@ -80,7 +80,7 @@ const DiceModal: React.FC<DiceModalProps> = ({ visible, onClose }) => {
 
   // Función para obtener el icono negro correspondiente al número
   const getBlackDiceIcon = (number: number, size: number = 80) => {
-    const iconProps = { width: size, height: size };
+    const iconProps = { width: font(size), height: font(size) };
     
     switch (number) {
       case 1: return <BlackDice1Icon {...iconProps} />;
@@ -118,30 +118,9 @@ const DiceModal: React.FC<DiceModalProps> = ({ visible, onClose }) => {
         setShowResult(false);
         setGameResult(null);
         startBlackDiceAnimation();
-      } else if (result === 'win') {
-        // Mostrar alerta de victoria
-        Alert.alert(
-          '¡Felicidades!',
-          '¡Has ganado la partida!',
-          [
-            {
-              text: 'Aceptar',
-              onPress: () => onClose()
-            }
-          ]
-        );
       } else {
-        // Mostrar alerta de derrota
-        Alert.alert(
-          'Has perdido',
-          'El dado negro ha ganado esta vez.',
-          [
-            {
-              text: 'Intentar de nuevo',
-              onPress: () => onClose()
-            }
-          ]
-        );
+        // Cerrar directamente informando el resultado (true si ganó, false si perdió)
+        onClose(result === 'win');
       }
     }, 1000);
   };
@@ -449,7 +428,7 @@ const DiceModal: React.FC<DiceModalProps> = ({ visible, onClose }) => {
       animationType="fade"
       transparent={true}
       visible={visible}
-      onRequestClose={onClose}
+      onRequestClose={() => {}}
     >
       <View style={styles.centeredView}>
         <View style={styles.modalContent}>
@@ -458,7 +437,7 @@ const DiceModal: React.FC<DiceModalProps> = ({ visible, onClose }) => {
             <View style={styles.blackDiceContainer}>
             <Animated.View style={[styles.diceWrapper, blackAnimatedStyle]}>
               {blackDiceAnimating ? (
-                <BlackDice1Icon width={60} height={60} />
+                <BlackDice1Icon width={font(60)} height={font(60)} />
               ) : (
                 getBlackDiceIcon(blackDiceResult, 60)
               )}
@@ -479,19 +458,19 @@ const DiceModal: React.FC<DiceModalProps> = ({ visible, onClose }) => {
                 style={[styles.button, styles.rollTwoButton]}
                 onPress={() => startDiceAnimation(true, false)}
               >
-                <DoubleDiceIcon width={55} height={55} />
+                <DoubleDiceIcon width={font(55)} height={font(55)} />
               </TouchableOpacity>
               <TouchableOpacity
                 style={[styles.button, styles.rollButton]}
                 onPress={() => startDiceAnimation(false, false)}
               >
-                <Dice1Icon width={40} height={40} />
+                <Dice1Icon width={font(40)} height={font(40)} />
               </TouchableOpacity>
               <TouchableOpacity
                 style={[styles.button, styles.roll666Button]}
                 onPress={() => startDiceAnimation(false, true)}
               >
-                <Dice666Icon width={40} height={40} />
+                <Dice666Icon width={font(40)} height={font(40)} />
               </TouchableOpacity>
             </View>
           </>
@@ -514,7 +493,7 @@ const DiceModal: React.FC<DiceModalProps> = ({ visible, onClose }) => {
                   <View style={styles.playerFirstDiceContainer}>
                     <Animated.View style={[styles.diceWrapper, animatedStyle]}>
                       {isAnimating ? (
-                        <RotateDiceIcon width={50} height={50} />
+                        <RotateDiceIcon width={font(50)} height={font(50)} />
                       ) : (
                         getDiceIcon(diceResult, 50)
                       )}
@@ -523,7 +502,7 @@ const DiceModal: React.FC<DiceModalProps> = ({ visible, onClose }) => {
                   <View style={styles.playerSecondDiceContainer}>
                     <Animated.View style={[styles.diceWrapper, animatedStyle2]}>
                       {isAnimating ? (
-                        <RotateDiceIcon width={50} height={50} />
+                        <RotateDiceIcon width={font(50)} height={font(50)} />
                       ) : (
                         getDiceIcon(diceResult2, 50)
                       )}
@@ -534,7 +513,7 @@ const DiceModal: React.FC<DiceModalProps> = ({ visible, onClose }) => {
               ) : (
                 <Animated.View style={[styles.diceWrapper, animatedStyle]}>
                   {isAnimating ? (
-                    <RotateDiceIcon width={70} height={70} />
+                    <RotateDiceIcon width={font(70)} height={font(70)} />
                   ) : (
                     getDiceIcon(diceResult, 70, is666Mode)
                   )}
@@ -559,27 +538,27 @@ const styles = StyleSheet.create({
   modalContent: {
     width: '100%',
     height: '30%',
-    backgroundColor: 'white',
+    backgroundColor: 'rgba(253, 253, 253, 0.97)',
     alignItems: 'center',
     justifyContent: 'center',
   },
   diceContainer: {
-    height: 150,
-    width: 150,
+    height: font(150),
+    width: font(150),
     justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: 20,
+    marginBottom: font(20),
   },
   twoDiceContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    width: 200,
-    marginBottom: 20,
+    width: font(200),
+    marginBottom: font(20),
   },
   singleDiceContainer: {
-    height: 100,
-    width: 100,
+    height: font(100),
+    width: font(100),
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -588,34 +567,34 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   sumText: {
-    fontSize: 18,
+    fontSize: font(18),
     fontWeight: 'bold',
     color: '#333',
-    marginBottom: 15,
+    marginBottom: font(15),
     textAlign: 'center',
   },
   blackDiceContainer: {
     alignItems: 'center',
-    marginBottom: 20,
-    paddingTop: 10,
+    marginBottom: font(20),
+    paddingTop: font(10),
   },
   buttonContainer: {
     flexDirection: 'row',
     justifyContent: 'space-around',
     width: '90%',
-    maxWidth: 350,
+    maxWidth: font(350),
     flexWrap: 'wrap',
   },
   button: {
-    borderRadius: 15,
-    padding: 15,
-    marginHorizontal: 10,
-    marginVertical: 5,
-    width: 70,
-    height: 70,
+    borderRadius: font(15),
+    padding: font(15),
+    marginHorizontal: font(10),
+    marginVertical: font(5),
+    width: font(70),
+    height: font(70),
     alignItems: 'center',
     justifyContent: 'center',
-    borderWidth: 3,
+    borderWidth: font(3),
   },
   rollButton: {
     backgroundColor: 'white',
@@ -634,7 +613,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-around',
     alignItems: 'center',
     width: '90%',
-    paddingHorizontal: 20,
+    paddingHorizontal: font(20),
   },
   leftDiceContainer: {
     alignItems: 'center',
@@ -654,11 +633,11 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   playerFirstDiceContainer: {
-    marginRight: 5,
+    marginRight: font(5),
   },
   playerSecondDiceContainer: {
-    marginTop: 15,
-    marginLeft: 5,
+    marginTop: font(15),
+    marginLeft: font(5),
   },
 });
 

@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { BoxIcon } from '../SvgExporter';
 import { Pressable, StyleSheet } from 'react-native';
 import ConversationChoiceModal from '../modal/conversationchoicemodal';
+import DiceModal from '../modal/dicemodal';
 import { conversations } from './conversations';
 import { setBoxFalse } from '../../redux/boxesSlice';
 import { boxesActions } from './boxesActions';
@@ -17,6 +18,7 @@ const Box: React.FC<BoxProps> = ({ boxKey, positionStyle }) => {
   const dispatch = useDispatch();
   const boxState = useSelector((state: any) => state.boxes[boxKey]);
   const [modalVisible, setModalVisible] = useState(false);
+  const [diceModalVisible, setDiceModalVisible] = useState(false);
 
   const handlePress = () => {
     if (boxState) {
@@ -26,12 +28,22 @@ const Box: React.FC<BoxProps> = ({ boxKey, positionStyle }) => {
 
   const handleAccept = () => {
     setModalVisible(false);
-    dispatch(setBoxFalse(boxKey));
+    setDiceModalVisible(true);
+  };
 
-    // 🔥 Acción centralizada en boxesActions.tsx
-    if (boxesActions[boxKey]) {
-      boxesActions[boxKey](dispatch);
+  const handleDiceModalClose = (playerWon: boolean = false) => {
+    setDiceModalVisible(false);
+    
+    dispatch(setBoxFalse(boxKey));
+    if (playerWon) {
+      // Solo si el jugador ganó, remover la caja y ejecutar la acción
+      
+      // 🔥 Acción centralizada en boxesActions.tsx
+      if (boxesActions[boxKey]) {
+        boxesActions[boxKey](dispatch);
+      }
     }
+    // Si perdió, no pasa nada (la caja permanece)
   };
 
   if (!boxState) return null;
@@ -44,9 +56,14 @@ const Box: React.FC<BoxProps> = ({ boxKey, positionStyle }) => {
 
       <ConversationChoiceModal
         visible={modalVisible}
-        conversation={conversations.openbox} // Se podría hacer dinámico por caja
+        conversation={conversations.openbox}
         onClose={() => setModalVisible(false)}
         onAccept={handleAccept}
+      />
+
+      <DiceModal
+        visible={diceModalVisible}
+        onClose={handleDiceModalClose}
       />
     </>
   );
