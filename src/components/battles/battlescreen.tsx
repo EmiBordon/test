@@ -15,6 +15,7 @@ import MoonTear from '../functions/moontear';
 import { decrementMaiaCurrentHealth} from '../../redux/maiaSlice';
 import { decrementArrows } from '../../redux/weaponsSlice';
 import HealingModal from '../modal/healingmodal';
+import DiceModal from '../modal/dicemodal';
 import { restoreBackup } from '../../redux/backupSlice';
 import { setMaiaState } from '../../redux/maiaSlice';
 import { setHealingState } from '../../redux/healingSlice';
@@ -27,6 +28,7 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from './types';
 import HealthBar from '../healthbar';
 import EnemyHealthBar from '../enemyhealthbar';
+
 
 const BattleScreen: React.FC = () => {
   const route = useRoute<RouteProp<RootStackParamList, 'BattleScreen'>>();
@@ -57,6 +59,8 @@ const BattleScreen: React.FC = () => {
   const [showShootingCircle, setShowShootingCircle] = useState(false);
   const [showRandomSequence, setShowRandomSequence] = useState(false);
   const [showMoonTear, setShowMoonTear] = useState(false);
+  const [showDiceModal, setShowDiceModal] = useState(false);
+  const [showDiceModalAttack, setShowDiceModalAttack] = useState(false);
   const [showAttackButton, setShowAttackButton] = useState(true);
   const [showDefenderButton, setShowDefenderButton] = useState(false);
   const [showDamagedEnemy, setShowDamagedEnemy] = useState(false);
@@ -133,6 +137,8 @@ const BattleScreen: React.FC = () => {
 
   const handleAttackResult = (result: boolean) => {
     setShowDrawBar(false);
+    setShowDiceModalAttack(false);
+    
     if (result) {
       setEnemyCurrentHealth(prev => Math.max(0, prev - damage));
       setShowDamagedEnemy(true);
@@ -140,6 +146,25 @@ const BattleScreen: React.FC = () => {
       setTimeout(() => setShowBrokenHearthEnemy(false), 1000);
       setTimeout(() => setShowDefenderButton(true), 1100);
     } else {
+      setShowDefenderButton(true);
+    }
+  };
+
+  // Función específica para manejar el resultado del DiceModal en ataques
+  const handleDiceAttackResult = (playerWon?: boolean) => {
+    setShowDiceModalAttack(false);
+    
+    // Si playerWon es true, el ataque fue exitoso
+    const success = playerWon === true;
+    
+    if (success) {
+      setEnemyCurrentHealth(prev => Math.max(0, prev - damage));
+      setShowDamagedEnemy(true);
+      setShowBrokenHearthEnemy(true);
+      setTimeout(() => setShowBrokenHearthEnemy(false), 1000);
+      setTimeout(() => setShowDefenderButton(true), 1100);
+    } else {
+      // Si falló o cerró sin completar, pasa al turno de defensa
       setShowDefenderButton(true);
     }
   };
@@ -157,12 +182,30 @@ const BattleScreen: React.FC = () => {
   };
 
   const handleDefenseResult = (result: boolean) => {
-    if (enemyCurrentHealth % 2 === 0) {
-      setShowRandomSequence(false);
-    } else {
-      setShowMoonTear(false);
-    }
+    // Cerrar todos los componentes de defensa (solo uno estará activo)
+    setShowRandomSequence(false);
+    setShowMoonTear(false);
+    setShowDiceModal(false);
+    
     if (!result) {
+      dispatch(decrementMaiaCurrentHealth(currentPhase.damage));
+      setShowBrokenHearthMaia(true);
+      setShowDamagedMaia(true);
+      setTimeout(() => setShowBrokenHearthMaia(false), 1000);
+      setTimeout(() => setShowAttackButton(true), 1100);
+    } else {
+      setShowAttackButton(true);
+    }
+  };
+
+  // Función específica para manejar el resultado del DiceModal
+  const handleDiceDefenseResult = (playerWon?: boolean) => {
+    setShowDiceModal(false);
+    
+    // Si playerWon es undefined (cerrado sin completar) o false (perdió), cuenta como fallo
+    const success = playerWon === true;
+    
+    if (!success) {
       dispatch(decrementMaiaCurrentHealth(currentPhase.damage));
       setShowBrokenHearthMaia(true);
       setShowDamagedMaia(true);
@@ -176,10 +219,18 @@ const BattleScreen: React.FC = () => {
   const handleAttackPress = () => {
     setShowAttackButton(false);
     setShowDefenderButton(false);
-    setShowDrawBar(true);
+    
+    // Elección aleatoria: 75% DrawBar (0-74) y 25% DiceModal (75-99)
+    const randomChoice = Math.floor(Math.random() * 100);
+    if (randomChoice < 75) {
+      setShowDrawBar(true);
+    } else {
+      setShowDiceModalAttack(true);
+    }
+    
     if(showEnemyInfo || showInfoButton){
-    setShowInfoButton(false);
-    setShowEnemyInfo(false);
+      setShowInfoButton(false);
+      setShowEnemyInfo(false);
     }
   };
 
@@ -193,12 +244,15 @@ const BattleScreen: React.FC = () => {
   };
 
   const handleDefensePress = () => {
-    if (enemyCurrentHealth % 2 === 0) {
-      setShowDefenderButton(false);
+    setShowDefenderButton(false);
+    // Elección aleatoria entre RandomSequence (0), MoonTear (1) y DiceModal (2)
+    const randomChoice = Math.floor(Math.random() * 3);
+    if (randomChoice === 0) {
       setShowRandomSequence(true);
-    } else {
-      setShowDefenderButton(false);
+    } else if (randomChoice === 1) {
       setShowMoonTear(true);
+    } else {
+      setShowDiceModal(true);
     }
   };
   const handleInfoPress = () => {
@@ -421,6 +475,18 @@ const BattleScreen: React.FC = () => {
             setShowDefenderButton(true);
           }
         }} 
+      />
+
+      {/* DiceModal para defensa - tercera opción aleatoria */}
+      <DiceModal 
+        visible={showDiceModal} 
+        onClose={handleDiceDefenseResult} 
+      />
+
+      {/* DiceModal para ataque - 25% de probabilidad */}
+      <DiceModal 
+        visible={showDiceModalAttack} 
+        onClose={handleDiceAttackResult} 
       />
     </View>
   );
