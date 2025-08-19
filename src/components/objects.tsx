@@ -8,6 +8,8 @@ import {
   QuiverArrowIcon,
   HealthPotionIcon,
   BigHealthPotionIcon,
+  DoubleDiceIcon,
+  Dice666Icon,
 } from './SvgExporter';
 
 // Define el estado de tu slice de objects
@@ -15,6 +17,8 @@ interface ObjectsState {
   diamond: number;
   rubi: number;
   pocketwatch: number;
+  doubledice:number;
+  sixdice:number;
   barkey: boolean;
   prisionkey1: boolean;
   prisionkey2: boolean;
@@ -57,6 +61,8 @@ export const useObjects = () => {
     prisionkey2,
     keydoor1,
     keydoor2,
+    doubledice,
+    sixdice,
   } = useSelector((state: RootState) => state.objects);
 
   const { arrows } = useSelector((state: RootState) => state.weapons);
@@ -85,7 +91,23 @@ export const useObjects = () => {
       description: 'Reloj de Bolsillo antiguo, una reliquia',
       icon: PocketWatchIcon,
       state: pocketwatch,
-      price: 35,
+      price: 5,
+    },
+    {
+      id:'doubledice',
+      name: 'Dado Doble',
+      description: 'Dado Doble, se puede revender a magos',
+      icon: DoubleDiceIcon,
+      state: doubledice,
+      price: 5,
+    },
+    {
+      id:'sixdice',
+      name: 'Dado Seis',
+      description: 'Dado Seis, se puede revender a magos',
+      icon: Dice666Icon,
+      state: sixdice,
+      price: 5,
     },
   ];
 

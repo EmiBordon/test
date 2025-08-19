@@ -222,7 +222,7 @@ const BattleScreen: React.FC = () => {
     
     // Elección aleatoria: 75% DrawBar (0-74) y 25% DiceModal (75-99)
     const randomChoice = Math.floor(Math.random() * 100);
-    if (randomChoice < 75) {
+    if (randomChoice < 85) {
       setShowDrawBar(true);
     } else {
       setShowDiceModalAttack(true);

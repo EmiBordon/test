@@ -15,6 +15,8 @@ export interface ObjectsState {
   diamond: number;
   rubi: number;
   pocketwatch: number;
+  doubledice:number;
+  sixdice:number;
   barkey: boolean;
   prisionkey1: boolean;
   prisionkey2: boolean;
@@ -26,6 +28,8 @@ const initialState: ObjectsState = {
   diamond: 0,
   rubi: 0,
   pocketwatch: 0,
+  doubledice:0,
+  sixdice:0,
   barkey: false,
   prisionkey1: true,
   prisionkey2: true,
@@ -37,11 +41,11 @@ const objectsSlice = createSlice({
   name: 'objects',
   initialState,
   reducers: {
-    incrementObject: (state, action: PayloadAction<{ key: 'diamond' | 'rubi' | 'pocketwatch'; amount: number }>) => {
+    incrementObject: (state, action: PayloadAction<{ key: 'diamond' | 'rubi' | 'pocketwatch' | 'doubledice' | 'sixdice'; amount: number }>) => {
       state[action.payload.key] += action.payload.amount;
       saveState(state);
     },
-    decrementObject: (state, action: PayloadAction<{ key: 'diamond' | 'rubi' | 'pocketwatch'; amount: number }>) => {
+    decrementObject: (state, action: PayloadAction<{ key: 'diamond' | 'rubi' | 'pocketwatch' | 'doubledice' | 'sixdice'; amount: number }>) => {
       state[action.payload.key] -= action.payload.amount;
       saveState(state);
     },

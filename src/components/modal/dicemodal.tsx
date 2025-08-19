@@ -8,6 +8,8 @@ import {
   Animated,
   Easing,
 } from 'react-native';
+import { useSelector, useDispatch } from 'react-redux';
+import { decrementObject } from '../../redux/objectsSlice';
 import { 
   RotateDiceIcon, 
   Dice1Icon, 
@@ -27,12 +29,23 @@ import {
 } from '../SvgExporter';
 import { font } from '../functions/fontsize';
 
+interface ObjectsState {
+  doubledice: number;
+  sixdice: number;
+}
+
+interface RootState {
+  objects: ObjectsState;
+}
+
 interface DiceModalProps {
   visible: boolean;
   onClose: (playerWon?: boolean) => void;
 }
 
 const DiceModal: React.FC<DiceModalProps> = ({ visible, onClose }) => {
+  const dispatch = useDispatch();
+  const { doubledice, sixdice } = useSelector((state: RootState) => state.objects);
   const [isAnimating, setIsAnimating] = useState(false);
   const [diceResult, setDiceResult] = useState<number>(1);
   const [diceResult2, setDiceResult2] = useState<number>(1);
@@ -201,6 +214,18 @@ const DiceModal: React.FC<DiceModalProps> = ({ visible, onClose }) => {
   };
 
   const startDiceAnimation = (twoDice: boolean = false, is666: boolean = false) => {
+    // Verificar si el jugador tiene suficientes dados
+    if (twoDice && doubledice <= 0) return;
+    if (is666 && sixdice <= 0) return;
+    
+    // Decrementar el dado utilizado
+    if (twoDice) {
+      dispatch(decrementObject({ key: 'doubledice', amount: 1 }));
+    }
+    if (is666) {
+      dispatch(decrementObject({ key: 'sixdice', amount: 1 }));
+    }
+    
     setIsTwoDiceMode(twoDice);
     setIs666Mode(is666);
     setShowResult(false);
@@ -455,22 +480,45 @@ const DiceModal: React.FC<DiceModalProps> = ({ visible, onClose }) => {
             </View>
             <View style={styles.buttonContainer}>
               <TouchableOpacity
-                style={[styles.button, styles.rollTwoButton]}
+                style={[
+                  styles.button, 
+                  styles.rollTwoButton,
+                  doubledice <= 0 && styles.disabledButton
+                ]}
                 onPress={() => startDiceAnimation(true, false)}
+                disabled={doubledice <= 0}
               >
-                <DoubleDiceIcon width={font(55)} height={font(55)} />
+                <View style={styles.iconContainer}>
+                  <DoubleDiceIcon width={font(45)} height={font(45)} />
+                </View>
+                <Text style={[styles.quantityText, doubledice <= 0 && styles.disabledText]}>
+                  {doubledice}
+                </Text>
               </TouchableOpacity>
               <TouchableOpacity
                 style={[styles.button, styles.rollButton]}
                 onPress={() => startDiceAnimation(false, false)}
               >
-                <Dice1Icon width={font(40)} height={font(40)} />
+                <View style={styles.iconContainer}>
+                  <Dice1Icon width={font(35)} height={font(35)} />
+                </View>
+                <Text style={styles.quantityText}>∞</Text>
               </TouchableOpacity>
               <TouchableOpacity
-                style={[styles.button, styles.roll666Button]}
+                style={[
+                  styles.button, 
+                  styles.roll666Button,
+                  sixdice <= 0 && styles.disabledButton
+                ]}
                 onPress={() => startDiceAnimation(false, true)}
+                disabled={sixdice <= 0}
               >
-                <Dice666Icon width={font(40)} height={font(40)} />
+                <View style={styles.iconContainer}>
+                  <Dice666Icon width={font(35)} height={font(35)} />
+                </View>
+                <Text style={[styles.quantityText, sixdice <= 0 && styles.disabledText]}>
+                  {sixdice}
+                </Text>
               </TouchableOpacity>
             </View>
           </>
@@ -587,14 +635,15 @@ const styles = StyleSheet.create({
   },
   button: {
     borderRadius: font(15),
-    padding: font(15),
+    padding: font(8),
     marginHorizontal: font(10),
     marginVertical: font(5),
     width: font(70),
-    height: font(70),
+    height: font(80),
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'space-between',
     borderWidth: font(3),
+    flexDirection: 'column',
   },
   rollButton: {
     backgroundColor: 'white',
@@ -638,6 +687,25 @@ const styles = StyleSheet.create({
   playerSecondDiceContainer: {
     marginTop: font(15),
     marginLeft: font(5),
+  },
+  disabledButton: {
+    backgroundColor: '#cccccc',
+    borderColor: '#888888',
+    opacity: 0.6,
+  },
+  quantityText: {
+    fontSize: font(12),
+    fontWeight: 'bold',
+    color: 'black',
+    textAlign: 'center',
+  },
+  disabledText: {
+    color: '#666666',
+  },
+  iconContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
 

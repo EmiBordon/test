@@ -14,7 +14,9 @@ import {
   PillsIcon,
   CoinsIcon,
   QuiverArrowIcon,
-  DaggersIcon
+  DaggersIcon,
+  DoubleDiceIcon,
+  Dice666Icon,
 } from '../SvgExporter';
 import { useSelector, useDispatch } from 'react-redux';
 import { incrementGrapes, incrementHealthPotion, incrementBigHealthPotion } from '../../redux/healingSlice';
@@ -22,6 +24,7 @@ import { incrementArrows } from '../../redux/weaponsSlice';
 import { decrementCoins } from '../../redux/coinsSlice';
 import { incrementMaiaHealth } from '../../redux/maiaSlice';
 import { setCurrentWeapon } from '../../redux/weaponsSlice';
+import { incrementObject } from '../../redux/objectsSlice';
 import { font } from '../functions/fontsize';
 
 interface CoinsState {
@@ -56,6 +59,8 @@ const shopItems: Item[] = [
   { id: '4', name: 'Pildoras', price: 50, description: 'Aumenta 5 puntos de Salud Total' },
   { id: '5', name: 'Flechas', amount: 'X3', price: 10, description: 'Flechas para contrarrestar ataques enemigos' },
   { id: '6', name: 'Dagas', price: 70, description: 'Poderosas Dagas de combate, aumenta tu Daño a 3' },
+  { id: '7', name: 'Dado Doble', price: 5, description: 'Dado Doble, se puede revender a magos' },
+  { id: '8', name: 'Dado Seis', price: 5, description: 'Dado Seis, se puede revender a magos' },
 ];
 
 // Definimos un tipo para los componentes de ícono que reciben width y height.
@@ -76,6 +81,10 @@ const getIconComponent = (index: number): IconComponentType | null => {
       return QuiverArrowIcon;
     case 5:
       return DaggersIcon;  
+    case 6:
+      return DoubleDiceIcon;
+    case 7:
+      return Dice666Icon;
     default:
       return null;
   }
@@ -90,9 +99,18 @@ const ShopModal: React.FC<ShopModalProps> = ({ visible, onClose }) => {
   const [selectedInfo, setSelectedInfo] = useState<{ item: Item; index: number } | null>(null);
   // Estado para mostrar mensaje de monedas insuficientes.
   const [insufficientCoins, setInsufficientCoins] = useState(false);
+  // Estado para la paginación
+  const [page, setPage] = useState(0);
 
   // Filtrar los ítems para que si weapon > 0 no se muestre "Dagas"
   const filteredShopItems = shopItems.filter(item => !(weapon > 0 && item.name === 'Dagas'));
+  
+  // Configuración de paginación
+  const itemsPerPage = 5;
+  const paginatedItems = filteredShopItems.slice(
+    page * itemsPerPage,
+    page * itemsPerPage + itemsPerPage
+  );
 
   // Función para manejar la compra del ítem
   const handlePurchase = (item: Item, index: number) => {
@@ -122,6 +140,12 @@ const ShopModal: React.FC<ShopModalProps> = ({ visible, onClose }) => {
         case 'Dagas':
           dispatch(setCurrentWeapon(1));
           break;
+        case 'Dado Doble':
+          dispatch(incrementObject({ key: 'doubledice', amount: 1 }));
+          break;
+        case 'Dado Seis':
+          dispatch(incrementObject({ key: 'sixdice', amount: 1 }));
+          break;
         default:
           break;
       }
@@ -133,20 +157,39 @@ const ShopModal: React.FC<ShopModalProps> = ({ visible, onClose }) => {
     }
   };
 
+  // Funciones de navegación de páginas
+  const handleNextPage = () => {
+    if ((page + 1) * itemsPerPage < filteredShopItems.length) {
+      setPage(page + 1);
+      setSelectedInfo(null);
+      setInsufficientCoins(false);
+    }
+  };
+
+  const handlePrevPage = () => {
+    if (page > 0) {
+      setPage(page - 1);
+      setSelectedInfo(null);
+      setInsufficientCoins(false);
+    }
+  };
+
   const renderItem = ({ item, index }: { item: Item; index: number }) => {
-    const IconComponent = getIconComponent(index);
+    // Calcular el índice real considerando la paginación
+    const realIndex = page * itemsPerPage + index;
+    const IconComponent = getIconComponent(realIndex);
     return (
       <View style={styles.itemContainer}>
         {IconComponent && <IconComponent width={font(29)} height={font(29)} />}
         <Text style={styles.itemText}>{item.name} {item.amount}</Text>
         <Text style={styles.priceText}>${item.price}</Text>
         <View style={styles.buttonsContainer}>
-          <TouchableOpacity style={styles.buyButton} onPress={() => handlePurchase(item, index)}>
+          <TouchableOpacity style={styles.buyButton} onPress={() => handlePurchase(item, realIndex)}>
             <Text style={styles.buyButtonText}>Comprar</Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.infoButton}
-            onPress={() => { setInsufficientCoins(false); setSelectedInfo({ item, index }); }}
+            onPress={() => { setInsufficientCoins(false); setSelectedInfo({ item, index: realIndex }); }}
           >
             <Text style={styles.infoButtonText}>Info</Text>
           </TouchableOpacity>
@@ -167,11 +210,44 @@ const ShopModal: React.FC<ShopModalProps> = ({ visible, onClose }) => {
           </View>
           <Text style={styles.title}>TIENDA</Text>
           <FlatList
-            data={filteredShopItems}
+            data={paginatedItems}
             keyExtractor={(item) => item.id}
             renderItem={renderItem}
             style={{ flex: 1 }}
           />
+          
+          {/* Botones de paginación */}
+          {filteredShopItems.length > itemsPerPage && (
+            <View style={styles.paginationContainer}>
+              <TouchableOpacity
+                style={styles.pageButton}
+                onPress={handlePrevPage}
+                disabled={page === 0}
+              >
+                <Text style={[styles.pageButtonText, { color: page === 0 ? 'white' : 'black' }]}>{"<<"}</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.pageButton}
+                onPress={handleNextPage}
+                disabled={(page + 1) * itemsPerPage >= filteredShopItems.length}
+              >
+                <Text
+                  style={[
+                    styles.pageButtonText,
+                    {
+                      color:
+                        (page + 1) * itemsPerPage >= filteredShopItems.length
+                          ? 'white'
+                          : 'black',
+                    },
+                  ]}
+                >
+                  {">>"}
+                </Text>
+              </TouchableOpacity>
+            </View>
+          )}
+          
           {insufficientCoins && (
             <Text style={styles.errorText}>No tienes Monedas suficientes</Text>
           )}
@@ -310,6 +386,24 @@ const styles = StyleSheet.create({
     color: 'black',
     fontSize: font(16),
     marginTop: '8%',
+  },
+  paginationContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignSelf: 'center',
+    position: 'absolute',
+    width: '100%',
+    bottom: '33%',
+  },
+  pageButton: {
+    paddingHorizontal: '20%',
+    paddingVertical: '3%',
+    borderRadius: 5,
+    marginHorizontal: '20%',
+  },
+  pageButtonText: {
+    fontWeight: 'bold',
+    fontSize: font(20),
   },
 });
 
