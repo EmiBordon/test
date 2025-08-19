@@ -32,7 +32,7 @@ import CodeBox from '../../components/functions/codeboxicon';
 import SafeBox from '../../components/functions/safeboxicon';
 import RewardManager from '../../components/functions/rewardmanager';
 import { font } from '../../components/functions/fontsize';
-
+import EmptyBoxManager from '../../components/functions/emptyboxmanager';
 
 
 const iconConfig = [
@@ -463,6 +463,7 @@ const CaveScreen = () => {
       mSquares={5}
       />
       <RewardManager />
+      <EmptyBoxManager />
       <Location text={locationName[currentLocationIndex].text} />
       {modal2Visible && (
         <ConversationChoiceModal

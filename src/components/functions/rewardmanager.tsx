@@ -49,6 +49,7 @@ const RewardManager = () => {
   const dispatch = useDispatch();
   const boxes = useSelector((state: RootState) => state.boxes);
   const processed = useSelector((state: RootState) => state.rewards.processed);
+  const emptyBoxes = useSelector((state: RootState) => state.rewards.emptyBoxes);
 
   const [modalVisible, setModalVisible] = useState(false);
   const [rewardQueue, setRewardQueue] = useState<string[]>([]);
@@ -58,12 +59,13 @@ const RewardManager = () => {
     Object.keys(boxes).forEach((key) => {
       const boxKey = key as keyof typeof boxes;
 
-      if (!boxes[boxKey] && !processed[boxKey] && !rewardQueue.includes(boxKey)) {
+      // Solo mostrar recompensas si la caja fue abierta exitosamente (no está vacía)
+      if (!boxes[boxKey] && !processed[boxKey] && !emptyBoxes[boxKey] && !rewardQueue.includes(boxKey)) {
         setRewardQueue(prev => [...prev, boxKey]);
         dispatch(markRewardAsProcessed(boxKey));
       }
     });
-  }, [boxes, processed]);
+  }, [boxes, processed, emptyBoxes]);
 
   useEffect(() => {
     if (rewardQueue.length > 0 && !modalVisible) {

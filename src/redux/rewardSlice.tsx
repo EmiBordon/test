@@ -26,10 +26,66 @@ export interface RewardsState {
     mansionbox1: boolean;
     mansionbox2: boolean;
   };
+  emptyBoxes: {
+    barbox: boolean;
+    cavebox1: boolean;
+    cavebox2: boolean;
+    cavebox3: boolean;
+    cavebox4: boolean;
+    germisbox:boolean;
+    joxbox:boolean;
+    gorjoxbox:boolean;
+    riffbox:boolean;
+    prisionbox: boolean;
+    mansionbox1: boolean;
+    mansionbox2: boolean;
+  };
+  emptyBoxesShown: {
+    barbox: boolean;
+    cavebox1: boolean;
+    cavebox2: boolean;
+    cavebox3: boolean;
+    cavebox4: boolean;
+    germisbox:boolean;
+    joxbox:boolean;
+    gorjoxbox:boolean;
+    riffbox:boolean;
+    prisionbox: boolean;
+    mansionbox1: boolean;
+    mansionbox2: boolean;
+  };
 }
 
 const initialState: RewardsState = {
   processed: {
+    barbox: false,
+    cavebox1: false,
+    cavebox2: false,
+    cavebox3: false,
+    cavebox4: false,
+    germisbox:false,
+    joxbox:false,
+    gorjoxbox:false,
+    riffbox:false,
+    prisionbox: false,
+    mansionbox1: false,
+    mansionbox2: false,
+  },
+  emptyBoxes: {
+    barbox: false,
+    cavebox1: false,
+    cavebox2: false,
+    cavebox3: false,
+    cavebox4: false,
+    germisbox:false,
+    joxbox:false,
+    gorjoxbox:false,
+    riffbox:false,
+    prisionbox: false,
+    mansionbox1: false,
+    mansionbox2: false,
+  },
+  emptyBoxesShown: {
     barbox: false,
     cavebox1: false,
     cavebox2: false,
@@ -53,8 +109,18 @@ const rewardSlice = createSlice({
       state.processed[action.payload] = true;
       saveState(state);
     },
+    markBoxAsEmpty: (state, action: PayloadAction<keyof RewardsState['emptyBoxes']>) => {
+      state.emptyBoxes[action.payload] = true;
+      saveState(state);
+    },
+    markEmptyBoxAsShown: (state, action: PayloadAction<keyof RewardsState['emptyBoxesShown']>) => {
+      state.emptyBoxesShown[action.payload] = true;
+      saveState(state);
+    },
     resetProcessedRewards: (state) => {
       state.processed = { ...initialState.processed };
+      state.emptyBoxes = { ...initialState.emptyBoxes };
+      state.emptyBoxesShown = { ...initialState.emptyBoxesShown };
       saveState(state);
     },
   },
@@ -62,6 +128,12 @@ const rewardSlice = createSlice({
     builder.addCase(loadRewardsState.fulfilled, (state, action) => {
       if (action.payload) {
         Object.assign(state.processed, action.payload.processed);
+        if (action.payload.emptyBoxes) {
+          Object.assign(state.emptyBoxes, action.payload.emptyBoxes);
+        }
+        if (action.payload.emptyBoxesShown) {
+          Object.assign(state.emptyBoxesShown, action.payload.emptyBoxesShown);
+        }
       }
     });
   },
@@ -75,5 +147,5 @@ const saveState = async (state: RewardsState) => {
   }
 };
 
-export const { markRewardAsProcessed, resetProcessedRewards } = rewardSlice.actions;
+export const { markRewardAsProcessed, markBoxAsEmpty, markEmptyBoxAsShown, resetProcessedRewards } = rewardSlice.actions;
 export default rewardSlice.reducer;

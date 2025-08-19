@@ -49,6 +49,11 @@ const boxesSlice = createSlice({
       state[action.payload] = false;
       saveState(state);
     },
+    setBoxEmpty: (state, action: PayloadAction<keyof BoxesState>) => {
+      // Marcar la caja como vacía (diferente de recompensas exitosas)
+      state[action.payload] = false;
+      saveState(state);
+    },
     resetBoxes: (state) => {
       Object.assign(state, initialState);
       saveState(state);
@@ -71,5 +76,5 @@ const saveState = async (state: BoxesState) => {
   }
 };
 
-export const { setBoxFalse, resetBoxes } = boxesSlice.actions;
+export const { setBoxFalse, setBoxEmpty, resetBoxes } = boxesSlice.actions;
 export default boxesSlice.reducer;

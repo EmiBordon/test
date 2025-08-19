@@ -5,7 +5,8 @@ import { Pressable, StyleSheet } from 'react-native';
 import ConversationChoiceModal from '../modal/conversationchoicemodal';
 import DiceModal from '../modal/dicemodal';
 import { conversations } from './conversations';
-import { setBoxFalse } from '../../redux/boxesSlice';
+import { setBoxFalse, setBoxEmpty } from '../../redux/boxesSlice';
+import { markBoxAsEmpty } from '../../redux/rewardSlice';
 import { boxesActions } from './boxesActions';
 import { font } from './fontsize';
 
@@ -34,16 +35,19 @@ const Box: React.FC<BoxProps> = ({ boxKey, positionStyle }) => {
   const handleDiceModalClose = (playerWon: boolean = false) => {
     setDiceModalVisible(false);
     
-    dispatch(setBoxFalse(boxKey));
     if (playerWon) {
-      // Solo si el jugador ganó, remover la caja y ejecutar la acción
+      // ✅ Victoria: Caja con recompensas
+      dispatch(setBoxFalse(boxKey)); // Esto activará el RewardManager
       
       // 🔥 Acción centralizada en boxesActions.tsx
       if (boxesActions[boxKey]) {
         boxesActions[boxKey](dispatch);
       }
+    } else {
+      // ❌ Derrota: Caja vacía
+      dispatch(setBoxEmpty(boxKey)); // Marca como vacía sin recompensas
+      dispatch(markBoxAsEmpty(boxKey)); // Esto activará el EmptyBoxManager
     }
-    // Si perdió, no pasa nada (la caja permanece)
   };
 
   if (!boxState) return null;

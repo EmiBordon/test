@@ -43,9 +43,9 @@ const BattleScreen: React.FC = () => {
 
   const weaponDamageMap: { [key: number]: number } = {
     0: 1,
-    1: 3,
-    2: 5,
-    3: 7,
+    1: 2,
+    2: 3,
+    3: 4,
     4: 10,
   };
   

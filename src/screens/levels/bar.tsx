@@ -12,6 +12,7 @@ import { setLocation } from '../../redux/locationsSlice';
 import Box from '../../components/functions/boxicon'; // <-- nuevo componente
 import SafeBox from '../../components/functions/safeboxicon';
 import RewardManager from '../../components/functions/rewardmanager';
+import EmptyBoxManager from '../../components/functions/emptyboxmanager';
 import { incrementObjective } from '../../redux/objectivesSlice';
 import { font } from '../../components/functions/fontsize';
 
@@ -143,6 +144,7 @@ const BarScreen = () => {
       <Location text="Bar" />
       
       <RewardManager />
+      <EmptyBoxManager />
       {modal2Visible && (
         <ConversationModal 
           visible={modal2Visible}  
