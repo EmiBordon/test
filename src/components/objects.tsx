@@ -99,7 +99,7 @@ export const useObjects = () => {
       description: 'Dado Doble, se puede revender a magos',
       icon: DoubleDiceIcon,
       state: doubledice,
-      price: 5,
+      price: 50,
     },
     {
       id:'sixdice',
@@ -107,7 +107,7 @@ export const useObjects = () => {
       description: 'Dado Seis, se puede revender a magos',
       icon: Dice666Icon,
       state: sixdice,
-      price: 5,
+      price: 50,
     },
   ];
 

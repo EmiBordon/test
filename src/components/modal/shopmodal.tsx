@@ -59,31 +59,31 @@ const shopItems: Item[] = [
   { id: '4', name: 'Pildoras', price: 50, description: 'Aumenta 5 puntos de Salud Total' },
   { id: '5', name: 'Flechas', amount: 'X3', price: 10, description: 'Flechas para contrarrestar ataques enemigos' },
   { id: '6', name: 'Dagas', price: 70, description: 'Poderosas Dagas de combate, aumenta tu Daño a 3' },
-  { id: '7', name: 'Dado Doble', price: 5, description: 'Dado Doble, se puede revender a magos' },
-  { id: '8', name: 'Dado Seis', price: 5, description: 'Dado Seis, se puede revender a magos' },
+  { id: '7', name: 'Dado Doble', price: 50, description: 'Dado Doble, se puede revender a magos' },
+  { id: '8', name: 'Dado Seis', price: 50, description: 'Dado Seis, se puede revender a magos' },
 ];
 
 // Definimos un tipo para los componentes de ícono que reciben width y height.
 type IconComponentType = React.ComponentType<{ width?: number; height?: number; style?: any }>;
 
-// Función para obtener el componente de ícono según el índice.
-const getIconComponent = (index: number): IconComponentType | null => {
-  switch (index) {
-    case 0:
+// Función para obtener el componente de ícono según el ID del item.
+const getIconComponent = (itemId: string): IconComponentType | null => {
+  switch (itemId) {
+    case '1':
       return GrapesIcon;
-    case 1:
+    case '2':
       return HealthPotionIcon;
-    case 2:
+    case '3':
       return BigHealthPotionIcon;
-    case 3:
+    case '4':
       return PillsIcon;
-    case 4:
+    case '5':
       return QuiverArrowIcon;
-    case 5:
+    case '6':
       return DaggersIcon;  
-    case 6:
+    case '7':
       return DoubleDiceIcon;
-    case 7:
+    case '8':
       return Dice666Icon;
     default:
       return null;
@@ -96,7 +96,7 @@ const ShopModal: React.FC<ShopModalProps> = ({ visible, onClose }) => {
   const dispatch = useDispatch();
   
   // Estado para almacenar el objeto seleccionado para mostrar la info.
-  const [selectedInfo, setSelectedInfo] = useState<{ item: Item; index: number } | null>(null);
+  const [selectedInfo, setSelectedInfo] = useState<{ item: Item } | null>(null);
   // Estado para mostrar mensaje de monedas insuficientes.
   const [insufficientCoins, setInsufficientCoins] = useState(false);
   // Estado para la paginación
@@ -132,7 +132,7 @@ const ShopModal: React.FC<ShopModalProps> = ({ visible, onClose }) => {
           dispatch(incrementBigHealthPotion(1));
           break;
         case 'Pildoras':
-          dispatch(incrementMaiaHealth(5));
+          dispatch(incrementMaiaHealth(2));
           break;
         case 'Flechas':
           dispatch(incrementArrows(3)); // Aumenta 3 flechas
@@ -175,21 +175,19 @@ const ShopModal: React.FC<ShopModalProps> = ({ visible, onClose }) => {
   };
 
   const renderItem = ({ item, index }: { item: Item; index: number }) => {
-    // Calcular el índice real considerando la paginación
-    const realIndex = page * itemsPerPage + index;
-    const IconComponent = getIconComponent(realIndex);
+    const IconComponent = getIconComponent(item.id);
     return (
       <View style={styles.itemContainer}>
         {IconComponent && <IconComponent width={font(29)} height={font(29)} />}
         <Text style={styles.itemText}>{item.name} {item.amount}</Text>
         <Text style={styles.priceText}>${item.price}</Text>
         <View style={styles.buttonsContainer}>
-          <TouchableOpacity style={styles.buyButton} onPress={() => handlePurchase(item, realIndex)}>
+          <TouchableOpacity style={styles.buyButton} onPress={() => handlePurchase(item, index)}>
             <Text style={styles.buyButtonText}>Comprar</Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.infoButton}
-            onPress={() => { setInsufficientCoins(false); setSelectedInfo({ item, index: realIndex }); }}
+            onPress={() => { setInsufficientCoins(false); setSelectedInfo({ item }); }}
           >
             <Text style={styles.infoButtonText}>Info</Text>
           </TouchableOpacity>
@@ -255,7 +253,7 @@ const ShopModal: React.FC<ShopModalProps> = ({ visible, onClose }) => {
           {selectedInfo && (
             <View style={styles.infoPanel}>
               {(() => {
-                const SelectedIcon = getIconComponent(selectedInfo.index);
+                const SelectedIcon = getIconComponent(selectedInfo.item.id);
                 return SelectedIcon ? <SelectedIcon width={font(50)} height={font(50)} /> : null;
               })()}
               <Text style={styles.infoText}>

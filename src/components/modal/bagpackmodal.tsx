@@ -1,16 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { Modal, View, TouchableOpacity, Text, StyleSheet, Dimensions } from 'react-native';
-import CurrentWeaponIcon from '../currentweapon';
-import QuiverIcon from '../quiver';
-import { CrossBowIcon, BowIcon } from '../SvgExporter';
-import HealingIcon from '../healingicon';
+import { Modal, View, TouchableOpacity, Text, StyleSheet } from 'react-native';
+import { GrapesIcon, HealthPotionIcon, BigHealthPotionIcon, QuiverArrowIcon, BowIcon, DaggersIcon, SwordIcon } from '../SvgExporter';
 import { decrementBigHealthPotion, decrementGrapes, decrementHealthPotion } from '../../redux/healingSlice';
 import { useDispatch, useSelector } from "react-redux";
-import { incrementMaiaCurrentHealth, incrementMaiaHealth } from '../../redux/maiaSlice';
-import { useObjects } from '../objects'; // Ajustá la ruta según tu proyecto
+import { incrementMaiaCurrentHealth } from '../../redux/maiaSlice';
+import { useObjects, GameObject } from '../objects';
 import { font } from '../functions/fontsize';
 
-// Definir el tipo del estado de Redux para la curación
+// Definir el tipo del estado de Redux
 interface RootState {
   healing: {
     grapes: number;
@@ -20,6 +17,15 @@ interface RootState {
   maia: {
     maiahealth: number;
   };
+  weapons: {
+    currentWeapon: number;
+  };
+}
+
+// Tipo extendido para incluir objetos curativos y otros
+interface ExtendedGameObject extends GameObject {
+  type: 'healing' | 'weapon' | 'treasure' | 'key' | 'other';
+  healingType?: 'grapes' | 'healthpotion' | 'bighealthpotion';
 }
 
 interface BagPackModalProps {
@@ -28,213 +34,267 @@ interface BagPackModalProps {
 }
 
 const BagPackModal: React.FC<BagPackModalProps> = ({ visible, onClose }) => {
-  const { width, height } = Dimensions.get('window');
-  const [showCrossbowInfo, setShowCrossbowInfo] = useState(false);
-  // Estado para saber qué HealingIcon fue presionado ('G', 'H', 'B' o null si ninguno)
-  const [selectedHealing, setSelectedHealing] = useState<'G' | 'H' | 'B' | null>(null);
-  // Estado para controlar si se muestra la página de objetos
-  const [showExtraSlots, setShowExtraSlots] = useState(false);
-  // Estado para la paginación de objetos (7 items por página)
-  const [currentObjectPage, setCurrentObjectPage] = useState(0);
+  const [selectedItem, setSelectedItem] = useState<ExtendedGameObject | null>(null);
+  const [page, setPage] = useState(0);
   const dispatch = useDispatch();
 
-  // Reiniciar la página de objetos al cambiar a la vista de objetos
-  useEffect(() => {
-    if (showExtraSlots) {
-      setCurrentObjectPage(0);
-    }
-  }, [showExtraSlots]);
-
-  // Obtener el estado de curación desde Redux
+  // Obtener estados desde Redux
   const healingState = useSelector((state: RootState) => state.healing);
   const maiaHealth = useSelector((state: RootState) => state.maia.maiahealth);
+  const currentWeapon = useSelector((state: RootState) => state.weapons.currentWeapon);
 
-  // Obtener keys y treasures desde el hook
-  const { treasures, keys } = useObjects();
-  // Filtrar aquellos objetos con estado > 0
-  const availableKeys = keys.filter(obj => obj.state > 0);
-  const availableTreasures = treasures.filter(obj => obj.state > 0);
-  // Combinar priorizando keys
-  const availableObjects = [...availableKeys, ...availableTreasures];
+  // Obtener objetos desde el hook
+  const { treasures, keys, inventory } = useObjects();
 
-  // Configuración de paginación: 7 items por página
-  const pageSize = 6;
-  const totalPages = Math.ceil(availableObjects.length / pageSize);
-  const displayedObjects = availableObjects.slice(currentObjectPage * pageSize, (currentObjectPage + 1) * pageSize);
+  // Crear lista completa de objetos incluyendo curativos
+  const createCompleteItemList = (): ExtendedGameObject[] => {
+    const allItems: ExtendedGameObject[] = [];
 
-  // Callback para alternar la selección (seleccionar/deseleccionar)
-  const handleHealingIconSelect = (type: 'G' | 'H' | 'B') => {
-    if (selectedHealing === type) {
-      setSelectedHealing(null);
+    // PRIORIDAD 1: Agregar arco siempre al inicio (arma base)
+    allItems.push({
+      id: 'bow',
+      name: 'Arco',
+      description: 'Arma de combate a distancia básica',
+      icon: BowIcon,
+      state: 1,
+      type: 'weapon'
+    } as ExtendedGameObject);
+
+    // PRIORIDAD 2: Agregar arma actual basada en currentWeapon
+    if (currentWeapon === 1) {
+      allItems.push({
+        id: 'daggers',
+        name: 'Dagas',
+        description: 'Poderosas Dagas de combate, aumenta tu Daño a 3',
+        icon: DaggersIcon,
+        state: 1,
+        type: 'weapon'
+      } as ExtendedGameObject);
+    } else if (currentWeapon === 0) {
+      allItems.push({
+        id: 'sword',
+        name: 'Espada',
+        description: 'Espada de combate avanzada',
+        icon: SwordIcon,
+        state: 1,
+        type: 'weapon'
+      } as ExtendedGameObject);
+    }
+
+    // PRIORIDAD 3: Agregar flechas del inventario
+    const arrowItem = inventory.find(item => item.id === 'arrows');
+    if (arrowItem && typeof arrowItem.state === 'number' && arrowItem.state > 0) {
+      allItems.push({
+        ...arrowItem,
+        type: 'weapon'
+      } as ExtendedGameObject);
+    }
+
+    // PRIORIDAD 4: Agregar objetos curativos
+    if (healingState.grapes > 0) {
+      allItems.push({
+        id: 'grapes',
+        name: 'Uvas',
+        description: 'Aumentan el 20% de la Salud',
+        icon: GrapesIcon,
+        state: healingState.grapes,
+        type: 'healing',
+        healingType: 'grapes'
+      });
+    }
+
+    // Agregar pociones de curación del inventario
+    const healingInventory = inventory.filter(item => 
+      (item.id === 'healthpotion' || item.id === 'bighealthpotion') && 
+      typeof item.state === 'number' && item.state > 0
+    );
+    
+    healingInventory.forEach(item => {
+      allItems.push({
+        ...item,
+        type: 'healing',
+        healingType: item.id as 'healthpotion' | 'bighealthpotion'
+      } as ExtendedGameObject);
+    });
+
+    // PRIORIDAD 5: Agregar tesoros con cantidad > 0
+    treasures.forEach(treasure => {
+      if (typeof treasure.state === 'number' && treasure.state > 0) {
+        allItems.push({
+          ...treasure,
+          type: 'treasure'
+        } as ExtendedGameObject);
+      }
+    });
+
+    // PRIORIDAD 6: Agregar llaves al final con estado true
+    keys.forEach(key => {
+      if (typeof key.state === 'boolean' && key.state) {
+        allItems.push({
+          ...key,
+          state: 1, // Convertir boolean a número para visualización
+          type: 'key'
+        } as ExtendedGameObject);
+      }
+    });
+
+    return allItems;
+  };
+
+  const allItems = createCompleteItemList();
+  
+  // Configuración de paginación
+  const itemsPerPage = 4;
+  const totalPages = Math.ceil(allItems.length / itemsPerPage);
+  const paginatedItems = allItems.slice(page * itemsPerPage, (page + 1) * itemsPerPage);
+
+  // Función para manejar la selección de objetos
+  const handleItemSelect = (item: ExtendedGameObject) => {
+    if (selectedItem?.id === item.id) {
+      setSelectedItem(null);
     } else {
-      setSelectedHealing(type);
+      setSelectedItem(item);
     }
   };
 
-  // Despacha la acción correspondiente según el HealingIcon seleccionado
+  // Función para usar objetos curativos
   const handleUseHealing = () => {
-    if (selectedHealing === 'G') {
-      dispatch(decrementGrapes(1));
-      dispatch(incrementMaiaCurrentHealth(Math.floor(maiaHealth / 5)));
-    } else if (selectedHealing === 'H') {
-      dispatch(decrementHealthPotion(1));
-      dispatch(incrementMaiaCurrentHealth(Math.floor(maiaHealth / 2)));
-    } else if (selectedHealing === 'B') {
-      dispatch(decrementBigHealthPotion(1));
-      dispatch(incrementMaiaCurrentHealth(maiaHealth));
+    if (!selectedItem || selectedItem.type !== 'healing') return;
+
+    switch (selectedItem.healingType) {
+      case 'grapes':
+        dispatch(decrementGrapes(1));
+        dispatch(incrementMaiaCurrentHealth(Math.floor(maiaHealth / 5)));
+        break;
+      case 'healthpotion':
+        dispatch(decrementHealthPotion(1));
+        dispatch(incrementMaiaCurrentHealth(Math.floor(maiaHealth / 2)));
+        break;
+      case 'bighealthpotion':
+        dispatch(decrementBigHealthPotion(1));
+        dispatch(incrementMaiaCurrentHealth(maiaHealth));
+        break;
     }
-    setSelectedHealing(null);
+    setSelectedItem(null);
   };
 
-  // Verifica si se puede usar el objeto de curación
-  const canUseHealing =
-    (selectedHealing === 'G' && healingState.grapes > 0) ||
-    (selectedHealing === 'H' && healingState.healthpotion > 0) ||
-    (selectedHealing === 'B' && healingState.bighealthpotion > 0);
+  // Verificar si el objeto seleccionado es usable
+  const canUseSelected = selectedItem?.type === 'healing' && typeof selectedItem.state === 'number' && selectedItem.state > 0;
+
+  // Funciones de navegación
+  const handleNextPage = () => {
+    if ((page + 1) * itemsPerPage < allItems.length) {
+      setPage(page + 1);
+      setSelectedItem(null);
+    }
+  };
+
+  const handlePrevPage = () => {
+    if (page > 0) {
+      setPage(page - 1);
+      setSelectedItem(null);
+    }
+  };
+
+  const renderItem = ({ item }: { item: ExtendedGameObject }) => {
+    const isSelected = selectedItem?.id === item.id;
+    
+    // No mostrar cantidad para arco, espada, dagas y llaves
+    const shouldShowQuantity = !(
+      item.id === 'bow' || 
+      item.id === 'sword' || 
+      item.id === 'daggers' || 
+      item.type === 'key'
+    );
+    
+    return (
+      <TouchableOpacity
+        style={[styles.itemRow, isSelected && styles.selectedItemRow]}
+        onPress={() => handleItemSelect(item)}
+      >
+        <item.icon width={font(25)} height={font(25)} style={styles.itemIcon} />
+        <View style={styles.itemInfo}>
+          <Text style={styles.itemName}>{item.name}</Text>
+          {shouldShowQuantity && (
+            <Text style={styles.itemQuantity}>{item.state}</Text>
+          )}
+        </View>
+      </TouchableOpacity>
+    );
+  };
 
   return (
     <Modal visible={visible} animationType="slide" transparent>
       <View style={styles.overlay}>
-        <View style={[styles.modalContainer, { width: '90%', height: '60%' }]}>
-        {!showExtraSlots ? (
+        <View style={styles.modalContainer}>
           <Text style={styles.headerText}>Mochila</Text>
-        ) : (
-          <Text style={styles.headerText}>Objetos</Text>
-        ) }
-          {/* Si showExtraSlots es false, mostramos la página original; de lo contrario, la lista de objetos */}
-          {!showExtraSlots ? (
-            <>
-              {/* Renderizado de las secciones ARMAS y CURACIÓN */}
-              <View style={styles.sectionContainer}>
-                <View style={styles.itemsContainer}>
-                  {/* Sección ARMAS */}
-                  <View style={styles.itemTouchable}>
-                    <CurrentWeaponIcon />
-                  </View>
-                  <TouchableOpacity
-                    style={styles.itemTouchable}
-                    onPress={() => setShowCrossbowInfo(!showCrossbowInfo)}
-                  >
-                    <BowIcon width={'70%'} height={'70%'} />
-                  </TouchableOpacity>
-                  {showCrossbowInfo && (
-                    <View style={styles.infoContainer2}>
-                      <Text style={styles.infoText}>Arco</Text>
-                    </View>
-                  )}
-                  <View style={styles.itemTouchable}>
-                    <QuiverIcon />
-                  </View>
-                </View>
-                <View style={styles.itemsContainer2}>
-                  {/* Sección CURACIÓN */}
-                  <View style={styles.itemTouchable2}>
-                    <HealingIcon 
-                      iconType="G" 
-                      value={healingState.grapes}
-                      onSelect={handleHealingIconSelect}
-                    />
-                    {selectedHealing === 'G' && (
-                      <View style={styles.infoContainer}>
-                        <Text style={styles.infoText}>Uvas ({healingState.grapes})</Text>
-                      </View>
-                    )}
-                  </View>
-
-                  <View style={styles.itemTouchable2}>
-                    <HealingIcon 
-                      iconType="H" 
-                      value={healingState.healthpotion}
-                      onSelect={handleHealingIconSelect}
-                    />
-                    {selectedHealing === 'H' && (
-                      <View style={styles.infoContainer}>
-                        <Text style={styles.infoText}>Frasco de Salud ({healingState.healthpotion})</Text>
-                      </View>
-                    )}
-                  </View>
-
-                  <View style={styles.itemTouchable2}>
-                    <HealingIcon 
-                      iconType="B" 
-                      value={healingState.bighealthpotion}
-                      onSelect={handleHealingIconSelect}
-                    />
-                    {selectedHealing === 'B' && (
-                      <View style={styles.infoContainer}>
-                        <Text style={styles.infoText}>Gran Frasco de Salud ({healingState.bighealthpotion})</Text>
-                      </View>
-                    )}
-                  </View>
-                </View>
-              </View>
-
-              {/* Botón "Usar" solo se muestra en la página original */}
-              {selectedHealing && canUseHealing && (
-                <TouchableOpacity style={styles.useButton} onPress={handleUseHealing}>
-                  <Text style={styles.useButtonText}>Usar</Text>
-                </TouchableOpacity>
-              )}
-            </>
+          
+          {allItems.length === 0 ? (
+            <View style={styles.emptyContainer}>
+              <Text style={styles.emptyText}>No tienes objetos en tu mochila</Text>
+            </View>
           ) : (
-            // Segunda página: renderizamos la lista de objetos con paginación
             <>
-              <View style={styles.objectListContainer}>
-                {displayedObjects.map((obj, index) => (
-                  <View key={index} style={styles.objectListItem}>
-                    <obj.icon style={styles.objectIcon} width={font(30)} height={font(30)} />
-                    <Text style={styles.objectListText}>
-                      {obj.name} {obj.state}
-                    </Text>
+              <View style={styles.itemsContainer}>
+                {paginatedItems.map((item) => (
+                  <View key={item.id}>
+                    {renderItem({ item })}
                   </View>
                 ))}
-                   {totalPages > 1 && (
-               <View style={styles.paginationContainer}>
-               <TouchableOpacity
-                 onPress={() => setCurrentObjectPage(Math.max(currentObjectPage - 1, 0))}
-                 disabled={currentObjectPage === 0}
-                 style={styles.paginationButton}
-               >
-                 <Text style={[
-                   styles.paginationButtonText, 
-                   { color: currentObjectPage === 0 ? 'gray' : 'white' } // Aquí decides el color
-                 ]}>
-                   {"<<"}
-                 </Text>
-               </TouchableOpacity>
-               <TouchableOpacity
-                 onPress={() => setCurrentObjectPage(Math.min(currentObjectPage + 1, totalPages - 1))}
-                 disabled={currentObjectPage === totalPages - 1}
-                 style={styles.paginationButton}
-               >
-                 <Text style={[
-                   styles.paginationButtonText, 
-                   { color: currentObjectPage === totalPages - 1 ? 'gray' : 'white' }
-                 ]}>
-                   {">>"}
-                 </Text>
-               </TouchableOpacity>
-             </View>
-              )}
               </View>
               
-              
+              {/* Paginación */}
+              {totalPages > 1 && (
+                <View style={styles.paginationContainer}>
+                  <TouchableOpacity
+                    style={styles.paginationButton}
+                    onPress={handlePrevPage}
+                    disabled={page === 0}
+                  >
+                    <Text style={[styles.paginationButtonText, { color: page === 0 ? 'gray' : 'white' }]}>
+                      {"<<"}
+                    </Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    style={styles.paginationButton}
+                    onPress={handleNextPage}
+                    disabled={page === totalPages - 1}
+                  >
+                    <Text style={[styles.paginationButtonText, { color: page === totalPages - 1 ? 'gray' : 'white' }]}>
+                      {">>"}
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+              )}
             </>
           )}
-
-          {/* Botón "Cerrar" siempre visible */}
-          <TouchableOpacity style={styles.closeButton} onPress={() => { setSelectedHealing(null); onClose();setShowExtraSlots(false); }}>
-            <Text style={styles.closeButtonText}>Cerrar</Text>
-          </TouchableOpacity>
-
-          {/* Botón para cambiar de página en la esquina inferior derecha */}
-          <TouchableOpacity
-            style={styles.extraSlotsToggle}
-            onPress={() => setShowExtraSlots(!showExtraSlots)}
+          
+          {/* Descripción del objeto seleccionado */}
+          {selectedItem && (
+            <View style={styles.descriptionContainer}>
+              <Text style={styles.descriptionText}>
+                {selectedItem.description || 'Sin descripción disponible'}
+              </Text>
+            </View>
+          )}
+          
+          {/* Botón Usar (solo para objetos curativos) */}
+          {canUseSelected && (
+            <TouchableOpacity style={styles.useButton} onPress={handleUseHealing}>
+              <Text style={styles.useButtonText}>Usar</Text>
+            </TouchableOpacity>
+          )}
+          
+          {/* Botón Cerrar */}
+          <TouchableOpacity 
+            style={styles.closeButton} 
+            onPress={() => { 
+              setSelectedItem(null); 
+              setPage(0);
+              onClose(); 
+            }}
           >
-            <Text style={styles.extraSlotsToggleText}>
-              {showExtraSlots ? '<<' : '>>'}
-            </Text>
+            <Text style={styles.closeButtonText}>Cerrar</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -253,7 +313,7 @@ const styles = StyleSheet.create({
   },
   modalContainer: {
     width: '90%',
-    height: '60%',
+    height: '70%',
     backgroundColor: 'gray',
     borderRadius: 15,
     padding: '5%',
@@ -264,94 +324,86 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.8,
     shadowRadius: 4,
     elevation: 5,
-    position: 'relative',
   },
   headerText: {
     fontSize: font(24),
     color: '#fff',
     fontWeight: 'bold',
-    marginBottom: '2%',
+    marginBottom: '3%',
     alignSelf: 'center',
     textShadowColor: '#000',
     textShadowOffset: { width: 1, height: 1 },
     textShadowRadius: 2,
   },
-  sectionContainer: {
-    height:'80%',
+  emptyContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  emptyText: {
+    fontSize: font(18),
+    color: '#fff',
+    textAlign: 'center',
   },
   itemsContainer: {
+    flex: 1,
+    paddingVertical: '2%',
+  },
+  itemRow: {
     flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'space-around',
-    marginBottom: '5%',
-  },
-  itemsContainer2: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'space-around',
-  },
-  itemTouchable: {
-    width: '28%',
-    height: '1%',
-    aspectRatio: 1,
-    backgroundColor: '#fff',
-    justifyContent: 'center',
     alignItems: 'center',
-    borderRadius: 10,
-    borderWidth: 3,
-    borderColor: 'black',
-    marginVertical: '2%',
-    marginBottom: '10%',
-    marginTop: '10%',
-  },
-  itemTouchable2: {
-    width: '28%',
-    height: '1%',
-    aspectRatio: 1,
-    backgroundColor: '#fff',
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: 10,
-    borderWidth: 3,
-    borderColor: 'black',
-    marginVertical: '2%',
-    marginBottom: '25%',
-  },
-  infoContainer: {
-    position: 'absolute',
-    backgroundColor: 'rgba(0, 0, 0, 0.8)',
+    backgroundColor: 'white',
+    marginVertical: '1%',
     padding: '2%',
-    borderRadius: 5,
-    alignItems: 'center',
-    bottom: '103%',
-    left: '5%',
+    borderRadius: 8,
+    borderWidth: font(1.5),
+    borderColor: 'black',
+    height: font(60),
   },
-  infoContainer2: {
-    position: 'absolute',
-    backgroundColor: 'rgba(0, 0, 0, 0.8)',
-    padding: '2%',
-    borderRadius: 5,
-    alignItems: 'center',
-    bottom: '80%',
-    left: '58%',
-    transform: [{ translateX: -50 }],
+  selectedItemRow: {
+    backgroundColor: '#f0f0f0',
+    borderColor: 'black',
+    borderWidth: font(2),
   },
-  infoText: {
-    color: '#fff',
+  itemIcon: {
+    marginRight: '2%',
+  },
+  itemInfo: {
+    flex: 1,
+  },
+  itemName: {
+    fontSize: font(14),
     fontWeight: 'bold',
-    fontSize: font(13),
+    color: 'black',
+    marginBottom: '1%',
   },
-  useButton: {
-    position: 'absolute',
-    bottom: '5%',
-    left: '5%',
-    backgroundColor: '#fff',
+  itemQuantity: {
+    fontSize: font(12),
+    color: '#666',
+  },
+
+  descriptionContainer: {
+    backgroundColor: 'rgba(0, 0, 0, 0.8)',
     padding: '3%',
     borderRadius: 10,
+    marginBottom: '3%',
+  },
+  descriptionText: {
+    color: '#fff',
+    fontSize: font(14),
+    textAlign: 'center',
+  },
+  useButton: {
+    backgroundColor: 'black',
+    paddingVertical: '3%',
+    paddingHorizontal: '6%',
+    borderRadius: 10,
+    alignSelf: 'center',
+    marginBottom: '3%',
   },
   useButtonText: {
-    color: '#000',
-    fontSize: font(17),
+    color: 'white',
+    fontSize: font(16),
     fontWeight: 'bold',
   },
   closeButton: {
@@ -360,66 +412,23 @@ const styles = StyleSheet.create({
     paddingHorizontal: '5%',
     borderRadius: 10,
     alignSelf: 'center',
-    marginTop: '5%',
   },
   closeButtonText: {
     color: '#000',
     fontSize: font(17),
     fontWeight: 'bold',
   },
-  extraSlotsToggle: {
-    position: 'absolute',
-    bottom: '2%',
-    right: '5%',
-    backgroundColor: '#fff',
-    padding: '3%',
-    borderRadius: 10,
-  },
-  extraSlotsToggleText: {
-    fontSize: font(17),
-    fontWeight: 'bold',
-    color: '#000',
-  },
-  // Estilos para la lista de objetos en la segunda página
-  objectListContainer: {
-    flexDirection: 'column',
-    paddingVertical: '3%',
-    height:'80%',
-  },
-  objectListItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginVertical: '1%',
-    backgroundColor:'white',
-    borderWidth: font(1.5),
-    borderRadius: 10,
-  },
-  objectListText: {
-    fontSize: font(15),
-    marginLeft: '3%',
-    color: 'black',
-    fontWeight: 'bold',
-  },
-  objectIcon: {
-    marginLeft: '3%',
-    marginVertical: '1%',
-  },
-  // Estilos para los controles de paginación
   paginationContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginTop: '2%',
-    paddingHorizontal: '3%',
-    bottom: 0,
-    position: 'absolute',
-    width: '100%',
+    paddingHorizontal: '5%',
+    marginBottom: '3%',
   },
   paginationButton: {
-    padding: '4%',
+    padding: '3%',
   },
   paginationButtonText: {
-    fontSize: font(19),
+    fontSize: font(20),
     fontWeight: 'bold',
-    
   },
 });
