@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Modal, View, TouchableOpacity, Text, StyleSheet } from 'react-native';
-import { GrapesIcon, HealthPotionIcon, BigHealthPotionIcon, QuiverArrowIcon, BowIcon, DaggersIcon, SwordIcon } from '../SvgExporter';
+import { GrapesIcon, HealthPotionIcon, BigHealthPotionIcon, QuiverArrowIcon, BowIcon, DaggersIcon, SwordIcon, BombIcon } from '../SvgExporter';
 import { decrementBigHealthPotion, decrementGrapes, decrementHealthPotion } from '../../redux/healingSlice';
 import { useDispatch, useSelector } from "react-redux";
 import { incrementMaiaCurrentHealth } from '../../redux/maiaSlice';
@@ -50,17 +50,7 @@ const BagPackModal: React.FC<BagPackModalProps> = ({ visible, onClose }) => {
   const createCompleteItemList = (): ExtendedGameObject[] => {
     const allItems: ExtendedGameObject[] = [];
 
-    // PRIORIDAD 1: Agregar arco siempre al inicio (arma base)
-    allItems.push({
-      id: 'bow',
-      name: 'Arco',
-      description: 'Arma de combate a distancia básica',
-      icon: BowIcon,
-      state: 1,
-      type: 'weapon'
-    } as ExtendedGameObject);
-
-    // PRIORIDAD 2: Agregar arma actual basada en currentWeapon
+    // PRIORIDAD 1: Agregar arma actual basada en currentWeapon (espada/dagas primero)
     if (currentWeapon === 1) {
       allItems.push({
         id: 'daggers',
@@ -81,6 +71,16 @@ const BagPackModal: React.FC<BagPackModalProps> = ({ visible, onClose }) => {
       } as ExtendedGameObject);
     }
 
+    // PRIORIDAD 2: Agregar arco (arma base)
+    allItems.push({
+      id: 'bow',
+      name: 'Arco',
+      description: 'Arma de combate a distancia básica',
+      icon: BowIcon,
+      state: 1,
+      type: 'weapon'
+    } as ExtendedGameObject);
+
     // PRIORIDAD 3: Agregar flechas del inventario
     const arrowItem = inventory.find(item => item.id === 'arrows');
     if (arrowItem && typeof arrowItem.state === 'number' && arrowItem.state > 0) {
@@ -90,7 +90,16 @@ const BagPackModal: React.FC<BagPackModalProps> = ({ visible, onClose }) => {
       } as ExtendedGameObject);
     }
 
-    // PRIORIDAD 4: Agregar objetos curativos
+    // PRIORIDAD 4: Agregar bomba del inventario
+    const bombItem = inventory.find(item => item.id === 'bomb');
+    if (bombItem && typeof bombItem.state === 'number' && bombItem.state > 0) {
+      allItems.push({
+        ...bombItem,
+        type: 'weapon'
+      } as ExtendedGameObject);
+    }
+
+    // PRIORIDAD 5: Agregar objetos curativos
     if (healingState.grapes > 0) {
       allItems.push({
         id: 'grapes',
@@ -117,7 +126,7 @@ const BagPackModal: React.FC<BagPackModalProps> = ({ visible, onClose }) => {
       } as ExtendedGameObject);
     });
 
-    // PRIORIDAD 5: Agregar tesoros con cantidad > 0
+    // PRIORIDAD 6: Agregar tesoros con cantidad > 0
     treasures.forEach(treasure => {
       if (typeof treasure.state === 'number' && treasure.state > 0) {
         allItems.push({
@@ -127,7 +136,7 @@ const BagPackModal: React.FC<BagPackModalProps> = ({ visible, onClose }) => {
       }
     });
 
-    // PRIORIDAD 6: Agregar llaves al final con estado true
+    // PRIORIDAD 7: Agregar llaves al final con estado true
     keys.forEach(key => {
       if (typeof key.state === 'boolean' && key.state) {
         allItems.push({

@@ -65,6 +65,9 @@ import BowArrowSvg from '../assets/bowarrow.svg';
 import HearthSvg from '../assets/hearth.svg';
 import BrokenHearthSvg from '../assets/brokenhearth.svg';
 import HalfHearthSvg from '../assets/halfhearth.svg';
+import HearthMediumSvg from '../assets/hearthmedium.svg';
+import HearthLowSvg from '../assets/hearthlow.svg';
+import BombSvg from '../assets/bomb.svg';
 import DevilHearthSvg from '../assets/devilhearth.svg';
 import DevilBrokenHearthSvg from '../assets/devilbrokenhearth.svg';
 import DevilHalfHearthSvg from '../assets/devilhalfhearth.svg';
@@ -197,6 +200,9 @@ const QuiverArrowIcon = (props: any) => <QuiverSvg {...props} />;
 const HearthIcon = (props: any) => <HearthSvg {...props} />;
 const BrokenHearthIcon = (props: any) => <BrokenHearthSvg {...props} />;
 const HalfHearthIcon = (props: any) => <HalfHearthSvg {...props} />;
+const HearthMediumIcon = (props: any) => <HearthMediumSvg {...props} />;
+const HearthLowIcon = (props: any) => <HearthLowSvg {...props} />;
+const BombIcon = (props: any) => <BombSvg {...props} />;
 const DevilHearthIcon = (props: any) => <DevilHearthSvg {...props} />;
 const DevilBrokenHearthIcon = (props: any) => <DevilBrokenHearthSvg {...props} />;
 const DevilHalfHearthIcon = (props: any) => <DevilHalfHearthSvg {...props} />;
@@ -323,6 +329,9 @@ export {
   QuiverArrowIcon,
   HearthIcon,
   BrokenHearthIcon,
+  HearthMediumIcon,
+  HearthLowIcon,
+  BombIcon,
   TearIcon,
   MoonIcon,
   ShieldIcon,

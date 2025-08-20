@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
-import { DevilHearthIcon, DevilHalfHearthIcon, DevilBrokenHearthIcon } from './SvgExporter';
+import { HearthIcon, HearthMediumIcon, HearthLowIcon, BrokenHearthIcon } from './SvgExporter';
 import { font } from './functions/fontsize';
 
 interface EnemyHealthBarProps {
@@ -11,19 +11,25 @@ interface EnemyHealthBarProps {
 const MAX_PER_ROW = 13; // cantidad máxima de corazones por fila
 
 const EnemyHealthBar: React.FC<EnemyHealthBarProps> = ({ enemyHealth, enemyCurrentHealth }) => {
-  const totalHearts = Math.ceil(enemyHealth / 2);
+  const totalHearts = Math.ceil(enemyHealth / 3); // Cada corazón representa 3 puntos
   const heartIcons = [];
 
   for (let i = 0; i < totalHearts; i++) {
-    const heartPosition = i * 2;
+    const heartPosition = i * 3;
     const current = enemyCurrentHealth - heartPosition;
 
-    if (current >= 2) {
-      heartIcons.push(<DevilHearthIcon width={font(25)} height={font(25)} key={i} />);
+    if (current >= 3) {
+      // Corazón completo (3 puntos de vida)
+      heartIcons.push(<HearthIcon width={font(25)} height={font(25)} key={i} />);
+    } else if (current === 2) {
+      // Corazón medio (2 puntos de vida)
+      heartIcons.push(<HearthMediumIcon width={font(25)} height={font(25)} key={i} />);
     } else if (current === 1) {
-      heartIcons.push(<DevilHalfHearthIcon width={font(25)} height={font(25)} key={i} />);
+      // Corazón bajo (1 punto de vida)
+      heartIcons.push(<HearthLowIcon width={font(25)} height={font(25)} key={i} />);
     } else {
-      heartIcons.push(<DevilBrokenHearthIcon width={font(25)} height={font(25)} key={i} />);
+      // Corazón vacío (0 puntos de vida)
+      heartIcons.push(<BrokenHearthIcon width={font(25)} height={font(25)} key={i} />);
     }
   }
 

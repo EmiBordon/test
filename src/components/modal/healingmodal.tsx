@@ -4,6 +4,9 @@ import HealingIcon from '../healingicon';
 import { decrementBigHealthPotion, decrementGrapes, decrementHealthPotion } from '../../redux/healingSlice';
 import { useDispatch, useSelector } from "react-redux";
 import { incrementMaiaCurrentHealth } from '../../redux/maiaSlice';
+import { decrementBomb } from '../../redux/weaponsSlice';
+import { BombIcon, GrapesIcon, HealthPotionIcon, BigHealthPotionIcon } from '../SvgExporter';
+import { font } from '../functions/fontsize';
 
 // Definir el tipo del estado de Redux para la curación y la salud de Maia
 interface RootState {
@@ -15,6 +18,9 @@ interface RootState {
   maia: {
     maiahealth: number;
   };
+  weapons: {
+    bomb: number;
+  };
 }
 
 interface HealingModalProps {
@@ -23,99 +29,200 @@ interface HealingModalProps {
   onHealingUsed: (used: boolean) => void;
 }
 
+interface HealingItem {
+  id: string;
+  name: string;
+  quantity: number;
+  icon: React.ComponentType<any>;
+  type: 'G' | 'H' | 'B' | 'BOMB';
+}
+
 const HealingModal: React.FC<HealingModalProps> = ({ visible, onClose, onHealingUsed }) => {
-  const { width, height } = Dimensions.get('window');
   const dispatch = useDispatch();
   
-  // Obtener el estado de curación y la salud de Maia desde Redux
+  // Obtener el estado de curación, la salud de Maia y las bombas desde Redux
   const healingState = useSelector((state: RootState) => state.healing);
   const maiaHealth = useSelector((state: RootState) => state.maia.maiahealth);
+  const bomb = useSelector((state: RootState) => state.weapons.bomb);
 
-  // Estado para saber qué HealingIcon fue presionado ('G', 'H', 'B' o null si ninguno)
-  const [selectedHealing, setSelectedHealing] = useState<'G' | 'H' | 'B' | null>(null);
+  // Estados para paginación y selección
+  const [page, setPage] = useState(0);
+  const [selectedItem, setSelectedItem] = useState<HealingItem | null>(null);
 
-  // Alterna la selección del HealingIcon
-  const handleHealingIconSelect = (type: 'G' | 'H' | 'B') => {
-    setSelectedHealing(prev => (prev === type ? null : type));
+  // Crear lista de items disponibles (solo los que tienen cantidad > 0)
+  const createAvailableItems = (): HealingItem[] => {
+    const items: HealingItem[] = [];
+    
+    if (healingState.grapes > 0) {
+      items.push({
+        id: 'grapes',
+        name: 'Uvas',
+        quantity: healingState.grapes,
+        icon: () => <GrapesIcon width={font(40)} height={font(40)} />,
+        type: 'G'
+      });
+    }
+    
+    if (healingState.healthpotion > 0) {
+      items.push({
+        id: 'healthpotion',
+        name: 'Frasco de Salud',
+        quantity: healingState.healthpotion,
+        icon: () => <HealthPotionIcon width={font(40)} height={font(40)} />,
+        type: 'H'
+      });
+    }
+    
+    if (healingState.bighealthpotion > 0) {
+      items.push({
+        id: 'bighealthpotion',
+        name: 'Gran Frasco de Salud',
+        quantity: healingState.bighealthpotion,
+        icon: () => <BigHealthPotionIcon width={font(40)} height={font(40)} />,
+        type: 'B'
+      });
+    }
+    
+    if (bomb > 0) {
+      items.push({
+        id: 'bomb',
+        name: 'Bomba',
+        quantity: bomb,
+        icon: () => <BombIcon width={font(40)} height={font(40)} />,
+        type: 'BOMB'
+      });
+    }
+    
+    return items;
   };
 
-  // Despacha la acción de curación según el HealingIcon seleccionado, cierra el modal y devuelve true
-  const handleUseHealing = () => {
-    if (selectedHealing === 'G') {
-      dispatch(decrementGrapes(1));
-      dispatch(incrementMaiaCurrentHealth(Math.floor(maiaHealth / 5)));
-    } else if (selectedHealing === 'H') {
-      dispatch(decrementHealthPotion(1));
-      dispatch(incrementMaiaCurrentHealth(Math.floor(maiaHealth / 2)));
-    } else if (selectedHealing === 'B') {
-      dispatch(decrementBigHealthPotion(1));
-      dispatch(incrementMaiaCurrentHealth(maiaHealth));
+  const availableItems = createAvailableItems();
+  const itemsPerPage = 3;
+  const totalPages = Math.ceil(availableItems.length / itemsPerPage);
+  const paginatedItems = availableItems.slice(page * itemsPerPage, (page + 1) * itemsPerPage);
+
+  // Manejar selección de item
+  const handleItemSelect = (item: HealingItem) => {
+    setSelectedItem(selectedItem?.id === item.id ? null : item);
+  };
+
+  // Manejar uso del item seleccionado
+  const handleUseItem = () => {
+    if (!selectedItem) return;
+
+    switch (selectedItem.type) {
+      case 'G':
+        dispatch(decrementGrapes(1));
+        dispatch(incrementMaiaCurrentHealth(Math.floor(maiaHealth / 5)));
+        break;
+      case 'H':
+        dispatch(decrementHealthPotion(1));
+        dispatch(incrementMaiaCurrentHealth(Math.floor(maiaHealth / 2)));
+        break;
+      case 'B':
+        dispatch(decrementBigHealthPotion(1));
+        dispatch(incrementMaiaCurrentHealth(maiaHealth));
+        break;
+      case 'BOMB':
+        dispatch(decrementBomb(1));
+        // Solo descontar bomba, sin efecto de curación
+        break;
     }
-    setSelectedHealing(null);
+    
+    setSelectedItem(null);
     onHealingUsed(true);
     onClose();
   };
 
-  // Determina si se puede usar el objeto (valor > 0)
-  const canUseHealing =
-    (selectedHealing === 'G' && healingState.grapes > 0) ||
-    (selectedHealing === 'H' && healingState.healthpotion > 0) ||
-    (selectedHealing === 'B' && healingState.bighealthpotion > 0);
+  // Funciones de navegación
+  const handleNextPage = () => {
+    if (page + 1 < totalPages) {
+      setPage(page + 1);
+      setSelectedItem(null);
+    }
+  };
+
+  const handlePrevPage = () => {
+    if (page > 0) {
+      setPage(page - 1);
+      setSelectedItem(null);
+    }
+  };
 
   return (
     <Modal visible={visible} animationType="slide" transparent>
       <View style={styles.overlay}>
-        <View style={[styles.modalContainer, { width: '90%', height: '40%' }]}>
-         
-          <View style={styles.itemsContainer}>
-            <View style={styles.itemTouchable}>
-              <HealingIcon 
-                iconType="G" 
-                value={healingState.grapes}
-                onSelect={handleHealingIconSelect}
-              />
-              {selectedHealing === 'G' && (
-                <View style={styles.infoContainer}>
-                  <Text style={styles.infoText}>Uvas ({healingState.grapes})</Text>
+        <View style={[styles.modalContainer, { width: '90%', height: '50%' }]}>
+          
+          {availableItems.length === 0 ? (
+            <View style={styles.emptyContainer}>
+              <Text style={styles.emptyText}>No tienes objetos disponibles</Text>
+            </View>
+          ) : (
+            <>
+              <View style={styles.itemsContainer}>
+                {paginatedItems.map((item) => (
+                  <TouchableOpacity
+                    key={item.id}
+                    style={[
+                      styles.itemTouchable,
+                      selectedItem?.id === item.id && styles.selectedItem
+                    ]}
+                    onPress={() => handleItemSelect(item)}
+                  >
+                    <item.icon />
+                    <Text style={styles.quantityText}>{item.quantity}</Text>
+                    {selectedItem?.id === item.id && (
+                      <View style={styles.infoContainer}>
+                        <Text style={styles.infoText}>{item.name}</Text>
+                      </View>
+                    )}
+                  </TouchableOpacity>
+                ))}
+              </View>
+
+              {/* Paginación */}
+              {totalPages > 1 && (
+                <View style={styles.paginationContainer}>
+                  <TouchableOpacity
+                    style={styles.paginationButton}
+                    onPress={handlePrevPage}
+                    disabled={page === 0}
+                  >
+                    <Text style={[styles.paginationText, { color: page === 0 ? 'gray' : 'white' }]}>
+                      {"<<"}
+                    </Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    style={styles.paginationButton}
+                    onPress={handleNextPage}
+                    disabled={page === totalPages - 1}
+                  >
+                    <Text style={[styles.paginationText, { color: page === totalPages - 1 ? 'gray' : 'white' }]}>
+                      {">>"}
+                    </Text>
+                  </TouchableOpacity>
                 </View>
               )}
-            </View>
 
-            <View style={styles.itemTouchable}>
-              <HealingIcon 
-                iconType="H" 
-                value={healingState.healthpotion}
-                onSelect={handleHealingIconSelect}
-              />
-              {selectedHealing === 'H' && (
-                <View style={styles.infoContainer}>
-                  <Text style={styles.infoText}>Frasco de Salud ({healingState.healthpotion})</Text>
-                </View>
+              {/* Botón Usar */}
+              {selectedItem && (
+                <TouchableOpacity style={styles.useButton} onPress={handleUseItem}>
+                  <Text style={styles.useButtonText}>Usar</Text>
+                </TouchableOpacity>
               )}
-            </View>
-
-            <View style={styles.itemTouchable}>
-              <HealingIcon 
-                iconType="B" 
-                value={healingState.bighealthpotion}
-                onSelect={handleHealingIconSelect}
-              />
-              {selectedHealing === 'B' && (
-                <View style={styles.infoContainer}>
-                  <Text style={styles.infoText}>Gran Frasco de Salud ({healingState.bighealthpotion})</Text>
-                </View>
-              )}
-            </View>
-          </View>
-
-          {selectedHealing && canUseHealing && (
-            <TouchableOpacity style={styles.useButton} onPress={handleUseHealing}>
-              <Text style={styles.useButtonText}>Usar</Text>
-            </TouchableOpacity>
+            </>
           )}
 
-          {/* Botón "Cerrar" fijo en la parte inferior */}
-          <TouchableOpacity style={styles.closeButton} onPress={() => { setSelectedHealing(null); onClose(); }}>
+          {/* Botón Cerrar */}
+          <TouchableOpacity 
+            style={styles.closeButton} 
+            onPress={() => { 
+              setSelectedItem(null); 
+              setPage(0);
+              onClose(); 
+            }}
+          >
             <Text style={styles.closeButtonText}>Cerrar</Text>
           </TouchableOpacity>
         </View>
@@ -146,21 +253,22 @@ const styles = StyleSheet.create({
     elevation: 5,
     position: 'relative',
   },
-  headerText: {
-    fontSize: 24,
+  emptyContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  emptyText: {
+    fontSize: font(18),
     color: '#fff',
-    fontWeight: 'bold',
-    marginBottom: '2%',
-    alignSelf: 'center',
-    textShadowColor: '#000',
-    textShadowOffset: { width: 1, height: 1 },
-    textShadowRadius: 2,
+    textAlign: 'center',
   },
   itemsContainer: {
     flexDirection: 'row',
     justifyContent: 'space-around',
-    marginBottom: '5%',
-    marginTop:'8%',
+    marginBottom: '3%',
+    marginTop: '5%',
+    paddingHorizontal: '2%',
   },
   itemTouchable: {
     width: '28%',
@@ -169,39 +277,75 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 10,
-    borderWidth: 1,
+    borderWidth: font(1.5),
     borderColor: 'black',
     marginVertical: '2%',
+    position: 'relative',
+  },
+  selectedItem: {
+    backgroundColor: '#f0f0f0',
+    borderWidth: font(2),
+    borderColor: 'black',
+  },
+  quantityText: {
+    position: 'absolute',
+    bottom: font(2),
+    right: font(4),
+    backgroundColor: 'rgba(0, 0, 0, 0.7)',
+    color: 'white',
+    fontSize: font(12),
+    fontWeight: 'bold',
+    paddingHorizontal: font(4),
+    paddingVertical: font(1),
+    borderRadius: font(8),
+    minWidth: font(16),
+    textAlign: 'center',
   },
   infoContainer: {
     position: 'absolute',
     backgroundColor: 'rgba(0, 0, 0, 0.8)',
-    padding: '2%',
+    padding: '3%',
     borderRadius: 5,
     alignItems: 'center',
     bottom: '103%',
     left: '5%',
+    right: '5%',
   },
   infoText: {
     color: '#fff',
     fontWeight: 'bold',
-    fontSize: 14,
+    fontSize: font(14),
+    textAlign: 'center',
+  },
+  paginationContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingHorizontal: '15%',
+    marginBottom: '3%',
+  },
+  paginationButton: {
+    padding: '3%',
+  },
+  paginationText: {
+    fontSize: font(20),
+    fontWeight: 'bold',
   },
   useButton: {
     backgroundColor: '#fff',
-    padding: '3%',
+    paddingVertical: '3%',
+    paddingHorizontal: '6%',
     borderRadius: 10,
     alignSelf: 'center',
     marginBottom: '2%',
   },
   useButtonText: {
     color: '#000',
-    fontSize: 18,
+    fontSize: font(16),
     fontWeight: 'bold',
   },
   closeButton: {
     position: 'absolute',
-    bottom: 10,
+    bottom: font(10),
     alignSelf: 'center',
     backgroundColor: '#fff',
     paddingVertical: '3%',
@@ -210,7 +354,7 @@ const styles = StyleSheet.create({
   },
   closeButtonText: {
     color: '#000',
-    fontSize: 18,
+    fontSize: font(16),
     fontWeight: 'bold',
   },
 });

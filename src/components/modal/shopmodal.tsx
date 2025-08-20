@@ -17,10 +17,11 @@ import {
   DaggersIcon,
   DoubleDiceIcon,
   Dice666Icon,
+  BombIcon,
 } from '../SvgExporter';
 import { useSelector, useDispatch } from 'react-redux';
 import { incrementGrapes, incrementHealthPotion, incrementBigHealthPotion } from '../../redux/healingSlice';
-import { incrementArrows } from '../../redux/weaponsSlice';
+import { incrementArrows, incrementBomb } from '../../redux/weaponsSlice';
 import { decrementCoins } from '../../redux/coinsSlice';
 import { incrementMaiaHealth } from '../../redux/maiaSlice';
 import { setCurrentWeapon } from '../../redux/weaponsSlice';
@@ -58,9 +59,10 @@ const shopItems: Item[] = [
   { id: '3', name: 'Gran Frasco de Salud', price: 45, description: 'Aumenta el 100% de la Salud' },
   { id: '4', name: 'Pildoras', price: 50, description: 'Aumenta 5 puntos de Salud Total' },
   { id: '5', name: 'Flechas', amount: 'X3', price: 10, description: 'Flechas para contrarrestar ataques enemigos' },
-  { id: '6', name: 'Dagas', price: 70, description: 'Poderosas Dagas de combate, aumenta tu Daño a 3' },
-  { id: '7', name: 'Dado Doble', price: 50, description: 'Dado Doble, se puede revender a magos' },
-  { id: '8', name: 'Dado Seis', price: 50, description: 'Dado Seis, se puede revender a magos' },
+  { id: '6', name: 'Bomba', price: 100, description: 'Explosivo potente para combate' },
+  { id: '7', name: 'Dagas', price: 70, description: 'Poderosas Dagas de combate, aumenta tu Daño a 3' },
+  { id: '8', name: 'Dado Doble', price: 50, description: 'Dado Doble, se puede revender a magos' },
+  { id: '9', name: 'Dado Seis', price: 50, description: 'Dado Seis, se puede revender a magos' },
 ];
 
 // Definimos un tipo para los componentes de ícono que reciben width y height.
@@ -80,10 +82,12 @@ const getIconComponent = (itemId: string): IconComponentType | null => {
     case '5':
       return QuiverArrowIcon;
     case '6':
-      return DaggersIcon;  
+      return BombIcon;
     case '7':
-      return DoubleDiceIcon;
+      return DaggersIcon;  
     case '8':
+      return DoubleDiceIcon;
+    case '9':
       return Dice666Icon;
     default:
       return null;
@@ -132,10 +136,13 @@ const ShopModal: React.FC<ShopModalProps> = ({ visible, onClose }) => {
           dispatch(incrementBigHealthPotion(1));
           break;
         case 'Pildoras':
-          dispatch(incrementMaiaHealth(2));
+          dispatch(incrementMaiaHealth(3));
           break;
         case 'Flechas':
           dispatch(incrementArrows(3)); // Aumenta 3 flechas
+          break;
+        case 'Bomba':
+          dispatch(incrementBomb(1)); // Aumenta 1 bomba
           break;
         case 'Dagas':
           dispatch(setCurrentWeapon(1));

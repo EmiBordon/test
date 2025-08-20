@@ -18,7 +18,7 @@ export interface CoinsState {
 }
 
 const initialState: CoinsState = {
-  coins: 0,
+  coins: 1000,
 };
 
 const coinsSlice = createSlice({

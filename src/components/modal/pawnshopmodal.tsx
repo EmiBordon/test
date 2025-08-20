@@ -13,7 +13,7 @@ import { useObjects, GameObject } from '../objects';
 import { decrementObject } from '../../redux/objectsSlice';
 import { incrementCoins } from '../../redux/coinsSlice';
 import { font } from '../functions/fontsize';
-import { decrementArrows } from '../../redux/weaponsSlice';
+import { decrementArrows, decrementBomb } from '../../redux/weaponsSlice';
 import { decrementHealthPotion } from '../../redux/healingSlice';
 import { decrementBigHealthPotion } from '../../redux/healingSlice';
 
@@ -48,8 +48,13 @@ const PawnShopModal: React.FC<PawnShopModalProps> = ({ visible, onClose }) => {
   const handleSell = (item: GameObject, index: number) => {
     if (item.state > 0) {
       setSelectedInfo(null);
+      let sellPrice = item.price || 0;
+      
       if (item.id === 'arrows') {
         dispatch(decrementArrows(1));
+      } else if (item.id === 'bomb') {
+        dispatch(decrementBomb(1));
+        sellPrice = 70; // Precio de venta especial para bomba
       } else if (item.id === 'healthpotion') {
         dispatch(decrementHealthPotion(1));
       } else if (item.id === 'bighealthpotion') {
@@ -57,7 +62,7 @@ const PawnShopModal: React.FC<PawnShopModalProps> = ({ visible, onClose }) => {
       } else {
         dispatch(decrementObject({ key: item.id as any, amount: 1 }));
       }
-      dispatch(incrementCoins(item.price));
+      dispatch(incrementCoins(sellPrice));
     }
   };
 

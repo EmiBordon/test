@@ -10,6 +10,7 @@ import {
   BigHealthPotionIcon,
   DoubleDiceIcon,
   Dice666Icon,
+  BombIcon,
 } from './SvgExporter';
 
 // Define el estado de tu slice de objects
@@ -29,6 +30,7 @@ interface ObjectsState {
 // Define el estado de weapons y healing
 interface WeaponsState {
   arrows: number;
+  bomb: number;
 }
 interface HealingState {
   healthpotion: number;
@@ -65,7 +67,7 @@ export const useObjects = () => {
     sixdice,
   } = useSelector((state: RootState) => state.objects);
 
-  const { arrows } = useSelector((state: RootState) => state.weapons);
+  const { arrows, bomb } = useSelector((state: RootState) => state.weapons);
   const { healthpotion, bighealthpotion } = useSelector((state: RootState) => state.healing);
 
   const treasures: GameObject[] = [
@@ -157,6 +159,14 @@ export const useObjects = () => {
       icon: QuiverArrowIcon,
       state: arrows,
       price: 2,
+    },
+    {
+      id: 'bomb',
+      name: 'Bomba',
+      description: 'Explosivo potente para combate',
+      icon: BombIcon,
+      state: bomb,
+      price: 100,
     },
     {
       id: 'healthpotion',

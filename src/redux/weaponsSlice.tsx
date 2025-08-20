@@ -9,6 +9,7 @@ export interface WeaponsState {
   currentWeapon: number;
   crossbow: boolean;
   arrows: number;
+  bomb: number;
 }
 
 // Función para cargar el estado guardado
@@ -25,6 +26,7 @@ const initialState: WeaponsState = {
   currentWeapon: 0,
   crossbow: false,
   arrows: 6,
+  bomb: 0,
 };
 
 const weaponsSlice = createSlice({
@@ -47,6 +49,14 @@ const weaponsSlice = createSlice({
       state.arrows = Math.max(0, state.arrows - action.payload);
       saveState(state);
     },
+    incrementBomb: (state, action: PayloadAction<number>) => {
+      state.bomb += action.payload;
+      saveState(state);
+    },
+    decrementBomb: (state, action: PayloadAction<number>) => {
+      state.bomb = Math.max(0, state.bomb - action.payload);
+      saveState(state);
+    },
     activateCrossbow: (state) => {
       state.crossbow = true;
       saveState(state);
@@ -61,6 +71,7 @@ const weaponsSlice = createSlice({
       state.currentWeapon = action.payload.currentWeapon;
       state.crossbow = action.payload.crossbow;
       state.arrows = action.payload.arrows;
+      state.bomb = action.payload.bomb;
       saveState(state);
     },
   },
@@ -88,6 +99,8 @@ export const {
   decrementWeapon, 
   incrementArrows, 
   decrementArrows, 
+  incrementBomb, 
+  decrementBomb, 
   activateCrossbow, 
   resetState,
   setWeaponsState // 👈 nueva acción
