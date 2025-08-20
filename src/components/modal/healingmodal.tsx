@@ -26,7 +26,7 @@ interface RootState {
 interface HealingModalProps {
   visible: boolean;
   onClose: () => void;
-  onHealingUsed: (used: boolean) => void;
+  onHealingUsed: (used: boolean, bombUsed?: boolean) => void;
 }
 
 interface HealingItem {
@@ -125,8 +125,11 @@ const HealingModal: React.FC<HealingModalProps> = ({ visible, onClose, onHealing
         break;
       case 'BOMB':
         dispatch(decrementBomb(1));
-        // Solo descontar bomba, sin efecto de curación
-        break;
+        // Solo descontar bomba, activar modo especial
+        setSelectedItem(null);
+        onHealingUsed(true, true); // true para used, true para bombUsed
+        onClose();
+        return; // Salir temprano para bomba
     }
     
     setSelectedItem(null);

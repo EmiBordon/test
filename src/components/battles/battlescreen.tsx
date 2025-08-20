@@ -61,6 +61,7 @@ const BattleScreen: React.FC = () => {
   const [showMoonTear, setShowMoonTear] = useState(false);
   const [showDiceModal, setShowDiceModal] = useState(false);
   const [showDiceModalAttack, setShowDiceModalAttack] = useState(false);
+  const [showDiceModalBomb, setShowDiceModalBomb] = useState(false);
   const [showAttackButton, setShowAttackButton] = useState(true);
   const [showDefenderButton, setShowDefenderButton] = useState(false);
   const [showDamagedEnemy, setShowDamagedEnemy] = useState(false);
@@ -213,6 +214,31 @@ const BattleScreen: React.FC = () => {
       setTimeout(() => setShowAttackButton(true), 1100);
     } else {
       setShowAttackButton(true);
+    }
+  };
+
+  // Función específica para manejar el resultado del DiceModal de la bomba
+  const handleDiceBombResult = (playerWon?: boolean) => {
+    setShowDiceModalBomb(false);
+    
+    // Si playerWon es undefined (cerrado sin completar), no pasa nada y continúa la batalla
+    if (playerWon === undefined) {
+      setShowAttackButton(true);
+      return;
+    }
+    
+    if (playerWon === true) {
+      // Jugador gana: daño masivo al enemigo (1000 puntos)
+      setEnemyCurrentHealth(0); // Muerte instantánea
+      setShowDamagedEnemy(true);
+      setShowBrokenHearthEnemy(true);
+      setTimeout(() => setShowBrokenHearthEnemy(false), 1000);
+    } else {
+      // Jugador pierde: daño masivo a Maia (1000 puntos)
+      dispatch(decrementMaiaCurrentHealth(1000));
+      setShowBrokenHearthMaia(true);
+      setShowDamagedMaia(true);
+      setTimeout(() => setShowBrokenHearthMaia(false), 1000);
     }
   };
 
@@ -465,14 +491,23 @@ const BattleScreen: React.FC = () => {
       <HealingModal 
         visible={showHealingModal} 
         onClose={() => setShowHealingModal(false)} 
-        onHealingUsed={(used) => {
+        onHealingUsed={(used, bombUsed) => {
           if (used) {
             if(showEnemyInfo || showInfoButton){
               setShowInfoButton(false);
               setShowEnemyInfo(false);
-              }
-            setShowAttackButton(false);
-            setShowDefenderButton(true);
+            }
+            
+            if (bombUsed) {
+              // Si usó bomba, abrir DiceModal especial
+              setShowAttackButton(false);
+              setShowDefenderButton(false);
+              setShowDiceModalBomb(true);
+            } else {
+              // Objetos curativos normales
+              setShowAttackButton(false);
+              setShowDefenderButton(true);
+            }
           }
         }} 
       />
@@ -487,6 +522,12 @@ const BattleScreen: React.FC = () => {
       <DiceModal 
         visible={showDiceModalAttack} 
         onClose={handleDiceAttackResult} 
+      />
+
+      {/* DiceModal para bomba - decide la batalla */}
+      <DiceModal 
+        visible={showDiceModalBomb} 
+        onClose={handleDiceBombResult} 
       />
     </View>
   );
