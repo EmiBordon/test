@@ -133,6 +133,15 @@ import BlackDice4Svg from '../assets/blackdice4.svg';
 import BlackDice5Svg from '../assets/blackdice5.svg';
 import BlackDice6Svg from '../assets/blackdice6.svg';
 import EqualSvg from '../assets/equal.svg';
+import HandSvg from '../assets/hand.svg';
+import HandOneRingSvg from '../assets/handonering.svg';
+import HandTwoRingsSvg from '../assets/handtworings.svg';
+import HandThreeRingsSvg from '../assets/handthreerings.svg';
+import SuperRingSvg from '../assets/superring.svg';
+import RefreshSvg from '../assets/refresh.svg';
+import LifeRunicSvg from '../assets/liferunic.svg';
+import KeyRunicSvg from '../assets/keyrunic.svg';
+import CrossRunicSvg from '../assets/crossrunic.svg';
 
 const ArrowIcon = (props: any) => <ArrowSvg {...props} />;
 const ChestOpenIcon = (props: any) => <ChestOpenSvg {...props} />;
@@ -268,6 +277,16 @@ const BlackDice4Icon = (props: any) => <BlackDice4Svg {...props} />;
 const BlackDice5Icon = (props: any) => <BlackDice5Svg {...props} />;
 const BlackDice6Icon = (props: any) => <BlackDice6Svg {...props} />;
 const EqualIcon = (props: any) => <EqualSvg {...props} />;
+const HandIcon = (props: any) => <HandSvg {...props} />;
+const HandOneRingIcon = (props: any) => <HandOneRingSvg {...props} />;
+const HandTwoRingsIcon = (props: any) => <HandTwoRingsSvg {...props} />;
+const HandThreeRingsIcon = (props: any) => <HandThreeRingsSvg {...props} />;
+const SuperRingIcon = (props: any) => <SuperRingSvg {...props} />;
+const RefreshIcon = (props: any) => <RefreshSvg {...props} />;
+const KeyRunicIcon = (props: any) => <KeyRunicSvg {...props} />;
+const LifeRunicIcon = (props: any) => <LifeRunicSvg {...props} />;
+const CrossRunicIcon = (props: any) => <CrossRunicSvg {...props} />;
+
 
 export { 
   ArrowIcon, 
@@ -404,4 +423,14 @@ export {
   BlackDice5Icon,
   BlackDice6Icon,
   EqualIcon,
+  HandIcon,
+  HandOneRingIcon,
+  HandTwoRingsIcon,
+  HandThreeRingsIcon,
+  SuperRingIcon,
+  RefreshIcon,
+  KeyRunicIcon,
+  LifeRunicIcon,
+  CrossRunicIcon,
+
 };

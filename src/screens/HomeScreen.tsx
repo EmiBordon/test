@@ -8,6 +8,7 @@ import ResetButton from "../components/functions/resetbutton";
 // Importamos nuestro CodeModal y DiceModal
 import CodeModal from "../components/modal/codemodal";
 import DiceModal from "../components/modal/dicemodal";
+import PlanillaGrid from "../components/planillagrid";
 
 interface HomeScreenProps {
   navigation: any;
@@ -18,6 +19,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
   const [modalVisible, setModalVisible] = useState<boolean>(false);
   const [codeModalVisible, setCodeModalVisible] = useState<boolean>(false);
   const [diceModalVisible, setDiceModalVisible] = useState<boolean>(false);
+  const [planillaVisible, setPlanillaVisible] = useState<boolean>(false);
   const [showResetButton, setShowResetButton] = useState(false);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -60,11 +62,23 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
         <Text style={styles.buttonText}>Probar Dado</Text>
       </TouchableOpacity>
 
+      <TouchableOpacity
+        style={[styles.button, styles.planillaButton]}
+        onPress={() => setPlanillaVisible(true)}
+      >
+        <Text style={styles.buttonText}>Probar Planilla</Text>
+      </TouchableOpacity>
+
       {showResetButton && <ResetButton />}
-      
-      <DiceModal 
-        visible={diceModalVisible} 
-        onClose={() => setDiceModalVisible(false)} 
+
+      <DiceModal
+        visible={diceModalVisible}
+        onClose={() => setDiceModalVisible(false)}
+      />
+
+      <PlanillaGrid
+        visible={planillaVisible}
+        onClose={() => setPlanillaVisible(false)}
       />
     </View>
   );
@@ -97,6 +111,11 @@ const styles = StyleSheet.create({
     marginTop: "3%",
     borderColor: "#4CAF50",
     backgroundColor: "rgba(76, 175, 80, 0.1)",
+  },
+  planillaButton: {
+    marginTop: "3%",
+    borderColor: "#4A90D9",
+    backgroundColor: "rgba(74, 144, 217, 0.1)",
   },
   buttonText: {
     color: "#000",

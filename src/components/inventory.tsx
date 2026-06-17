@@ -20,12 +20,14 @@ import {
   HearthIcon,
   CoinsIcon,
   RadarIcon,
+  HandOneRingIcon,
 } from "../components/SvgExporter";
 import Map1Modal from "../components/modal/map1modal";
 import Map2Modal from "../components/modal/map2modal";
 import BagPackModal from "../components/modal/bagpackmodal";
 import NotesModal from "../components/modal/notesmodal";
 import GridModal from "../components/modal/gridmodal"; // Modal que muestra el minimapa
+import PlanillaGrid from "../components/planillagrid";
 import { NavigationProp, useNavigation } from "@react-navigation/native";
 import { font } from "./functions/fontsize";
 import Objectives from "./objetivesbutton";
@@ -90,6 +92,7 @@ const Inventory: React.FC<InventoryProps> = ({
   const [bagPackModalVisible, setBagPackModalVisible] = useState<boolean>(false);
   const [notesModalVisible, setNotesModalVisible] = useState<boolean>(false);
   const [gridModalVisible, setGridModalVisible] = useState<boolean>(false);
+  const [planillaVisible, setPlanillaVisible] = useState<boolean>(false);
 
   const toggleMapOptions = (): void => {
     setShowMapOptions(!showMapOptions);
@@ -192,9 +195,12 @@ const Inventory: React.FC<InventoryProps> = ({
         </TouchableOpacity>
 
        
-        {/* Otro casillero adicional */}
-        <TouchableOpacity style={styles.slot}>
-          {/* Contenido o funcionalidad a futuro */}
+        {/* Casillero 4 - Planilla */}
+        <TouchableOpacity
+          style={styles.slot}
+          onPress={() => setPlanillaVisible(true)}
+        >
+          <HandOneRingIcon width={font(50)} height={font(50)} />
         </TouchableOpacity>
 
         {/* Modales */}
@@ -224,6 +230,10 @@ const Inventory: React.FC<InventoryProps> = ({
           sSquares={sSquares}
           mSquares={mSquares}
           tSquares={tSquares}
+        />
+        <PlanillaGrid
+          visible={planillaVisible}
+          onClose={() => setPlanillaVisible(false)}
         />
       </View>
     </>
