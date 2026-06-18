@@ -18,10 +18,21 @@ export interface CharactersState {
   jox: number;
   gorjox: number;
   riff: number;
-  pawnshopboy:number;
-  death:number;
-  tim:number;
+  pawnshopboy: number;
+  death: number;
+  tim: number;
+  shopgirlHealth: number;
+  barisHealth: number;
+  germisHealth: number;
+  joxHealth: number;
+  gorjoxHealth: number;
+  riffHealth: number;
+  pawnshopboyHealth: number;
+  deathHealth: number;
+  timHealth: number;
 }
+
+type HealthKey = 'shopgirlHealth' | 'barisHealth' | 'germisHealth' | 'joxHealth' | 'gorjoxHealth' | 'riffHealth' | 'pawnshopboyHealth' | 'deathHealth' | 'timHealth';
 
 const initialState: CharactersState = {
   shopgirl: 0,
@@ -30,9 +41,18 @@ const initialState: CharactersState = {
   jox: 0,
   gorjox: 0,
   riff: 0,
-  pawnshopboy:0,
-  death:1,
+  pawnshopboy: 0,
+  death: 1,
   tim: 0,
+  shopgirlHealth: 3,
+  barisHealth: 3,
+  germisHealth: 3,
+  joxHealth: 3,
+  gorjoxHealth: 3,
+  riffHealth: 3,
+  pawnshopboyHealth: 3,
+  deathHealth: 3,
+  timHealth: 3,
 };
 
 const charactersSlice = createSlice({
@@ -42,6 +62,21 @@ const charactersSlice = createSlice({
     setCharacter: (state, action: PayloadAction<{ key: keyof CharactersState; value: number }>) => {
       const { key, value } = action.payload;
       state[key] = value;
+      saveState(state);
+    },
+    setCharacterHealth: (state, action: PayloadAction<{ key: HealthKey; value: number }>) => {
+      const { key, value } = action.payload;
+      state[key] = Math.max(value, 0);
+      saveState(state);
+    },
+    incrementCharacterHealth: (state, action: PayloadAction<{ key: HealthKey; delta: number }>) => {
+      const { key, delta } = action.payload;
+      state[key] += delta;
+      saveState(state);
+    },
+    decrementCharacterHealth: (state, action: PayloadAction<{ key: HealthKey; delta: number }>) => {
+      const { key, delta } = action.payload;
+      state[key] = Math.max(state[key] - delta, 0);
       saveState(state);
     },
     resetCharacters: (state) => {
@@ -66,5 +101,13 @@ const saveState = async (state: CharactersState) => {
   }
 };
 
-export const { setCharacter, resetCharacters } = charactersSlice.actions;
+export const {
+  setCharacter,
+  setCharacterHealth,
+  incrementCharacterHealth,
+  decrementCharacterHealth,
+  resetCharacters,
+} = charactersSlice.actions;
+
+export type { HealthKey };
 export default charactersSlice.reducer;

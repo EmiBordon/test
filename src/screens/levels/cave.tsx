@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   View,
   StyleSheet,
@@ -33,6 +33,8 @@ import SafeBox from '../../components/functions/safeboxicon';
 import RewardManager from '../../components/functions/rewardmanager';
 import { font } from '../../components/functions/fontsize';
 import EmptyBoxManager from '../../components/functions/emptyboxmanager';
+import SimpleBattle from '../../components/battles/SimpleBattle';
+import ShakyIcon, { ShakyIconRef } from '../../components/characters/shakymatticon';
 
 
 const iconConfig = [
@@ -43,20 +45,6 @@ const iconConfig = [
     width: font(120),
     style: { top: '35%', left: '50%' },
     appearances: [
-      {
-        imageIndex: 1,
-        requiredState: 0,
-        conversation: conversations.germisconv1,
-        updateState: 1,
-        modalType: 'modal2'
-      },
-      {
-        imageIndex: 1,
-        requiredState: 1,
-        conversation: conversations.germisconv2,
-        // No actualizamos el estado en este paso
-        modalType: 'modal2'
-      },
       {
         imageIndex: 3,
         requiredState: 2,
@@ -79,19 +67,6 @@ const iconConfig = [
     width: font(125),
     style: { top: '35%', left: '10%' },
     appearances: [
-      {
-        imageIndex: 2,
-        requiredState: 0,
-        conversation: conversations.joxconv1,
-        updateState: 1,
-        modalType: 'modal2'
-      },
-      {
-        imageIndex: 2,
-        requiredState: 1,
-        conversation: conversations.joxconv2,
-        modalType: 'modal2'
-      },
       {
         imageIndex: 3,
         requiredState: 2,
@@ -150,21 +125,7 @@ const iconConfig = [
     height: font(90),
     width: font(90),
     style: { top: '35%', left: '29%' },
-    appearances: [
-      {
-        imageIndex: 5,
-        requiredState: 0,
-        updateState: 1,
-        conversation: conversations.riffconv1,
-        modalType: 'modal2'
-      },
-      {
-        imageIndex: 5,
-        requiredState: 1,
-        conversation: conversations.riffconv2,
-        modalType: 'modal2'
-      },
-    ]
+    appearances: [],
   },
 ];
 
@@ -192,6 +153,8 @@ const CaveScreen = () => {
   const [conversationContent, setConversationContent] = useState<Conversation | null>(null);
   const [currentSquare,setCurrentSquare ]= useState(7);
   const [currentIconIndex, setCurrentIconIndex] = useState(0);
+  const [showDamagedMaia, setShowDamagedMaia] = useState(false);
+  const maiaShakeRef = useRef<ShakyIconRef>(null);
   const dispatch = useDispatch();
   const caveState = useSelector((state: any) => state.locations.cave);
   const germisState = useSelector((state: any) => state.characters.germis);
@@ -301,19 +264,7 @@ const CaveScreen = () => {
 
   const handleAccept = () => {
     // Ejemplo de aceptar en un modal2: si la conversación es de Germis, guardar backup y navegar a la BattleScreen.
-    if (
-      conversationContent === conversations.germisconv1 ||
-      conversationContent === conversations.germisconv2
-    ) {
-      dispatch(saveBackup({ healing, maia, weapons }));
-      setModal2Visible(false);
-      navigation.navigate('BattleScreen', { enemyName: 'Germis' });
-    } else if (conversationContent === conversations.joxconv1 ||
-      conversationContent === conversations.joxconv2) {
-        dispatch(saveBackup({ healing, maia, weapons }));
-      setModal2Visible(false);
-      navigation.navigate('BattleScreen', { enemyName: 'Jox' });
-      }else if (conversationContent === conversations.gorjoxconv1 ||
+    if (conversationContent === conversations.gorjoxconv1 ||
         conversationContent === conversations.gorjoxconv2||
         conversationContent === conversations.gorjoxconv0) {
         dispatch(setCharacter({ key: 'germis', value: 4 }));
@@ -329,13 +280,7 @@ const CaveScreen = () => {
              {
               dispatch(setCharacter({ key: 'death', value: 2 }));
               setModal2Visible(false);
-            }else if (conversationContent === conversations.riffconv1 || 
-              conversationContent === conversations.riffconv2  )
-              {
-                dispatch(saveBackup({ healing, maia, weapons }));
-               setModal2Visible(false);
-               navigation.navigate('BattleScreen', { enemyName: 'Riff' });
-             }
+            }
   };
   const handleClose = () => {
     if (conversationContent === conversations.deathconv1 ) {
@@ -382,6 +327,13 @@ const CaveScreen = () => {
       setCurrentSquare(7);
     } 
     }, [currentImageIndex]);
+
+  useEffect(() => {
+    if (showDamagedMaia) {
+      setTimeout(() => { maiaShakeRef.current?.triggerShake(); }, 100);
+      setTimeout(() => { setShowDamagedMaia(false); }, 1000);
+    }
+  }, [showDamagedMaia]);
 
   return (
     <View style={styles.container}>
@@ -430,6 +382,48 @@ const CaveScreen = () => {
       )}
       {/* Render de los íconos configurados */}
       {renderIcons()}
+
+      {/* SimpleBattle: Germis (imageIndex 1, estado 0 o 1) */}
+      {currentImageIndex === 1 && (germisState === 0 || germisState === 1) && (
+        <SimpleBattle
+          enemyName="Germis"
+          enemyKey="germis"
+          healthKey="germisHealth"
+          Icon={GermisIcon}
+          iconWidth={font(105)}
+          iconHeight={font(105)}
+          style={{ top: '35%', left: '50%' }}
+          onMaiaDamaged={() => setShowDamagedMaia(true)}
+        />
+      )}
+
+      {/* SimpleBattle: Jox (imageIndex 2, estado 0 o 1) */}
+      {currentImageIndex === 2 && (joxState === 0 || joxState === 1) && (
+        <SimpleBattle
+          enemyName="Jox"
+          enemyKey="jox"
+          healthKey="joxHealth"
+          Icon={JoxIcon}
+          iconWidth={font(110)}
+          iconHeight={font(110)}
+          style={{ top: '35%', left: '10%' }}
+          onMaiaDamaged={() => setShowDamagedMaia(true)}
+        />
+      )}
+
+      {/* SimpleBattle: Riff (imageIndex 5, estado 0 o 1) */}
+      {currentImageIndex === 5 && (riffState === 0 || riffState === 1) && (
+        <SimpleBattle
+          enemyName="Riff"
+          enemyKey="riff"
+          healthKey="riffHealth"
+          Icon={RiffIcon}
+          iconWidth={font(80)}
+          iconHeight={font(80)}
+          style={{ top: '35%', left: '29%' }}
+          onMaiaDamaged={() => setShowDamagedMaia(true)}
+        />
+      )}
       {(currentImageIndex > 0) && (currentImageIndex < 4) &&(
         <View style={styles.backIcons}>
           <Pressable style={styles.arrowButton} onPress={handlePrevImage}>
@@ -452,7 +446,10 @@ const CaveScreen = () => {
             </View>
           )}
       <View style={styles.maiaContainer}>
-        <MaiaIcon height={font(150)} width={font(150)} />
+        {showDamagedMaia
+          ? <ShakyIcon ref={maiaShakeRef} Icon={MaiaIcon} height={font(150)} width={font(150)} />
+          : <MaiaIcon height={font(150)} width={font(150)} />
+        }
       </View>
       <Inventory 
       highlightedSquares={[22,17,12,7,13,16]}
