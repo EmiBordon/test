@@ -9,7 +9,7 @@ import { incrementObjective } from '../../redux/objectivesSlice';
 export const enemies: Enemy[] = [
   {
     name: "Matt",
-    health: 6,
+    health: 3,
     initialdamage: 1,
     victoryMessage: "Matt esta enojado porque lo golpeaste demasiado fuerte...",
     defeatMessage: "Matt se siente completamente decepcionado de tu desempeño...",
@@ -26,7 +26,7 @@ export const enemies: Enemy[] = [
 
   {
     name: "Germis",
-    health: 10,
+    health: 3,
     initialdamage: 2,
     victoryMessage: "Estuviste por darle el golpe final a Germis, pero huyó...",
     defeatMessage: "Germis te venció...vuelve a intentarlo",
@@ -42,7 +42,7 @@ export const enemies: Enemy[] = [
 
   {
     name: "Jox",
-    health: 12,
+    health: 3,
     initialdamage: 2,
     victoryMessage: "Jox ha escapado con sus ultimas fuerzas...",
     defeatMessage: "Jox te destruyó...vuelve a intentarlo",
@@ -52,16 +52,14 @@ export const enemies: Enemy[] = [
       { type: 'dispatch', action: () => setCharacter({ key: 'jox', value: 2 }) }
     ],
     phases: [
-      { threshold: 0.9, damage: 2, drawBarLevels: 3, drawBarDuration: 1450, moonTearPattern: 3, moonTearDifficulty: 3.3, gridLength: 3, gridDelay: 480,icon: JoxIcon },
-      { threshold: 0.6, damage: 2, drawBarLevels: 3, drawBarDuration: 1450, moonTearPattern: 3, moonTearDifficulty: 3.3, gridLength: 3, gridDelay: 480,icon: JoxIcon },
-      { threshold: 0.4, damage: 2, drawBarLevels: 3, drawBarDuration: 1450, moonTearPattern: 3, moonTearDifficulty: 3.3, gridLength: 3, gridDelay: 480,icon: JoxIcon },
+      
       { threshold: 0, damage: 2, drawBarLevels: 4, drawBarDuration: 1450, moonTearPattern: 3, moonTearDifficulty: 3.4, gridLength: 4, gridDelay: 470,icon: JoxIcon },
     ],
   },
 
   {
     name: "Gorjox",
-    health: 20,
+    health: 12,
     initialdamage: 4,
     victoryMessage: "Gorjox agoniza de dolor.. su sonido al morir hace eco en toda la cueva...",
     defeatMessage: "Gorjox te aplastó sin piedad... vuelve a intentarlo",
@@ -83,7 +81,7 @@ export const enemies: Enemy[] = [
   },
   {
     name: "Riff",
-    health: 6,
+    health: 3,
     initialdamage: 1,
     victoryMessage: "Riff llora de dolor mientras se desintegra...",
     defeatMessage: "Riff acabo contigo, se siente muy triste y arrepentido.",
