@@ -20,7 +20,10 @@ import {
   HearthIcon,
   CoinsIcon,
   RadarIcon,
+  HandIcon,
   HandOneRingIcon,
+  HandTwoRingsIcon,
+  HandThreeRingsIcon,
 } from "../components/SvgExporter";
 import Map1Modal from "../components/modal/map1modal";
 import Map2Modal from "../components/modal/map2modal";
@@ -34,6 +37,7 @@ import Objectives from "./objetivesbutton";
 import { incrementObjective } from "../redux/objectivesSlice";
 import GridTouchable from "./gridtouchable";
 import HealthBar from "./healthbar";
+import ManaBar from "./manabar";
 // Tipado para el estado de Redux
 interface MaiaState {
   maiahealth: number;
@@ -76,7 +80,11 @@ const Inventory: React.FC<InventoryProps> = ({
   const dispatch = useDispatch();
   const maiaHealth = useSelector((state: RootState) => state.maia.maiahealth);
   const maiaCurrentHealth = useSelector((state: RootState) => state.maia.maiacurrenthealth);
+  const maiaManaLevel = useSelector((state: any) => state.maia.maiaManaLevel);
   const coins = useSelector((state: RootState) => state.coins.coins);
+
+  const HAND_ICONS = [HandIcon, HandOneRingIcon, HandTwoRingsIcon, HandThreeRingsIcon];
+  const HandLevelIcon = HAND_ICONS[Math.min(maiaManaLevel ?? 1, 3)];
 
   // Estados de mapas desde Redux
   const map1 = useSelector((state: RootState) => state.locations.map1);
@@ -129,6 +137,11 @@ const Inventory: React.FC<InventoryProps> = ({
         <Objectives />
       </View>
       <View style={styles.inventoryContainer}>
+        {/* Barra de mana */}
+        <View style={styles.manaBar}>
+          <ManaBar />
+        </View>
+
         {/* Barra de monedas */}
         <View style={styles.coinsBar}>
           <View style={styles.healthContainer}>
@@ -200,7 +213,7 @@ const Inventory: React.FC<InventoryProps> = ({
           style={styles.slot}
           onPress={() => setPlanillaVisible(true)}
         >
-          <HandOneRingIcon width={font(50)} height={font(50)} />
+          <HandLevelIcon width={font(50)} height={font(50)} />
         </TouchableOpacity>
 
         {/* Modales */}
@@ -280,6 +293,12 @@ const styles = StyleSheet.create({
     position: "absolute",
     top: "-40%",
     right: "0%",
+    padding: "-3%",
+  },
+  manaBar: {
+    position: "absolute",
+    top: font(-45),
+    left: "0%",
     padding: "-3%",
   },
   healthContainer: {

@@ -142,6 +142,11 @@ import RefreshSvg from '../assets/refresh.svg';
 import LifeRunicSvg from '../assets/liferunic.svg';
 import KeyRunicSvg from '../assets/keyrunic.svg';
 import CrossRunicSvg from '../assets/crossrunic.svg';
+import ManaBar0Svg from '../assets/manabar0.svg';
+import ManaBar1Svg from '../assets/manabar1.svg';
+import ManaBar2Svg from '../assets/manabar2.svg';
+import ManaBar3Svg from '../assets/manabar3.svg';
+import ManaBookSvg from '../assets/manabook.svg';
 
 const ArrowIcon = (props: any) => <ArrowSvg {...props} />;
 const ChestOpenIcon = (props: any) => <ChestOpenSvg {...props} />;
@@ -286,7 +291,11 @@ const RefreshIcon = (props: any) => <RefreshSvg {...props} />;
 const KeyRunicIcon = (props: any) => <KeyRunicSvg {...props} />;
 const LifeRunicIcon = (props: any) => <LifeRunicSvg {...props} />;
 const CrossRunicIcon = (props: any) => <CrossRunicSvg {...props} />;
-
+const ManaBar0Icon = (props: any) => <ManaBar0Svg {...props} />;
+const ManaBar1Icon = (props: any) => <ManaBar1Svg {...props} />;
+const ManaBar2Icon = (props: any) => <ManaBar2Svg {...props} />;
+const ManaBar3Icon = (props: any) => <ManaBar3Svg {...props} />;
+const ManaBookIcon = (props: any) => <ManaBookSvg {...props} />;
 
 export { 
   ArrowIcon, 
@@ -432,5 +441,9 @@ export {
   KeyRunicIcon,
   LifeRunicIcon,
   CrossRunicIcon,
-
+  ManaBar0Icon,
+  ManaBar1Icon,
+  ManaBar2Icon,
+  ManaBar3Icon,
+  ManaBookIcon
 };

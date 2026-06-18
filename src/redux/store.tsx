@@ -1,6 +1,7 @@
 // src/redux/store.js
 import { configureStore, combineReducers } from '@reduxjs/toolkit';
 import { persistStore, persistReducer } from 'redux-persist';
+import autoMergeLevel2 from 'redux-persist/lib/stateReconciler/autoMergeLevel2';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // Imports de tus slices
@@ -22,6 +23,7 @@ import objectivesReducer from './objectivesSlice';
 const persistConfig = {
   key: 'root',
   storage: AsyncStorage,
+  stateReconciler: autoMergeLevel2,
   whitelist: [
     'matt', 
     'maia', 

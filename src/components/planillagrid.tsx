@@ -10,8 +10,10 @@ import {
   Animated,
 } from 'react-native';
 import { font } from './functions/fontsize';
-import { CrossIcon, RefreshIcon, HandOneRingIcon } from './SvgExporter';
-import { getSpellIcon } from './functions/spellEffects';
+import { CrossIcon, RefreshIcon, HandIcon, HandOneRingIcon, HandTwoRingsIcon, HandThreeRingsIcon } from './SvgExporter';
+import { useSelector, useDispatch } from 'react-redux';
+import ManaBar from './manabar';
+import { resolveSpell } from './functions/spellEffects';
 
 const GRID_SIZE = 9;
 const CENTER = Math.floor(GRID_SIZE / 2);
@@ -32,17 +34,47 @@ interface PlanillaGridProps {
   onClose: () => void;
 }
 
+const HAND_ICONS = [HandIcon, HandOneRingIcon, HandTwoRingsIcon, HandThreeRingsIcon];
+
+const BLOCKED_SETS: Record<number, Set<number>> = {
+  0: new Set(Array.from({ length: 81 }, (_, i) => i)),
+  1: new Set([
+    0,1,2,3,4,5,6,7,8,9,
+    10,11,12,13,14,15,16,17,18,19,
+    25,26,27,28,
+    34,35,36,37,
+    43,44,45,46,
+    52,53,54,55,
+    61,62,63,64,
+    65,66,67,68,69,70,
+    71,72,73,74,75,76,77,78,79,80,
+  ]),
+  2: new Set([
+    0,1,2,3,4,5,6,7,8,9,
+    17,18,26,27,35,36,44,45,53,54,62,63,
+    71,72,73,74,75,76,77,78,79,80,
+  ]),
+  3: new Set<number>(),
+};
+
 const PlanillaGrid: React.FC<PlanillaGridProps> = ({ visible, onClose }) => {
+  const dispatch = useDispatch();
+  const maiaManaLevel = useSelector((state: any) => state.maia.maiaManaLevel);
+  const maiaMana = useSelector((state: any) => state.maia.maiaMana);
   const [path, setPath] = useState<Point[]>([{ row: CENTER, col: CENTER }]);
   const [isDragging, setIsDragging] = useState(false);
   const [fingerPos, setFingerPos] = useState<{ x: number; y: number } | null>(null);
   const [phase, setPhase] = useState<'drawing' | 'reveal'>('drawing');
   const [SpellIcon, setSpellIcon] = useState<React.ComponentType<any> | null>(null);
+  const [revealMessage, setRevealMessage] = useState<string | null>(null);
 
   const pathRef = useRef<Point[]>([{ row: CENTER, col: CENTER }]);
   const isDraggingRef = useRef(false);
+  const maiaManaLevelRef = useRef(maiaManaLevel);
   const contentOpacity = useRef(new Animated.Value(1)).current;
   const revealOpacity = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => { maiaManaLevelRef.current = maiaManaLevel; }, [maiaManaLevel]);
 
   useEffect(() => {
     if (visible) {
@@ -54,6 +86,7 @@ const PlanillaGrid: React.FC<PlanillaGridProps> = ({ visible, onClose }) => {
       setFingerPos(null);
       setPhase('drawing');
       setSpellIcon(null);
+      setRevealMessage(null);
       contentOpacity.setValue(1);
       revealOpacity.setValue(0);
     }
@@ -65,6 +98,13 @@ const PlanillaGrid: React.FC<PlanillaGridProps> = ({ visible, onClose }) => {
       onMoveShouldSetPanResponder: () => true,
 
       onPanResponderGrant: (evt) => {
+        const level = Math.min(maiaManaLevelRef.current, 3);
+        const centerValue = CENTER * GRID_SIZE + CENTER;
+        if (BLOCKED_SETS[level].has(centerValue)) {
+          isDraggingRef.current = false;
+          return;
+        }
+
         const { locationX, locationY } = evt.nativeEvent;
         const col = Math.floor(locationX / CELL_SIZE);
         const row = Math.floor(locationY / CELL_SIZE);
@@ -90,6 +130,9 @@ const PlanillaGrid: React.FC<PlanillaGridProps> = ({ visible, onClose }) => {
         const col = Math.floor(locationX / CELL_SIZE);
         const row = Math.floor(locationY / CELL_SIZE);
         if (row < 0 || row >= GRID_SIZE || col < 0 || col >= GRID_SIZE) return;
+
+        const level = Math.min(maiaManaLevelRef.current, 3);
+        if (BLOCKED_SETS[level].has(row * GRID_SIZE + col)) return;
 
         const current = pathRef.current;
         if (current.some(p => p.row === row && p.col === col)) return;
@@ -186,14 +229,17 @@ const PlanillaGrid: React.FC<PlanillaGridProps> = ({ visible, onClose }) => {
     setFingerPos(null);
     setPhase('drawing');
     setSpellIcon(null);
+    setRevealMessage(null);
     contentOpacity.setValue(1);
     revealOpacity.setValue(0);
   };
 
   const handleReveal = () => {
     const sequence = pathRef.current.map(p => getValue(p.row, p.col));
-    const Icon = getSpellIcon(sequence);
+    const { Icon, effect, noMana } = resolveSpell(sequence, maiaMana);
     setSpellIcon(() => Icon);
+    setRevealMessage(noMana ? 'No tienes suficiente Maná' : null);
+    if (!noMana && effect) effect(dispatch);
 
     // 1. Fade out el contenido
     Animated.timing(contentOpacity, {
@@ -257,6 +303,8 @@ const PlanillaGrid: React.FC<PlanillaGridProps> = ({ visible, onClose }) => {
                           path[path.length - 1].row === row &&
                           path[path.length - 1].col === col;
                         const sz = isCenter ? CENTER_CIRCLE_SIZE : CIRCLE_SIZE;
+                        const level = Math.min(maiaManaLevel, 3);
+                        const isBlocked = BLOCKED_SETS[level].has(row * GRID_SIZE + col);
 
                         return (
                           <View
@@ -267,8 +315,9 @@ const PlanillaGrid: React.FC<PlanillaGridProps> = ({ visible, onClose }) => {
                               style={[
                                 styles.circle,
                                 { width: sz, height: sz, borderRadius: sz / 2 },
-                                inPath && !isHead && styles.circleInPath,
-                                isHead && styles.circleHead,
+                                isBlocked && styles.circleBlocked,
+                                !isBlocked && inPath && !isHead && styles.circleInPath,
+                                !isBlocked && isHead && styles.circleHead,
                               ]}
                             />
                           </View>
@@ -285,14 +334,16 @@ const PlanillaGrid: React.FC<PlanillaGridProps> = ({ visible, onClose }) => {
               </View>
 
               <View style={styles.bottomArea}>
-                
                 <View style={styles.actionsRow}>
                   <TouchableOpacity style={styles.actionButton} onPress={resetPath}>
                     <RefreshIcon width={font(44)} height={font(44)} />
                   </TouchableOpacity>
                   <TouchableOpacity style={styles.actionButton} onPress={handleReveal}>
-                    <HandOneRingIcon width={font(100)} height={font(100)} />
+                    {React.createElement(HAND_ICONS[Math.min(maiaManaLevel, 3)], { width: font(100), height: font(100) })}
                   </TouchableOpacity>
+                </View>
+                <View style={styles.manaBarContainer}>
+                  <ManaBar />
                 </View>
               </View>
             </>
@@ -305,6 +356,9 @@ const PlanillaGrid: React.FC<PlanillaGridProps> = ({ visible, onClose }) => {
           pointerEvents="none"
         >
           {SpellIcon && <SpellIcon width={font(180)} height={font(180)} />}
+          {revealMessage && (
+            <Text style={styles.revealMessage}>{revealMessage}</Text>
+          )}
         </Animated.View>
 
       </View>
@@ -342,7 +396,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   circle: {
-    backgroundColor: '#D4D4D4',
+    backgroundColor: '#888888',
+  },
+  circleBlocked: {
+    backgroundColor: '#cacacab4',
   },
   circleInPath: {
     backgroundColor: '#131313',
@@ -357,6 +414,11 @@ const styles = StyleSheet.create({
     width: '100%',
     alignItems: 'center',
     marginTop: font(12),
+  },
+  manaBarContainer: {
+    position: 'absolute',
+    bottom: 0,
+    left: font(8),
   },
   hintText: {
     fontSize: font(13),
@@ -377,6 +439,13 @@ const styles = StyleSheet.create({
   revealLayer: {
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  revealMessage: {
+    marginTop: font(16),
+    fontSize: font(18),
+    fontWeight: 'bold',
+    color: 'black',
+    textAlign: 'center',
   },
 });
 

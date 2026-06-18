@@ -3,7 +3,7 @@ import React from 'react';
 import { TouchableOpacity, Text, StyleSheet } from 'react-native';
 import { useDispatch } from 'react-redux';
 import { resetMattState } from '../../redux/mattSlice';
-import { resetMaiaHealth } from '../../redux/maiaSlice';
+import { resetMaiaHealth, resetMaiaMana, resetMaiaManaLevel } from '../../redux/maiaSlice';
 import { resetHealing } from '../../redux/healingSlice';
 import { resetState } from '../../redux/weaponsSlice'; // Ajusta la ruta según tu estructura
 import { resetNotas } from '../../redux/agendaSlice';
@@ -21,6 +21,8 @@ const ResetButton = () => {
   const handleReset = () => {
     dispatch(resetMattState());
     dispatch(resetMaiaHealth());
+    dispatch(resetMaiaMana());
+    dispatch(resetMaiaManaLevel());
     dispatch(resetHealing());
     dispatch(resetState());
     dispatch(resetNotas());

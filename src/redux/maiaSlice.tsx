@@ -16,11 +16,15 @@ export const loadMaiaState = createAsyncThunk(
 export interface MaiaState {
   maiahealth: number;
   maiacurrenthealth: number;
+  maiaMana: number;
+  maiaManaLevel: number;
 }
 
 const initialState: MaiaState = {
   maiahealth: 6,
   maiacurrenthealth: 6,
+  maiaMana: 3,
+  maiaManaLevel: 1,
 };
 
 const maiaSlice = createSlice({
@@ -42,6 +46,10 @@ const maiaSlice = createSlice({
       state.maiacurrenthealth = initialState.maiacurrenthealth;
       saveState(state);
     },
+    healMaiaFull: (state) => {
+      state.maiacurrenthealth = state.maiahealth;
+      saveState(state);
+    },
     incrementMaiaCurrentHealth: (state, action: PayloadAction<number>) => {
       state.maiacurrenthealth = Math.min(state.maiacurrenthealth + action.payload, state.maiahealth);
       saveState(state);
@@ -50,9 +58,35 @@ const maiaSlice = createSlice({
       state.maiacurrenthealth = Math.max(state.maiacurrenthealth - action.payload, 0);
       saveState(state);
     },
+    incrementMaiaMana: (state, action: PayloadAction<number>) => {
+      state.maiaMana += action.payload;
+      saveState(state);
+    },
+    decrementMaiaMana: (state, action: PayloadAction<number>) => {
+      state.maiaMana = Math.max(state.maiaMana - action.payload, 0);
+      saveState(state);
+    },
+    resetMaiaMana: (state) => {
+      state.maiaMana = initialState.maiaMana;
+      saveState(state);
+    },
+    incrementMaiaManaLevel: (state, action: PayloadAction<number>) => {
+      state.maiaManaLevel += action.payload;
+      saveState(state);
+    },
+    decrementMaiaManaLevel: (state, action: PayloadAction<number>) => {
+      state.maiaManaLevel = Math.max(state.maiaManaLevel - action.payload, 0);
+      saveState(state);
+    },
+    resetMaiaManaLevel: (state) => {
+      state.maiaManaLevel = initialState.maiaManaLevel;
+      saveState(state);
+    },
     setMaiaState: (state, action: PayloadAction<MaiaState>) => {
       state.maiahealth = action.payload.maiahealth;
       state.maiacurrenthealth = action.payload.maiacurrenthealth;
+      state.maiaMana = action.payload.maiaMana;
+      state.maiaManaLevel = action.payload.maiaManaLevel;
       saveState(state);
     },
 },
@@ -74,13 +108,20 @@ const saveState = async (state: MaiaState) => {
   }
 };
 
-export const { 
-  incrementMaiaHealth, 
-  decrementMaiaHealth, 
-  resetMaiaHealth, 
-  incrementMaiaCurrentHealth, 
+export const {
+  incrementMaiaHealth,
+  decrementMaiaHealth,
+  resetMaiaHealth,
+  healMaiaFull,
+  incrementMaiaCurrentHealth,
   decrementMaiaCurrentHealth,
-  setMaiaState // 👈 nueva acción agregada
+  incrementMaiaMana,
+  decrementMaiaMana,
+  resetMaiaMana,
+  incrementMaiaManaLevel,
+  decrementMaiaManaLevel,
+  resetMaiaManaLevel,
+  setMaiaState,
 } = maiaSlice.actions;
 
 export default maiaSlice.reducer;

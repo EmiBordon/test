@@ -1,10 +1,17 @@
 import React, { useState, useRef } from "react";
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 
 
 import { FountainIcon, PillsIcon, CoinsIcon } from "../components/SvgExporter";
 import ResetButton from "../components/functions/resetbutton";
+import ManaBar from "../components/manabar";
+import {
+  incrementMaiaMana,
+  decrementMaiaMana,
+  incrementMaiaManaLevel,
+  decrementMaiaManaLevel,
+} from "../redux/maiaSlice";
 // Importamos nuestro CodeModal y DiceModal
 import CodeModal from "../components/modal/codemodal";
 import DiceModal from "../components/modal/dicemodal";
@@ -24,6 +31,9 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
   const timerRef = useRef<NodeJS.Timeout | null>(null);
 
   // Obtenemos los estados que queremos guardar/restaurar
+  const maiaMana = useSelector((state: any) => state.maia.maiaMana);
+  const maiaManaLevel = useSelector((state: any) => state.maia.maiaManaLevel);
+
   const healing = useSelector((state: any) => state.healing);
   const maia = useSelector((state: any) => state.maia);
   const weapons = useSelector((state: any) => state.weapons);
@@ -43,7 +53,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
   };
 
   return (
-    <View style={styles.container}>
+    <ScrollView contentContainerStyle={styles.container}>
       <Text style={styles.title}>Maia y La Fuente</Text>
       <FountainIcon height={"25%"} />
       <TouchableOpacity
@@ -69,6 +79,31 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
         <Text style={styles.buttonText}>Probar Planilla</Text>
       </TouchableOpacity>
 
+      {/* --- TEST: Mana --- */}
+      <View style={styles.testSection}>
+        <Text style={styles.testLabel}>Mana ({maiaMana})</Text>
+        <View style={styles.testRow}>
+          <TouchableOpacity style={styles.testBtn} onPress={() => dispatch(decrementMaiaMana(1))}>
+            <Text style={styles.testBtnText}>-</Text>
+          </TouchableOpacity>
+          <ManaBar />
+          <TouchableOpacity style={styles.testBtn} onPress={() => dispatch(incrementMaiaMana(1))}>
+            <Text style={styles.testBtnText}>+</Text>
+          </TouchableOpacity>
+        </View>
+
+        <Text style={styles.testLabel}>Mana Level ({maiaManaLevel})</Text>
+        <View style={styles.testRow}>
+          <TouchableOpacity style={styles.testBtn} onPress={() => dispatch(decrementMaiaManaLevel(1))}>
+            <Text style={styles.testBtnText}>-</Text>
+          </TouchableOpacity>
+          <Text style={styles.testValue}>{maiaManaLevel}</Text>
+          <TouchableOpacity style={styles.testBtn} onPress={() => dispatch(incrementMaiaManaLevel(1))}>
+            <Text style={styles.testBtnText}>+</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+
       {showResetButton && <ResetButton />}
 
       <DiceModal
@@ -80,15 +115,16 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
         visible={planillaVisible}
         onClose={() => setPlanillaVisible(false)}
       />
-    </View>
+    </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    flexGrow: 1,
     alignItems: "center",
     backgroundColor: "#fff",
+    paddingBottom: 40,
   },
   title: {
     fontSize: 30,
@@ -121,6 +157,47 @@ const styles = StyleSheet.create({
     color: "#000",
     fontWeight: "bold",
     fontSize: 20,
+  },
+  testSection: {
+    marginTop: "5%",
+    alignItems: "center",
+    gap: 6,
+    borderWidth: 1,
+    borderColor: "#aaa",
+    borderRadius: 10,
+    padding: 10,
+    backgroundColor: "rgba(100, 100, 255, 0.05)",
+  },
+  testLabel: {
+    fontWeight: "bold",
+    fontSize: 14,
+    color: "#333",
+  },
+  testRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 16,
+  },
+  testBtn: {
+    width: 36,
+    height: 36,
+    borderWidth: 2,
+    borderColor: "#000",
+    borderRadius: 8,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "white",
+  },
+  testBtnText: {
+    fontSize: 22,
+    fontWeight: "bold",
+    lineHeight: 26,
+  },
+  testValue: {
+    fontSize: 22,
+    fontWeight: "bold",
+    minWidth: 30,
+    textAlign: "center",
   },
 });
 
