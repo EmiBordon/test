@@ -1,6 +1,7 @@
 import React from "react";
 import { Modal, View, TouchableOpacity, StyleSheet, Dimensions } from "react-native";
-import { Map2Icon, PalaceIcon } from "../SvgExporter"; // Importamos los nuevos SVGs
+import { Map2Icon, PalaceIcon } from "../SvgExporter";
+import IconButton from "../functions/iconbutton";
 
 const Map2Modal = ({ visible, onClose, navigation }) => { // 🔹 Recibe navigation como prop
   const { height } = Dimensions.get("window");
@@ -14,16 +15,16 @@ const Map2Modal = ({ visible, onClose, navigation }) => { // 🔹 Recibe navigat
             <Map2Icon width="136%" height="100%" style={styles.mapBackground} />
           </View>
 
-          {/* 🔹 PalaceIcon reemplaza a HouseIcon */}
-          <TouchableOpacity 
-            style={styles.iconPalace} 
+          <IconButton
+            Icon={PalaceIcon}
+            width={70}
+            height={70}
+            style={styles.iconPalace}
             onPress={() => {
-              onClose();  // 🔹 Cierra el modal antes de navegar
-              navigation.navigate("PalaceScreen"); // ✅ Ahora navega a PalaceScreen
+              onClose();
+              navigation.navigate("PalaceScreen");
             }}
-          >
-            <PalaceIcon width={70} height={70} />
-          </TouchableOpacity>
+          />
 
           <TouchableOpacity style={styles.closeButton} onPress={onClose}>
             <View style={styles.closeButtonInner}>

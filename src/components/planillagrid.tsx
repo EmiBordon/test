@@ -11,6 +11,7 @@ import {
 } from 'react-native';
 import { font } from './functions/fontsize';
 import { CrossIcon, RefreshIcon, HandIcon, HandOneRingIcon, HandTwoRingsIcon, HandThreeRingsIcon } from './SvgExporter';
+import IconButton from './functions/iconbutton';
 import { useSelector, useDispatch } from 'react-redux';
 import ManaBar from './manabar';
 import { resolveSpell } from './functions/spellEffects';
@@ -183,10 +184,13 @@ const PlanillaGrid: React.FC<PlanillaGridProps> = ({ visible, onClose }) => {
             position: 'absolute',
             width: length,
             height: font(3),
-            backgroundColor: '#333',
+            backgroundColor: '#851de6',
             left: (c1.x + c2.x) / 2 - length / 2,
             top: (c1.y + c2.y) / 2 - font(1.5),
             transform: [{ rotate: `${angle}deg` }],
+            shadowColor: '#c084fc',
+            shadowOpacity: 0.9,
+            shadowRadius: 6,
           }}
         />
       );
@@ -206,11 +210,11 @@ const PlanillaGrid: React.FC<PlanillaGridProps> = ({ visible, onClose }) => {
               position: 'absolute',
               width: length,
               height: font(2),
-              backgroundColor: '#888',
+              backgroundColor: '#c084fc',
               left: (c1.x + fingerPos.x) / 2 - length / 2,
               top: (c1.y + fingerPos.y) / 2 - font(1),
               transform: [{ rotate: `${angle}deg` }],
-              opacity: 0.5,
+              opacity: 0.55,
             }}
           />
         );
@@ -286,9 +290,13 @@ const PlanillaGrid: React.FC<PlanillaGridProps> = ({ visible, onClose }) => {
         <Animated.View style={[styles.container, { opacity: contentOpacity }]}>
           {phase === 'drawing' && (
             <>
-              <TouchableOpacity style={styles.crossButton} onPress={onClose}>
-                <CrossIcon width={font(28)} height={font(28)} />
-              </TouchableOpacity>
+              <IconButton
+                Icon={CrossIcon}
+                width={font(28)}
+                height={font(28)}
+                style={{ top: font(1), right: font(12), zIndex: 10 }}
+                onPress={onClose}
+              />
 
               <View style={{ width: GRID_PX, height: GRID_PX, marginTop: font(28) }}>
                 <View style={StyleSheet.absoluteFillObject} pointerEvents="none">
@@ -336,10 +344,10 @@ const PlanillaGrid: React.FC<PlanillaGridProps> = ({ visible, onClose }) => {
               <View style={styles.bottomArea}>
                 <View style={styles.actionsRow}>
                   <TouchableOpacity style={styles.actionButton} onPress={resetPath}>
-                    <RefreshIcon width={font(44)} height={font(44)} />
+                    <RefreshIcon width={font(44)} height={font(44)} overflow='hidden' />
                   </TouchableOpacity>
                   <TouchableOpacity style={styles.actionButton} onPress={handleReveal}>
-                    {React.createElement(HAND_ICONS[Math.min(maiaManaLevel, 3)], { width: font(100), height: font(100) })}
+                    {React.createElement(HAND_ICONS[Math.min(maiaManaLevel, 3)], { width: font(100), height: font(100), overflow:'hidden' })}
                   </TouchableOpacity>
                 </View>
                 <View style={styles.manaBarContainer}>
@@ -371,22 +379,21 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#ffffffe1',
+    backgroundColor: 'rgba(255, 255, 255, 0.54)',
   },
   container: {
     width: '95%',
-    backgroundColor: '#ffffffe1',
+    backgroundColor: 'rgb(250, 223, 250)',
     borderRadius: font(16),
     paddingVertical: font(16),
     paddingHorizontal: CONTAINER_PADDING,
     alignItems: 'center',
     top: font(100),
-  },
-  crossButton: {
-    position: 'absolute',
-    top: font(1),
-    right: font(12),
-    padding: font(1),
+    borderWidth: 1,
+    borderColor: '#4c1d95',
+    shadowColor: '#7c3aed',
+    shadowOpacity: 0.6,
+    shadowRadius: 20,
   },
   row: {
     flexDirection: 'row',
@@ -396,19 +403,28 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   circle: {
-    backgroundColor: '#888888',
+    backgroundColor: '#190d4e',
+    shadowColor: '#6d28d9',
+    shadowOpacity: 0.4,
+    shadowRadius: 4,
   },
   circleBlocked: {
-    backgroundColor: '#cacacab4',
+    backgroundColor: 'rgba(55, 42, 94, 0.35)',
   },
   circleInPath: {
-    backgroundColor: '#131313',
-    borderColor: '#333',
+    backgroundColor: '#5d00ff',
+    borderColor: '#a855f7',
+    shadowColor: '#c084fc',
+    shadowOpacity: 0.8,
+    shadowRadius: 8,
   },
   circleHead: {
-    backgroundColor: '#131313',
-    borderColor: '#333',
+    backgroundColor: '#5d00ff',
+    borderColor: '#a855f7',
     borderWidth: 2,
+    shadowColor: '#f0abfc',
+    shadowOpacity: 1,
+    shadowRadius: 12,
   },
   bottomArea: {
     width: '100%',
@@ -444,8 +460,10 @@ const styles = StyleSheet.create({
     marginTop: font(16),
     fontSize: font(18),
     fontWeight: 'bold',
-    color: 'black',
+    color: '#e9d5ff',
     textAlign: 'center',
+    textShadowColor: '#a855f7',
+    textShadowRadius: 8,
   },
 });
 

@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import {CodeChestIcon, Safe2Icon } from '../SvgExporter';
-import { Pressable, StyleSheet } from 'react-native';
-import ConversationChoiceModal from '../modal/conversationchoicemodal';
+import { Safe2Icon } from '../SvgExporter';
+import IconButton from './iconbutton';
 import CodeModal from '../modal/codemodal';
 import { conversations } from './conversations';
 import { setBoxFalse } from '../../redux/boxesSlice';
@@ -21,47 +20,31 @@ const CodeBox: React.FC<CodeBoxProps> = ({ boxKey, positionStyle, code }) => {
   const [modalVisible, setModalVisible] = useState(false);
 
   const handlePress = () => {
-    if (boxState) {
-      setModalVisible(true);
-    }
+    if (boxState) setModalVisible(true);
   };
 
   const handleAccept = () => {
     setModalVisible(false);
     dispatch(setBoxFalse(boxKey));
-
-    if (boxesActions[boxKey]) {
-      boxesActions[boxKey](dispatch);
-    }
+    if (boxesActions[boxKey]) boxesActions[boxKey](dispatch);
   };
 
   if (!boxState) return null;
 
   return (
     <>
-      <Pressable style={[styles.iconButton, positionStyle]} onPress={handlePress}>
-        <Safe2Icon height={font(70)} width={font(70)} />
-      </Pressable>
+      <IconButton Icon={Safe2Icon} width={font(70)} height={font(70)} style={positionStyle} onPress={handlePress} />
 
-      <CodeModal 
-        visible={modalVisible} 
-        code={code} 
+      <CodeModal
+        visible={modalVisible}
+        code={code}
         onClose={(success) => {
-          if (success) {
-            handleAccept();
-          } else {
-            setModalVisible(false);
-          }
-        }} 
+          if (success) handleAccept();
+          else setModalVisible(false);
+        }}
       />
     </>
   );
 };
 
 export default CodeBox;
-
-const styles = StyleSheet.create({
-  iconButton: {
-    position: 'absolute',
-  },
-});

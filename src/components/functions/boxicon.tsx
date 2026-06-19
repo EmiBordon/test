@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { BoxIcon } from '../SvgExporter';
-import { Pressable, StyleSheet } from 'react-native';
+import IconButton from './iconbutton';
 import ConversationChoiceModal from '../modal/conversationchoicemodal';
 import DiceModal from '../modal/dicemodal';
 import { conversations } from './conversations';
@@ -22,9 +22,7 @@ const Box: React.FC<BoxProps> = ({ boxKey, positionStyle }) => {
   const [diceModalVisible, setDiceModalVisible] = useState(false);
 
   const handlePress = () => {
-    if (boxState) {
-      setModalVisible(true);
-    }
+    if (boxState) setModalVisible(true);
   };
 
   const handleAccept = () => {
@@ -34,19 +32,12 @@ const Box: React.FC<BoxProps> = ({ boxKey, positionStyle }) => {
 
   const handleDiceModalClose = (playerWon: boolean = false) => {
     setDiceModalVisible(false);
-    
     if (playerWon) {
-      // ✅ Victoria: Caja con recompensas
-      dispatch(setBoxFalse(boxKey)); // Esto activará el RewardManager
-      
-      // 🔥 Acción centralizada en boxesActions.tsx
-      if (boxesActions[boxKey]) {
-        boxesActions[boxKey](dispatch);
-      }
+      dispatch(setBoxFalse(boxKey));
+      if (boxesActions[boxKey]) boxesActions[boxKey](dispatch);
     } else {
-      // ❌ Derrota: Caja vacía
-      dispatch(setBoxEmpty(boxKey)); // Marca como vacía sin recompensas
-      dispatch(markBoxAsEmpty(boxKey)); // Esto activará el EmptyBoxManager
+      dispatch(setBoxEmpty(boxKey));
+      dispatch(markBoxAsEmpty(boxKey));
     }
   };
 
@@ -54,9 +45,7 @@ const Box: React.FC<BoxProps> = ({ boxKey, positionStyle }) => {
 
   return (
     <>
-      <Pressable style={[styles.iconButton, positionStyle]} onPress={handlePress}>
-        <BoxIcon height={font(70)} width={font(70)} />
-      </Pressable>
+      <IconButton Icon={BoxIcon} width={font(70)} height={font(70)} style={positionStyle} onPress={handlePress} />
 
       <ConversationChoiceModal
         visible={modalVisible}
@@ -65,18 +54,9 @@ const Box: React.FC<BoxProps> = ({ boxKey, positionStyle }) => {
         onAccept={handleAccept}
       />
 
-      <DiceModal
-        visible={diceModalVisible}
-        onClose={handleDiceModalClose}
-      />
+      <DiceModal visible={diceModalVisible} onClose={handleDiceModalClose} />
     </>
   );
 };
 
 export default Box;
-
-const styles = StyleSheet.create({
-  iconButton: {
-    position: 'absolute',
-  },
-});

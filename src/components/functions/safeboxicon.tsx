@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Safe1Icon } from '../SvgExporter';
-import { Pressable, StyleSheet } from 'react-native';
-import CodeModal from '../modal/codemodal';
+import IconButton from './iconbutton';
 import SafeModal from '../modal/safemodal';
 import { setBoxFalse } from '../../redux/boxesSlice';
 import { boxesActions } from './boxesActions';
@@ -20,41 +19,29 @@ const SafeBox: React.FC<SafeBoxProps> = ({ boxKey, positionStyle, code }) => {
   const [modalVisible, setModalVisible] = useState(false);
 
   const handlePress = () => {
-    if (boxState) {
-      setModalVisible(true);
-    }
+    if (boxState) setModalVisible(true);
   };
 
   const handleAccept = () => {
     setModalVisible(false);
     dispatch(setBoxFalse(boxKey));
-
-    if (boxesActions[boxKey]) {
-      boxesActions[boxKey](dispatch);
-    }
+    if (boxesActions[boxKey]) boxesActions[boxKey](dispatch);
   };
 
   if (!boxState) return null;
 
   return (
     <>
-      <Pressable style={[styles.iconButton, positionStyle]} onPress={handlePress}>
-        <Safe1Icon height={font(70)} width={font(70)} />
-      </Pressable>
+      <IconButton Icon={Safe1Icon} width={font(70)} height={font(70)} style={positionStyle} onPress={handlePress} />
 
       <SafeModal
         visible={modalVisible}
         correctCode={code}
         onClose={() => setModalVisible(false)}
-         onSuccess={() => {handleAccept();}}/>
+        onSuccess={() => handleAccept()}
+      />
     </>
   );
 };
 
 export default SafeBox;
-
-const styles = StyleSheet.create({
-  iconButton: {
-    position: 'absolute',
-  },
-});

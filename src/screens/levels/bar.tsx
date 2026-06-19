@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { View, StyleSheet, Pressable, Image, BackHandler } from 'react-native';
+import IconButton from '../../components/functions/iconbutton';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import { MaiaIcon, ArrowIcon, BarisIcon } from '../../components/SvgExporter';
 import Inventory from '../../components/inventory';
@@ -110,9 +111,7 @@ const BarScreen = () => {
       />
         </>
         ) : (
-      <Pressable style={[styles.iconButton, iconStyle]} onPress={handleIconPress}>
-        <CurrentIcon height={height} width={width} />
-      </Pressable>
+      <IconButton Icon={CurrentIcon} width={width} height={height} style={iconStyle} onPress={handleIconPress} />
       )}
 
         {currentIconIndex !== 0 &&(
@@ -164,9 +163,6 @@ const styles = StyleSheet.create({
     height: '40%',
   },
   buttonImage: { width: '100%', height: '40%' },
-  iconButton: {
-    position: 'absolute',
-  },
   leftIcons: {
     flexDirection: 'row',
     position: 'absolute',

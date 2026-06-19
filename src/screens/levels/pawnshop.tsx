@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, Pressable, Image, BackHandler } from 'react-native';
+import { View, StyleSheet, Image, BackHandler } from 'react-native';
 import { MaiaIcon, ShopGirlIcon, PawnShopBoyIcon } from '../../components/SvgExporter';
+import IconButton from '../../components/functions/iconbutton';
 import Inventory from '../../components/inventory';
 import Location from '../../components/functions/location';
 import ConversationChoiceModal from '../../components/modal/conversationchoicemodal';
@@ -63,9 +64,7 @@ const PawnShopScreen = () => {
     <View style={styles.container}>
       <Image source={require('../../images/pawnshop.jpg')} style={styles.backgroundImage} />
 
-      <Pressable style={[styles.iconButton, iconStyle]} onPress={handleIconPress}>
-        <CurrentIcon height={height} width={width} />
-      </Pressable>
+      <IconButton Icon={CurrentIcon} width={width} height={height} style={iconStyle} onPress={handleIconPress} />
 
       <View style={styles.maiaContainer}>
         <MaiaIcon height={160} width={160} />
@@ -109,9 +108,6 @@ const styles = StyleSheet.create({
     width: '130%',
     height: '40%',
     //top:'10%',
-  },
-  iconButton: {
-    position: 'absolute',
   },
   sideIcons: {
     flexDirection: 'row',

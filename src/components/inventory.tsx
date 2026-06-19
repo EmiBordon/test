@@ -164,35 +164,38 @@ const Inventory: React.FC<InventoryProps> = ({
           style={styles.slot}
           onPress={() => setBagPackModalVisible(true)}
         >
-          <BagPackIcon width={font(40)} height={font(40)} />
+          <BagPackIcon width={font(40)} height={font(40)} overflow='hidden'/>
         </TouchableOpacity>
 
         {/* Casillero 2 - Mapas */}
         <View style={styles.mapContainer}>
           <TouchableOpacity style={styles.slot} onPress={toggleMapOptions}>
-            <MapIcon width={font(40)} height={font(40)} />
+            <MapIcon width={font(40)} height={font(40)} overflow='hidden' />
           </TouchableOpacity>
           {showMapOptions && (
             <View style={styles.mapOptions}>
-              <TouchableOpacity onPress={() => handleMapPress("map1")}>
+              <TouchableOpacity style={styles.mapOptionBtn} onPress={() => handleMapPress("map1")}>
                 <MapInv1Icon
                   width={font(38)}
                   height={font(38)}
                   fill={map1 ? "black" : "gray"}
+                  overflow='hidden'
                 />
               </TouchableOpacity>
-              <TouchableOpacity onPress={() => handleMapPress("map2")}>
+              <TouchableOpacity style={styles.mapOptionBtn} onPress={() => handleMapPress("map2")}>
                 <MapInv2Icon
                   width={font(38)}
                   height={font(38)}
                   fill={map2 ? "black" : "gray"}
+                  overflow='hidden'
                 />
               </TouchableOpacity>
-              <TouchableOpacity onPress={() => handleMapPress("map3")}>
+              <TouchableOpacity style={styles.mapOptionBtn} onPress={() => handleMapPress("map3")}>
                 <MapInv3Icon
                   width={font(38)}
                   height={font(38)}
                   fill={map3 ? "black" : "gray"}
+                  overflow='hidden'
                 />
               </TouchableOpacity>
             </View>
@@ -204,7 +207,7 @@ const Inventory: React.FC<InventoryProps> = ({
           style={styles.slot}
           onPress={() => setNotesModalVisible(true)}
         >
-          <NoteBookIcon width={font(38)} height={font(38)} />
+          <NoteBookIcon width={font(38)} height={font(38)} overflow='hidden' />
         </TouchableOpacity>
 
        
@@ -212,8 +215,9 @@ const Inventory: React.FC<InventoryProps> = ({
         <TouchableOpacity
           style={styles.slot}
           onPress={() => setPlanillaVisible(true)}
+          
         >
-          <HandLevelIcon width={font(50)} height={font(50)} />
+          <HandLevelIcon width={font(50)} height={font(50)} overflow='hidden' />
         </TouchableOpacity>
 
         {/* Modales */}
@@ -318,6 +322,12 @@ const styles = StyleSheet.create({
     top: "-70%",
     right: "5%",
     padding: "-3%",
+  },
+  mapOptionBtn: {
+    width: font(38),
+    height: font(38),
+    justifyContent: "center",
+    alignItems: "center",
   },
   objectivesContainer: {
     position: "absolute",

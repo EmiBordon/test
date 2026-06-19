@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { View, StyleSheet, Pressable, Image, BackHandler } from 'react-native';
+import IconButton from '../../components/functions/iconbutton';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import { MaiaIcon, MattIcon, DoorIcon, ChestCloseIcon, ArrowIcon } from '../../components/SvgExporter';
 import Inventory from '../../components/inventory';
@@ -133,9 +134,7 @@ const TutorialScreen = () => {
     <View style={styles.container}>
       <Image source={require('../../images/floor2.jpg')} style={styles.backgroundImage} />
 
-      <Pressable style={[styles.iconButton, iconStyle]} onPress={handleIconPress}>
-        <CurrentIcon height={height} width={width} />
-      </Pressable>
+      <IconButton Icon={CurrentIcon} width={width} height={height} style={iconStyle} onPress={handleIconPress} />
 
       <View style={styles.sideIcons}>
         <Pressable style={styles.arrowButton} onPress={handlePrevIcon}>
@@ -182,14 +181,12 @@ const TutorialScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor:'#b8810a42'
   },
   backgroundImage: {
     ...StyleSheet.absoluteFillObject,
     width: '100%',
     height: '25%',
-  },
-  iconButton: {
-    position: 'absolute',
   },
   sideIcons: {
     flexDirection: 'row',

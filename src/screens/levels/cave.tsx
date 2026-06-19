@@ -30,6 +30,7 @@ import { saveBackup } from '../../redux/backupSlice';
 import Box from '../../components/functions/boxicon';
 import CodeBox from '../../components/functions/codeboxicon';
 import SafeBox from '../../components/functions/safeboxicon';
+import IconButton from '../../components/functions/iconbutton';
 import RewardManager from '../../components/functions/rewardmanager';
 import { font } from '../../components/functions/fontsize';
 import EmptyBoxManager from '../../components/functions/emptyboxmanager';
@@ -300,13 +301,14 @@ const CaveScreen = () => {
       );
       if (!appearance) return null;
       return (
-        <Pressable
+        <IconButton
           key={icon.name}
-          style={[styles.iconButton, icon.style]}
+          Icon={icon.component}
+          width={icon.width}
+          height={icon.height}
+          style={icon.style}
           onPress={() => handleIconPress(icon.name)}
-        >
-          <icon.component height={icon.height} width={icon.width} />
-        </Pressable>
+        />
       );
     });
   };
@@ -370,15 +372,16 @@ const CaveScreen = () => {
       <Pressable style={styles.buttonImage} onPress={handleImagePress} />
       {/* SignIcon (se muestra en la primera imagen) */}
       {currentImageIndex === 0 && (
-        <Pressable
-          style={[styles.iconButton, signIconData.style]}
+        <IconButton
+          Icon={signIconData.component}
+          width={signIconData.width}
+          height={signIconData.height}
+          style={signIconData.style}
           onPress={() => {
             setModalVisible(true);
             setConversationContent(conversations.sign1);
           }}
-        >
-          <signIconData.component height={signIconData.height} width={signIconData.width} />
-        </Pressable>
+        />
       )}
       {/* Render de los íconos configurados */}
       {renderIcons()}
@@ -489,7 +492,6 @@ const styles = StyleSheet.create({
     height: '30%'
   },
   buttonImage: { width: '100%', height: '30%' },
-  iconButton: { position: 'absolute' },
   backIcons: {
     flexDirection: 'row',
     width: '100%',

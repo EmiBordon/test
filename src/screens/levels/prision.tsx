@@ -29,6 +29,7 @@ import { saveBackup } from '../../redux/backupSlice';
 import Box from '../../components/functions/boxicon';
 import CodeBox from '../../components/functions/codeboxicon';
 import SafeBox from '../../components/functions/safeboxicon';
+import IconButton from '../../components/functions/iconbutton';
 import RewardManager from '../../components/functions/rewardmanager';
 import { font } from '../../components/functions/fontsize';
 
@@ -248,13 +249,14 @@ const PrisionScreen = () => {
       );
       if (!appearance) return null;
       return (
-        <Pressable
+        <IconButton
           key={icon.name}
-          style={[styles.iconButton, icon.style]}
+          Icon={icon.component}
+          width={icon.width}
+          height={icon.height}
+          style={icon.style}
           onPress={() => handleIconPress(icon.name)}
-        >
-          <icon.component height={icon.height} width={icon.width} />
-        </Pressable>
+        />
       );
     });
   };
@@ -384,7 +386,6 @@ const styles = StyleSheet.create({
     height: '35%'
   },
   buttonImage: { width: '100%', height: '35%' },
-  iconButton: { position: 'absolute' },
   backIcons: {
     flexDirection: 'row',
     width: '100%',
