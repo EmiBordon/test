@@ -1,27 +1,64 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Modal, View, TouchableOpacity, Text, StyleSheet, Dimensions, Alert, Image } from "react-native";
 import {
-  HouseIcon, PrisionIcon, StoreIcon, RestaurantIcon, BigHouseIcon, CaveIcon, CrossIcon, PawnShopIcon
+  HouseIcon, PrisionIcon, StoreIcon, RestaurantIcon, BigHouseIcon, CaveIcon,
+  CrossIcon, PawnShopIcon, MapArrowIcon, MapDoorIcon
 } from "../SvgExporter";
 import { font } from "../functions/fontsize";
 import IconButton from "../functions/iconbutton";
 
-const ICONS = [
-  { key: "house",      Component: HouseIcon,      size: font(55), text: "Casa",    top: "35%", left: "9%",  tx: -30, ty: -30, route: "Tutorial" },
-  { key: "prison",     Component: PrisionIcon,    size: font(60), text: "Prisión", top: "68%", left: "77%", tx: -30, ty: -30, route: "Prision"  },
-  { key: "store",      Component: StoreIcon,      size: font(50), text: "Tienda",  top: "58%", left: "55%", tx: -30, ty: -30, route: "Shop"     },
-  { key: "restaurant", Component: RestaurantIcon, size: font(55), text: "Bar",     top: "40%", left: "33%", tx: -30, ty: -30, route: "Bar"      },
-  { key: "bigHouse",   Component: BigHouseIcon,   size: font(65), text: "Mansión", top: "35%", left: "88%", tx: -40, ty: -40, route: null       },
-  { key: "cave",       Component: CaveIcon,       size: font(40), text: "Cueva",   top: "70%", left: "42%", tx: -30, ty: -30, route: "Cave"     },
-  { key: "pawnShop",   Component: PawnShopIcon,   size: font(55), text: "Joyeria", top: "84%", left: "74%", tx: -30, ty: -30, route: "PawnShop" },
+type MapId = 1 | 2 | 3 | 4;
+
+// Iconos de ubicación — cada uno indica en qué mapa aparece con mapId
+const LOCATION_ICONS = [
+  { key: "house",      Component: HouseIcon,      size: font(55),  text: "Casa",    top: "85%", left: "9%",  tx: -30, ty: -30, route: "Tutorial", mapId: 1 as MapId },
+  { key: "prison",     Component: PrisionIcon,    size: font(60),  text: "Prisión", top: "58%", left: "85%", tx: -30, ty: -30, route: "Prision",  mapId: 1 as MapId },
+  { key: "store",      Component: StoreIcon,      size: font(50),  text: "Tienda",  top: "67%", left: "45%", tx: -30, ty: -30, route: "Shop",     mapId: 1 as MapId },
+  { key: "restaurant", Component: RestaurantIcon, size: font(55),  text: "Bar",     top: "40%", left: "33%", tx: -30, ty: -30, route: "Bar",      mapId: 1 as MapId },
+  { key: "cave",       Component: CaveIcon,       size: font(60),  text: "Cueva",   top: "30%", left: "12%", tx: -30, ty: -30, route: "Cave",     mapId: 1 as MapId },
+  { key: "pawnShop",   Component: PawnShopIcon,   size: font(55),  text: "Joyeria", top: "14%", left: "65%", tx: -30, ty: -30, route: "PawnShop", mapId: 1 as MapId },
+  { key: "bigHouse",   Component: BigHouseIcon,   size: font(105), text: "Mansión", top: "47%", left: "82%", tx: -50, ty: -50, route: null,       mapId: 4 as MapId },
 ];
+
+// Iconos de navegación entre mapas por página
+const MAP_NAV: Record<MapId, { key: string; Component: React.ComponentType<any>; size: number; top: string; left: string; tx: number; ty: number; rotate?: string; scaleX?: number; scaleY?: number; targetMap: MapId }[]> = {
+  1: [
+    { key: "to_2", Component: MapArrowIcon, size: font(65), top: "92%", left: "82%", tx: -20, ty: -20,scaleY: -1, rotate: "340deg", targetMap: 2 },
+  ],
+  2: [
+    { key: "to_1", Component: MapArrowIcon, size: font(60), top: "84%", left: "8%",  tx: -20, ty: -20, rotate: "180deg", targetMap: 1 },
+    { key: "to_3", Component: MapArrowIcon, size: font(60), top: "45%", left: "86%", tx: -20, ty: -20, targetMap: 3 },
+    { key: "to_4", Component: MapDoorIcon,  size: font(50), top: "56%", left: "44%", tx: -25, ty: -25, targetMap: 4 },
+  ],
+  3: [
+    { key: "to_2", Component: MapArrowIcon, size: font(60), top: "42%", left: "10%",  tx: -20, ty: -20, rotate: "180deg", targetMap: 2 },
+  ],
+  4: [
+    { key: "to_2", Component: MapDoorIcon,  size: font(50), top: "88%", left: "48%", tx: -25, ty: -25, targetMap: 2 },
+  ],
+};
+
+const MAP_IMAGES: Record<MapId, any> = {
+  1: require('../../images/map1.jpg'),
+  2: require('../../images/map2.jpg'),
+  3: require('../../images/map3.jpg'),
+  4: require('../../images/map4.jpg'),
+};
 
 const Map1Modal = ({ visible, onClose, navigation }) => {
   const { height } = Dimensions.get("window");
   const modalHeight = height * 0.7;
 
+  const [currentMap, setCurrentMap] = useState<MapId>(1);
   const [selected, setSelected] = useState<string | null>(null);
-  const selectedItem = ICONS.find(i => i.key === selected);
+  const selectedItem = LOCATION_ICONS.find(i => i.key === selected);
+
+  useEffect(() => {
+    if (visible) {
+      setCurrentMap(1);
+      setSelected(null);
+    }
+  }, [visible]);
 
   const handleGo = () => {
     if (!selectedItem) return;
@@ -34,17 +71,23 @@ const Map1Modal = ({ visible, onClose, navigation }) => {
     setSelected(null);
   };
 
+  const switchMap = (target: MapId) => {
+    setCurrentMap(target);
+    setSelected(null);
+  };
+
   return (
     <Modal visible={visible} animationType="slide" transparent>
       <View style={styles.overlay}>
         <View style={[styles.modalContainer, { height: modalHeight }]}>
 
           <Image
-            source={require('../../images/map1.jpg')}
+            source={MAP_IMAGES[currentMap]}
             style={{ width: '100%', height: '100%' }}
             resizeMode="cover"
           />
 
+          {/* Prompt de viaje — visible en cualquier mapa cuando hay selección */}
           {selectedItem && (
             <View style={styles.promptBar}>
               <Text style={styles.promptText}>¿Deseas viajar a {selectedItem.text}?</Text>
@@ -59,7 +102,8 @@ const Map1Modal = ({ visible, onClose, navigation }) => {
             </View>
           )}
 
-          {ICONS.map(({ key, Component, size, text, top, left, tx, ty }) => (
+          {/* Iconos de ubicación — filtrados por mapa actual */}
+          {LOCATION_ICONS.filter(i => i.mapId === currentMap).map(({ key, Component, size, text, top, left, tx, ty }) => (
             <IconButton
               key={key}
               Icon={Component}
@@ -76,11 +120,33 @@ const Map1Modal = ({ visible, onClose, navigation }) => {
             </IconButton>
           ))}
 
+          {/* Iconos de navegación entre mapas */}
+          {MAP_NAV[currentMap].map(({ key, Component, size, top, left, tx, ty, rotate, scaleX, scaleY, targetMap }) => (
+            <IconButton
+              key={key}
+              Icon={Component}
+              width={size}
+              height={size}
+              style={{
+                top, left, zIndex: 20,
+                transform: [
+                  { translateX: tx },
+                  { translateY: ty },
+                  ...(rotate  ? [{ rotate }]         : []),
+                  ...(scaleX !== undefined ? [{ scaleX }] : []),
+                  ...(scaleY !== undefined ? [{ scaleY }] : []),
+                ],
+              }}
+              onPress={() => switchMap(targetMap)}
+            />
+          ))}
+
+          {/* Botón cerrar */}
           <IconButton
             Icon={CrossIcon}
             width={30}
             height={30}
-            style={{ top: 10, right: 10, zIndex: 10 }}
+            style={{ top: 10, right: 10, zIndex: 30 }}
             onPress={() => { onClose(); setSelected(null); }}
           />
 
@@ -99,7 +165,7 @@ const styles = StyleSheet.create({
   },
   modalContainer: {
     width: "95%",
-    backgroundColor: "white",
+    backgroundColor: "black",
     borderRadius: 10,
     overflow: "hidden",
     alignItems: "center",

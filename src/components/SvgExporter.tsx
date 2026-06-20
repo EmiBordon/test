@@ -147,8 +147,12 @@ import ManaBar1Svg from '../assets/manabar1.svg';
 import ManaBar2Svg from '../assets/manabar2.svg';
 import ManaBar3Svg from '../assets/manabar3.svg';
 import ManaBookSvg from '../assets/manabook.svg';
+import MapArrowSvg from '../assets/maparrow.svg';
+import MapDoorSvg from '../assets/mapdoor.svg';
 
 const ArrowIcon = (props: any) => <ArrowSvg {...props} />;
+const MapArrowIcon = (props: any) => <MapArrowSvg {...props} />;
+const MapDoorIcon = (props: any) => <MapDoorSvg {...props} />;
 const ChestOpenIcon = (props: any) => <ChestOpenSvg {...props} />;
 const ChestCloseIcon = (props: any) => <ChestCloseSvg {...props} />;
 const CodeChestIcon = (props: any) => <CodeChestSvg {...props} />;
@@ -445,5 +449,7 @@ export {
   ManaBar1Icon,
   ManaBar2Icon,
   ManaBar3Icon,
-  ManaBookIcon
+  ManaBookIcon,
+  MapArrowIcon,
+  MapDoorIcon
 };
