@@ -1,5 +1,5 @@
 import React from 'react';
-import { Modal, View, StyleSheet, TouchableOpacity } from 'react-native';
+import { Modal, View, StyleSheet, TouchableOpacity, Text } from 'react-native';
 import { font } from '../functions/fontsize';
 
 interface GridModalProps {
@@ -9,7 +9,8 @@ interface GridModalProps {
   whiteSquare?: number | null;
   sSquares:number;
   tSquares:number;
-  mSquares:number; 
+  mSquares:number;
+  text: string;
 }
 
 const GridModal: React.FC<GridModalProps> = ({
@@ -20,6 +21,7 @@ const GridModal: React.FC<GridModalProps> = ({
   tSquares,
   sSquares,
   mSquares,
+  text,
 }) => {
   // Generamos un array de 49 índices (0 a 48)
   const totalSquares = tSquares;
@@ -51,6 +53,9 @@ const GridModal: React.FC<GridModalProps> = ({
           ))}
         </View>
       </TouchableOpacity>
+      <View style={styles.locationContainer}>
+        <Text style={styles.locationText}>{text}</Text>
+      </View>
     </Modal>
   );
 };
@@ -74,6 +79,27 @@ const styles = StyleSheet.create({
     borderWidth: font(1),
     borderColor: 'rgba(0, 0, 0, 0)',
     borderRadius: font(12),
+  },
+  locationContainer: {
+    position: 'absolute',
+    top: '1%',
+    right: '2%',
+    backgroundColor: 'rgba(18, 7, 2, 0.97)',
+    paddingVertical: 6,
+    paddingHorizontal: 12,
+    borderRadius: 8,
+    borderWidth: 2,
+    borderColor: '#C8A84B',
+    elevation: 4,
+    shadowColor: '#D4AF37',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.5,
+    shadowRadius: 6,
+  },
+  locationText: {
+    color: '#C8A84B',
+    fontSize: font(15),
+    fontWeight: 'bold',
   },
 });
 

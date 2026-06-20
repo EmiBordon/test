@@ -145,19 +145,16 @@ const TutorialScreen = () => {
         </Pressable>
       </View>
 
-      <View style={styles.maiaContainer}>
-        <MaiaIcon height={160} width={160} />
-      </View>
-
-      <Inventory 
+      <Inventory
       highlightedSquares={[7,8]}
       whiteSquare={currentSquare}
       sSquares={55}
       minisSquares={16}
       tSquares={9}
       mSquares={3}
+      text="Casa"
       />
-      <Location text="Casa" />
+      <Location />
 
       {modalVisible && (
         <ConversationChoiceModal 

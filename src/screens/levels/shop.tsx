@@ -66,19 +66,18 @@ const ShopScreen = () => {
 
       <IconButton Icon={CurrentIcon} width={width} height={height} style={iconStyle} onPress={handleIconPress} />
 
-      <View style={styles.maiaContainer}>
-        <MaiaIcon height={160} width={160} />
-      </View>
+     
 
-      <Inventory 
+      <Inventory
       highlightedSquares={[7]}
       whiteSquare={7}
       minisSquares={18}
       sSquares={55}
       tSquares={9}
       mSquares={3}
+      text="Tienda"
       />
-      <Location text="Tienda" />
+      <Location />
 
       {modalVisible && (
         isShopModal ? (

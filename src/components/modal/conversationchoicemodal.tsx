@@ -77,7 +77,7 @@ const ConversationChoiceModal: React.FC<ConversationChoiceModalProps> = ({
             </View>
           ) : (
             <TouchableOpacity style={styles.button} onPress={handleNext}>
-              <DoubleArrowIcon width={font(18)} height={font(18)} />
+              <DoubleArrowIcon width={font(28)} height={font(28)} overlay='hidden' />
             </TouchableOpacity>
           )}
         </View>

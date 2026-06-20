@@ -5,11 +5,7 @@ import { font } from './fontsize';
 import { MenuIcon } from '../SvgExporter';
 import { useNavigation } from '@react-navigation/native';
 
-interface LocationProps {
-  text: string;
-}
-
-const Location: React.FC<LocationProps> = ({ text }) => {
+const Location: React.FC = () => {
   const [showMenu, setShowMenu] = useState(false);
   const navigation = useNavigation();
 
@@ -22,7 +18,7 @@ const Location: React.FC<LocationProps> = ({ text }) => {
     <>
       <TouchableOpacity style={styles.menuButton} onPress={() => setShowMenu(!showMenu)}>
         <View style={styles.circle}>
-          <MenuIcon width={font(25)} height={font(25)} fill="white" />
+          <MenuIcon width={font(25)} height={font(25)} fill='#D4AF37' />
         </View>
       </TouchableOpacity>
 
@@ -40,9 +36,6 @@ const Location: React.FC<LocationProps> = ({ text }) => {
         </View>
       )}
 
-      <View style={styles.container}>
-        <Text style={styles.locationText}>{text}</Text>
-      </View>
     </>
   );
 };
@@ -56,30 +49,39 @@ const styles = StyleSheet.create({
     padding: 5,
   },
   circle: {
-    backgroundColor: 'black',
+    backgroundColor: '#6B2D0A',
     borderRadius: 15,
+    borderWidth: 2,
+    borderColor: 'black',
     padding: 8,
     justifyContent: 'center',
     alignItems: 'center',
+    shadowColor: '#D4AF37',
+    shadowOpacity: 0.6,
+    shadowRadius: 4,
+    elevation: 4,
   },
   menuContainer: {
     position: 'absolute',
     top: '8%',
     left: '2%',
-    backgroundColor: 'white',
-    padding: 10,
-    borderRadius: 5,
-    elevation: 3,
-    shadowColor: '#000',
+    backgroundColor: 'rgba(18, 7, 2, 0.97)',
+    padding: 12,
+    borderRadius: 8,
+    borderWidth: 2,
+    borderColor: '#C8A84B',
+    elevation: 6,
+    shadowColor: '#D4AF37',
     shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.3,
-    shadowRadius: 3,
+    shadowOpacity: 0.5,
+    shadowRadius: 6,
     zIndex: 9,
   },
   menuText: {
     fontSize: font(14),
-    marginBottom: 8,
+    marginBottom: 10,
     fontWeight: 'bold',
+    color: '#C8A84B',
   },
   buttonsRow: {
     flexDirection: 'row',
@@ -87,32 +89,19 @@ const styles = StyleSheet.create({
     gap: 10,
   },
   button: {
-    backgroundColor: 'black',
+    backgroundColor: '#6B2D0A',
     paddingVertical: 8,
     paddingHorizontal: 15,
-    borderRadius: 5,
+    borderRadius: 6,
+    borderWidth: 2,
+    borderColor: '#C8A84B',
+    shadowColor: '#C8A84B',
+    shadowOpacity: 0.5,
+    shadowRadius: 4,
   },
   buttonText: {
-    color: 'white',
+    color: '#C8A84B',
     fontSize: font(13),
-    fontWeight: 'bold',
-  },
-  container: {
-    position: 'absolute',
-    top: '1%',
-    right: '2%',
-    backgroundColor: 'black',
-    padding: '2%',
-    borderRadius: 5,
-    elevation: 3,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.3,
-    shadowRadius: 3,
-  },
-  locationText: {
-    color: 'white',
-    fontSize: font(15),
     fontWeight: 'bold',
   },
 });

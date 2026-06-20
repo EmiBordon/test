@@ -475,23 +475,19 @@ const CaveScreen = () => {
           onPress={arrow.onPress}
         />
       ))}
-      <View style={styles.maiaContainer}>
-        {showDamagedMaia
-          ? <ShakyIcon ref={maiaShakeRef} Icon={MaiaIcon} height={font(150)} width={font(150)} />
-          : <MaiaIcon height={font(150)} width={font(150)} />
-        }
-      </View>
-      <Inventory 
+      
+      <Inventory
       highlightedSquares={[22,17,12,7,13,16]}
       whiteSquare={currentSquare}
       sSquares={50}
       minisSquares={12}
       tSquares={25}
       mSquares={5}
+      text={locationName[currentLocationIndex].text}
       />
       <RewardManager />
       <EmptyBoxManager />
-      <Location text={locationName[currentLocationIndex].text} />
+      <Location />
       {modal2Visible && (
         <ConversationChoiceModal
           visible={modal2Visible}

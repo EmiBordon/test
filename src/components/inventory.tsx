@@ -54,7 +54,8 @@ interface InventoryProps {
   sSquares:number;
   minisSquares:number;
   tSquares:number;
-  mSquares:number; 
+  mSquares:number;
+  text: string;
 }
 
 const windowWidth = Dimensions.get("window").width;
@@ -66,6 +67,7 @@ const Inventory: React.FC<InventoryProps> = ({
   sSquares,
   minisSquares,
   mSquares,
+  text,
 }) => {
   const dispatch = useDispatch();
   const maiaHealth = useSelector((state: RootState) => state.maia.maiahealth);
@@ -175,6 +177,7 @@ const Inventory: React.FC<InventoryProps> = ({
           sSquares={sSquares}
           mSquares={mSquares}
           tSquares={tSquares}
+          text={text}
         />
         <PlanillaGrid
           visible={planillaVisible}

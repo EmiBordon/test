@@ -50,9 +50,9 @@ const ConversationModal = ({ visible, onClose, conversation }) => {
             <TouchableOpacity style={styles.button} onPress={handleNext}>
         
                 {currentIndex === conversation.dialogos.length - 1 ? (
-                <DoubleArrowIcon width={font(18)} height={font(18)} style={styles.rotatedIcon}  />
+                <DoubleArrowIcon width={font(28)} height={font(28)} overlay='hidden' style={styles.rotatedIcon}  />
               ) : (
-                <DoubleArrowIcon width={font(18)} height={font(18)}  />
+                <DoubleArrowIcon width={font(28)} height={font(28)} overlay='hidden'  />
               )}
 
             </TouchableOpacity>

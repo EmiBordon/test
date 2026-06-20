@@ -346,19 +346,18 @@ const PrisionScreen = () => {
               </Pressable>
             </View>
           )}
-      <View style={styles.maiaContainer}>
-        <MaiaIcon height={font(150)} width={font(150)} />
-      </View>
-      <Inventory 
+
+      <Inventory
       highlightedSquares={[22,17,12,13,16,15,10,8,3]}
       whiteSquare={currentSquare}
       sSquares={50}
       minisSquares={12}
       tSquares={25}
       mSquares={5}
+      text={locationName[currentLocationIndex].text}
       />
       <RewardManager />
-      <Location text={locationName[currentLocationIndex].text} />
+      <Location />
       {modal2Visible && (
         <ConversationChoiceModal
           visible={modal2Visible}

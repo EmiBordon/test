@@ -128,19 +128,18 @@ const BarScreen = () => {
         </Pressable>
       </View>
       )}
-      <View style={styles.maiaContainer}>
-        <MaiaIcon height={font(150)} width={font(150)} />
-      </View>
 
-      <Inventory 
+
+      <Inventory
       highlightedSquares={[7,8,5]}
       whiteSquare={currentSquare}
       minisSquares={16}
       sSquares={55}
       tSquares={9}
       mSquares={3}
+      text="Bar"
       />
-      <Location text="Bar" />
+      <Location />
       
       <RewardManager />
       <EmptyBoxManager />
