@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Modal, View, TouchableOpacity, Text, StyleSheet, Dimensions } from 'react-native';
-import { GrapesIcon, HealthPotionIcon, BigHealthPotionIcon, QuiverArrowIcon, BowIcon, DaggersIcon, SwordIcon, BombIcon } from '../SvgExporter';
+import { GrapesIcon, HealthPotionIcon, BigHealthPotionIcon, QuiverArrowIcon, BowIcon, DaggersIcon, SwordIcon, BombIcon, CrossIcon } from '../SvgExporter';
+import IconButton from '../functions/iconbutton';
 import { decrementBigHealthPotion, decrementGrapes, decrementHealthPotion } from '../../redux/healingSlice';
 import { useDispatch, useSelector } from "react-redux";
 import { incrementMaiaCurrentHealth, incrementMaiaMana } from '../../redux/maiaSlice';
@@ -267,7 +268,7 @@ const BagPackModal: React.FC<BagPackModalProps> = ({ visible, onClose }) => {
                 onPress={handlePrevPage}
                 disabled={page === 0}
               >
-                <Text style={[styles.paginationButtonText, { color: page === 0 ? 'gray' : 'white' }]}>
+                <Text style={[styles.paginationButtonText, { color: page === 0 ? '#5a3a1a' : '#C8A84B' }]}>
                   {"<<"}
                 </Text>
               </TouchableOpacity>
@@ -277,7 +278,7 @@ const BagPackModal: React.FC<BagPackModalProps> = ({ visible, onClose }) => {
                 onPress={handleNextPage}
                 disabled={page === totalPages - 1}
               >
-                <Text style={[styles.paginationButtonText, { color: page === totalPages - 1 ? 'gray' : 'white' }]}>
+                <Text style={[styles.paginationButtonText, { color: page === totalPages - 1 ? '#5a3a1a' : '#C8A84B' }]}>
                   {">>"}
                 </Text>
               </TouchableOpacity>
@@ -300,17 +301,17 @@ const BagPackModal: React.FC<BagPackModalProps> = ({ visible, onClose }) => {
             </TouchableOpacity>
           )}
 
-          {/* Botón Cerrar */}
-          <TouchableOpacity
-            style={styles.closeButton}
+          <IconButton
+            Icon={CrossIcon}
+            width={font(28)}
+            height={font(28)}
+            style={{ top: font(10), right: font(10), zIndex: 10 }}
             onPress={() => {
               setSelectedItem(null);
               setPage(0);
               onClose();
             }}
-          >
-            <Text style={styles.closeButtonText}>Cerrar</Text>
-          </TouchableOpacity>
+          />
         </View>
       </View>
     </Modal>
@@ -325,32 +326,30 @@ const SLOT_GAP = font(6);
 const styles = StyleSheet.create({
   overlay: {
     flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.6)',
+    backgroundColor: 'rgba(0,0,0,0.7)',
     justifyContent: 'center',
     alignItems: 'center',
   },
   modalContainer: {
     width: '90%',
-    backgroundColor: 'gray',
-    borderRadius: 15,
+    backgroundColor: 'rgba(18, 7, 2, 0.97)',
+    borderRadius: 12,
     padding: font(16),
     borderWidth: 3,
-    borderColor: '#fff',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.8,
-    shadowRadius: 4,
+    borderColor: '#C8A84B',
+    shadowColor: '#C8A84B',
+    shadowOpacity: 0.5,
+    shadowRadius: 10,
     elevation: 5,
   },
   headerText: {
     fontSize: font(22),
-    color: '#fff',
+    color: '#C8A84B',
     fontWeight: 'bold',
     marginBottom: font(12),
     alignSelf: 'center',
-    textShadowColor: '#000',
-    textShadowOffset: { width: 1, height: 1 },
-    textShadowRadius: 2,
+    textShadowColor: '#6B2D0A',
+    textShadowRadius: 4,
   },
   grid: {
     flexDirection: 'row',
@@ -362,17 +361,20 @@ const styles = StyleSheet.create({
   slot: {
     width: SLOT_SIZE,
     height: SLOT_SIZE,
-    backgroundColor: 'white',
+    backgroundColor: '#6B2D0A',
     borderRadius: 8,
     borderWidth: 2,
-    borderColor: 'black',
+    borderColor: '#C8A84B',
     justifyContent: 'center',
     alignItems: 'center',
+    shadowColor: '#D4AF37',
+    shadowOpacity: 0.4,
+    shadowRadius: 3,
   },
   slotSelected: {
-    borderColor: '#ffffff',
+    borderColor: '#FFD700',
     borderWidth: 3,
-    backgroundColor: '#b6b6b6',
+    backgroundColor: '#8B3A0F',
   },
   slotQuantity: {
     position: 'absolute',
@@ -380,42 +382,36 @@ const styles = StyleSheet.create({
     right: font(4),
     fontSize: font(11),
     fontWeight: 'bold',
-    color: '#000',
+    color: '#C8A84B',
   },
   descriptionContainer: {
-    backgroundColor: 'rgba(0, 0, 0, 0.8)',
+    backgroundColor: 'rgba(30, 12, 3, 0.97)',
     padding: font(10),
-    borderRadius: 10,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: '#C8A84B',
     marginBottom: font(8),
   },
   descriptionText: {
-    color: '#fff',
+    color: '#E8D5A3',
     fontSize: font(13),
     textAlign: 'center',
   },
   useButton: {
-    backgroundColor: 'black',
+    backgroundColor: '#6B2D0A',
     paddingVertical: font(8),
     paddingHorizontal: font(20),
-    borderRadius: 10,
+    borderRadius: 8,
+    borderWidth: 2,
+    borderColor: '#C8A84B',
     alignSelf: 'center',
     marginBottom: font(8),
+    shadowColor: '#C8A84B',
+    shadowOpacity: 0.5,
+    shadowRadius: 4,
   },
   useButtonText: {
-    color: 'white',
-    fontSize: font(16),
-    fontWeight: 'bold',
-  },
-  closeButton: {
-    backgroundColor: '#fff',
-    paddingVertical: font(8),
-    paddingHorizontal: font(16),
-    borderRadius: 10,
-    alignSelf: 'center',
-    marginTop: font(4),
-  },
-  closeButtonText: {
-    color: '#000',
+    color: '#FFD700',
     fontSize: font(16),
     fontWeight: 'bold',
   },
@@ -434,7 +430,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   pageIndicator: {
-    color: 'white',
+    color: '#C8A84B',
     fontSize: font(14),
     fontWeight: 'bold',
   },

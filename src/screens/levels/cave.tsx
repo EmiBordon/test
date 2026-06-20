@@ -2,7 +2,6 @@ import React, { useState, useEffect, useRef } from 'react';
 import {
   View,
   StyleSheet,
-  Pressable,
   Image,
   Dimensions,
   BackHandler
@@ -44,6 +43,7 @@ const iconConfig = [
     component: GermisIcon,
     height: font(120),
     width: font(120),
+    
     style: { top: '35%', left: '50%' },
     appearances: [
       {
@@ -292,6 +292,41 @@ const CaveScreen = () => {
     }
   };
 
+  // ── Configuración de flechas de navegación por imagen ──────────────────
+  // Editar aquí para cambiar posición/transform de cada flecha por imagen.
+  // Campos: top, left/right (número o string), transform (opcional).
+  const NAV_ARROWS: Record<number, Array<{
+    key: string;
+    onPress: () => void;
+    top: number | string;
+    left?: number | string;
+    right?: number | string;
+    transform?: object[];
+  }>> = {
+    0: [
+      { key: 'next', onPress: handleImagePress, top: font(300), right: font(144), transform: [{ rotate: '270deg' }] },
+    ],
+    1: [
+      { key: 'back', onPress: handlePrevImage,  top: font(550), left: font(54),  transform: [{ rotate: '90deg' }] },
+      { key: 'next', onPress: handleImagePress, top: font(234), right: font(204), transform: [{ rotate: '259deg' }] },
+      { key: 'side', onPress: handlePrevIcon,   top: font(334), left: font(64),  transform: [{ scaleX: 1 }] },
+    ],
+    2: [
+      { key: 'back', onPress: handlePrevImage,  top: font(14), left: font(14),  transform: [{ rotate: '90deg' }] },
+      { key: 'next', onPress: handleImagePress, top: font(14), right: font(14), transform: [{ rotate: '270deg' }] },
+      { key: 'side', onPress: handleNextIcon,   top: font(14), right: font(74) },
+    ],
+    3: [
+      { key: 'back', onPress: handlePrevImage,  top: font(14), left: font(14),  transform: [{ rotate: '90deg' }] },
+    ],
+    4: [
+      { key: 'side', onPress: handleNextIcon,   top: font(14), right: font(14) },
+    ],
+    5: [
+      { key: 'side', onPress: handlePrevIcon,   top: font(14), left: font(14),  transform: [{ scaleX: -1 }] },
+    ],
+  };
+
   // Renderiza los íconos de acuerdo a la configuración y la imagen actual
   const renderIcons = () => {
     return iconConfig.map(icon => {
@@ -339,24 +374,26 @@ const CaveScreen = () => {
 
   return (
     <View style={styles.container}>
-     {currentImageIndex === 0 && (
+     
+      <Image source={backgroundImages[currentImageIndex]} style={styles.backgroundImage} resizeMode="cover" />
+      {currentImageIndex === 0 && (
      <CodeBox 
       boxKey='cavebox1'
-      positionStyle={{ top: '40%', left: '22%' }}
+      positionStyle={{ top: '60%', left: '52%' }}
       code="028173456"
       />
      )}
      {currentImageIndex === 1 && (
      <Box 
       boxKey='cavebox2'
-      positionStyle={{ top: '60%', left: '70%' }}
+      positionStyle={{ top: '70%', left: '70%' }}
       
       />
      )}
      {currentImageIndex === 2 && (
      <CodeBox 
       boxKey='cavebox3'
-      positionStyle={{ top: '60%', left: '30%' }}
+      positionStyle={{ top: '35%', left: '70%' }}
       code="302845617"
       />
      )}
@@ -367,10 +404,6 @@ const CaveScreen = () => {
       code="4587"
       />
      )}
-      <Image source={backgroundImages[currentImageIndex]} style={styles.backgroundImage} />
-      {/* Presionando la imagen se ejecuta handleImagePress */}
-      <Pressable style={styles.buttonImage} onPress={handleImagePress} />
-      {/* SignIcon (se muestra en la primera imagen) */}
       {currentImageIndex === 0 && (
         <IconButton
           Icon={signIconData.component}
@@ -393,9 +426,9 @@ const CaveScreen = () => {
           enemyKey="germis"
           healthKey="germisHealth"
           Icon={GermisIcon}
-          iconWidth={font(105)}
-          iconHeight={font(105)}
-          style={{ top: '35%', left: '50%' }}
+          iconWidth={font(135)}
+          iconHeight={font(135)}
+          style={{ top: font(355), left: font(125) }}
           onMaiaDamaged={() => setShowDamagedMaia(true)}
         />
       )}
@@ -408,7 +441,7 @@ const CaveScreen = () => {
           healthKey="joxHealth"
           Icon={JoxIcon}
           iconWidth={font(110)}
-          iconHeight={font(110)}
+          iconHeight={font(190)}
           style={{ top: '35%', left: '10%' }}
           onMaiaDamaged={() => setShowDamagedMaia(true)}
         />
@@ -421,33 +454,27 @@ const CaveScreen = () => {
           enemyKey="riff"
           healthKey="riffHealth"
           Icon={RiffIcon}
-          iconWidth={font(80)}
-          iconHeight={font(80)}
-          style={{ top: '35%', left: '29%' }}
+          iconWidth={font(160)}
+          iconHeight={font(160)}
+          style={{ top: '40%', left: '50%' }}
           onMaiaDamaged={() => setShowDamagedMaia(true)}
         />
       )}
-      {(currentImageIndex > 0) && (currentImageIndex < 4) &&(
-        <View style={styles.backIcons}>
-          <Pressable style={styles.arrowButton} onPress={handlePrevImage}>
-            <ArrowIcon style={styles.backArrow} height={font(45)} width={font(45)} />
-          </Pressable>
-        </View>
-      )}
-          {((currentImageIndex == 2)||(currentImageIndex == 4) )&& (
-            <View style={styles.rightIcons}>
-              <Pressable style={styles.arrowButton} onPress={handleNextIcon}>
-                <ArrowIcon height={font(45)} width={font(45)} />
-              </Pressable>
-            </View>
-            )}
-          {((currentImageIndex == 1)||(currentImageIndex == 5) )&& (
-            <View style={styles.leftIcons}>
-              <Pressable style={styles.arrowButton} onPress={handlePrevIcon}>
-                <ArrowIcon style={styles.leftArrow} height={font(45)} width={font(45)} />
-              </Pressable>
-            </View>
-          )}
+      {(NAV_ARROWS[currentImageIndex] ?? []).map(arrow => (
+        <IconButton
+          key={arrow.key}
+          Icon={ArrowIcon}
+          width={font(50)}
+          height={font(50)}
+          style={{
+            top: arrow.top,
+            ...(arrow.left  !== undefined ? { left:  arrow.left  } : {}),
+            ...(arrow.right !== undefined ? { right: arrow.right } : {}),
+            ...(arrow.transform           ? { transform: arrow.transform } : {}),
+          }}
+          onPress={arrow.onPress}
+        />
+      ))}
       <View style={styles.maiaContainer}>
         {showDamagedMaia
           ? <ShakyIcon ref={maiaShakeRef} Icon={MaiaIcon} height={font(150)} width={font(150)} />
@@ -485,43 +512,11 @@ const CaveScreen = () => {
 };
 
 const styles = StyleSheet.create({
-  container: { flex: 1 },
+  container: { flex: 1, backgroundColor:'#689692' },
   backgroundImage: {
     ...StyleSheet.absoluteFillObject,
-    width: '100%',
-    height: '30%'
-  },
-  buttonImage: { width: '100%', height: '30%' },
-  backIcons: {
-    flexDirection: 'row',
-    width: '100%',
-    justifyContent: 'space-between',
-    position: 'absolute',
-    top: '70%',
-    paddingHorizontal: '2%'
-  },
-  leftIcons: {
-    flexDirection: 'row',
-    position: 'absolute',
-    top: '50%',
-    left: 0, // Alinea el contenedor al borde derecho
-    paddingHorizontal: '2%',
-    justifyContent: 'flex-end', // Alinea los íconos a la derecha dentro del contenedor
-    width: 'auto', // O eliminá la propiedad 'width' si no hace falta ocupar todo el ancho
-  },
-  rightIcons: {
-    flexDirection: 'row',
-    position: 'absolute',
-    top: '50%',
-    right: 0, // Alinea el contenedor al borde derecho
-    paddingHorizontal: '2%',
-    justifyContent: 'flex-end', // Alinea los íconos a la derecha dentro del contenedor
-    width: 'auto', // O eliminá la propiedad 'width' si no hace falta ocupar todo el ancho
-  },
-  backArrow: { transform: [{ rotate: '90deg' }] },
-  arrowButton: { width: font(45), height: font(45) },
-  leftArrow: {
-    transform: [{ scaleX: -1 }],
+    width:'100%',
+    height:'100%'
   },
   maiaContainer: {
     position: 'absolute',

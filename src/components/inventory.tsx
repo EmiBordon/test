@@ -107,13 +107,13 @@ const Inventory: React.FC<InventoryProps> = ({
         {/* Barra de monedas */}
         <View style={styles.coinsBar}>
           <View style={styles.healthContainer}>
+            <Text style={styles.healthBarText}>{coins}</Text>
             <CoinsIcon
               height={font(18)}
               width={font(18)}
               style={styles.hearthIcon}
               overflow='hidden'
             />
-            <Text style={styles.healthBarText}>{coins}</Text>
           </View>
         </View>
 
@@ -230,7 +230,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   hearthIcon: {
-    marginRight: "5%",
+    marginLeft: font(3),
   },
   healthBarText: {
     color: "black",
@@ -240,7 +240,7 @@ const styles = StyleSheet.create({
   coinsBar: {
     position: "absolute",
     top: "-70%",
-    right: "5%",
+    right: "1%",
     padding: "-3%",
   },
   objectivesContainer: {

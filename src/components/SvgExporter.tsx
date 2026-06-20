@@ -82,6 +82,7 @@ import GrapesSvg from '../assets/grapes.svg';
 import HealthPotionSvg from '../assets/health-potion.svg';
 import BigHealthPotionSvg from '../assets/big-health-potion.svg';
 import BowSvg from '../assets/bow.svg';
+import BowShootSvg from '../assets/bowshoot.svg';
 import BarisSvg from '../assets/baris.svg';
 import ShopGirlSvg from '../assets/shopgirl.svg';
 import CoinsSvg from '../assets/coins.svg';
@@ -214,6 +215,7 @@ const SuperSwordIcon = (props: any) => <SuperSwordSvg {...props} />;
 const DaggersIcon = (props: any) => <DaggersSvg {...props} />;
 const CrossBowIcon = (props: any) => <CrossBowSvg {...props} />;
 const BowArrowIcon = (props: any) => <BowArrowSvg {...props} />;
+const BowShootIcon = (props: any) => <BowShootSvg {...props} />;
 const QuiverArrowIcon = (props: any) => <QuiverSvg {...props} />;
 const HearthIcon = (props: any) => <HearthSvg {...props} />;
 const BrokenHearthIcon = (props: any) => <BrokenHearthSvg {...props} />;
@@ -358,6 +360,7 @@ export {
   DaggersIcon,
   CrossBowIcon,
   BowArrowIcon,
+  BowShootIcon,
   QuiverArrowIcon,
   HearthIcon,
   BrokenHearthIcon,

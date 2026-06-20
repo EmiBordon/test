@@ -151,8 +151,8 @@ const SimpleBattle: React.FC<SimpleBattleProps> = ({
 
         <TouchableOpacity onPress={() => setShowBattleUI(prev => !prev)}>
           {showDamagedEnemy
-            ? <ShakyIcon ref={enemyIconRef} Icon={Icon} width={iconWidth} height={iconHeight} />
-            : <Icon width={iconWidth} height={iconHeight} />
+            ? <ShakyIcon ref={enemyIconRef} Icon={Icon} width={iconWidth} height={iconHeight}  />
+            : <Icon width={iconWidth} height={iconHeight} overflow='hidden' />
           }
         </TouchableOpacity>
 
@@ -162,27 +162,27 @@ const SimpleBattle: React.FC<SimpleBattleProps> = ({
             {characterState === 0 && (
               <>
                 <TouchableOpacity style={styles.actionBtn} onPress={() => setShowDrawBar(true)}>
-                  {React.createElement(WEAPON_ICONS[currentWeapon] ?? SwordIcon, { width: font(36), height: font(36) })}
+                  {React.createElement(WEAPON_ICONS[currentWeapon] ?? SwordIcon, { width: font(36), height: font(36), overflow:'hidden' })}
                 </TouchableOpacity>
                 <TouchableOpacity
                   style={[styles.actionBtn, arrows === 0 && styles.actionBtnDisabled]}
                   onPress={() => setShowShootingCircle(true)}
                   disabled={arrows === 0}
                 >
-                  <BowIcon width={font(36)} height={font(36)} />
+                  <BowIcon width={font(36)} height={font(36)} overflow='hidden' />
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.actionBtn} onPress={() => setShowPlanillaGrid(true)}>
-                  <ManaBookIcon width={font(36)} height={font(36)} />
+                  <ManaBookIcon width={font(36)} height={font(36)} overflow='hidden' />
                 </TouchableOpacity>
               </>
             )}
             {characterState === 1 && (
               <>
                 <TouchableOpacity style={styles.actionBtn} onPress={handleShieldPress}>
-                  <ShieldIcon width={font(36)} height={font(36)} />
+                  <ShieldIcon width={font(36)} height={font(36)} overflow='hidden' />
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.actionBtn} onPress={() => setShowPlanillaGrid(true)}>
-                  <ManaBookIcon width={font(36)} height={font(36)} />
+                  <ManaBookIcon width={font(36)} height={font(36)} overflow='hidden' />
                 </TouchableOpacity>
               </>
             )}

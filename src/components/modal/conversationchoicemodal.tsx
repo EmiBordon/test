@@ -89,34 +89,42 @@ const ConversationChoiceModal: React.FC<ConversationChoiceModalProps> = ({
 const styles = StyleSheet.create({
   overlay: {
     flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.5)', // Fondo semitransparente (negro)
-    justifyContent: 'flex-end',         // Modal en la parte inferior
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    justifyContent: 'flex-end',
     alignItems: 'center',
   },
   modalContainer: {
-    width: '100%',          // Ocupa el 95% del ancho de la pantalla
-    backgroundColor: '#fff', // Fondo blanco
-    borderTopLeftRadius: 10,
-    borderTopRightRadius: 10,
+    width: '100%',
+    backgroundColor: 'rgb(92, 50, 30)',
+    borderTopLeftRadius: 12,
+    borderTopRightRadius: 12,
+    borderTopWidth: 3,
+    borderLeftWidth: 3,
+    borderRightWidth: 3,
+    borderBottomWidth: 3,
+    borderColor: '#C8A84B',
     padding: '5%',
     marginBottom: '2%',
+    shadowColor: '#C8A84B',
+    shadowOpacity: 0.4,
+    shadowRadius: 8,
   },
   contentRow: {
     flexDirection: 'row',
     alignItems: 'center',
   },
   svgContainer: {
-    width: '30%',          // 30% para el SVG
-    aspectRatio: 1,        // Contenedor cuadrado
+    width: '30%',
+    aspectRatio: 1,
     justifyContent: 'center',
     alignItems: 'center',
   },
   textContainer: {
-    width: '70%',          // 70% para el texto
+    width: '70%',
     paddingLeft: '5%',
   },
   dialogueText: {
-    color: '#000',
+    color: '#E8D5A3',
     fontSize: font(20),
   },
   button: {
@@ -130,17 +138,22 @@ const styles = StyleSheet.create({
   },
   buttonRow: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'space-around',
     marginTop: '5%',
   },
   choiceButton: {
-    backgroundColor: 'black',
-    padding: 10,
-    borderRadius: 5,
-    marginHorizontal: '5%',
+    backgroundColor: '#6B2D0A',
+    paddingVertical: font(10),
+    paddingHorizontal: font(22),
+    borderRadius: 8,
+    borderWidth: 2,
+    borderColor: '#C8A84B',
+    shadowColor: '#C8A84B',
+    shadowOpacity: 0.5,
+    shadowRadius: 4,
   },
   choiceButtonText: {
-    color: 'white',
+    color: '#FFD700',
     fontSize: font(16),
     fontWeight: 'bold',
   },

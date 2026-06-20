@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { View, TouchableOpacity, StyleSheet, Dimensions, Text } from 'react-native';
+import { useSelector } from 'react-redux';
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
@@ -8,12 +9,23 @@ import Animated, {
   Easing,
   runOnJS,
 } from 'react-native-reanimated';
+import { SwordIcon, DaggersIcon, PirateSwordIcon, DoubleSwordIcon, SuperSwordIcon } from '../SvgExporter';
+import { font } from './fontsize';
 import { getRandomBarNumber } from './randombarnumber';
+
+const WEAPON_ICONS: Record<number, React.ComponentType<any>> = {
+  0: SwordIcon,
+  1: DaggersIcon,
+  2: PirateSwordIcon,
+  3: DoubleSwordIcon,
+  4: SuperSwordIcon,
+};
 
 const { width } = Dimensions.get('window');
 const CONTAINER_WIDTH = width * 0.9; // Ancho de la barra
-const BALL_SIZE = width * 0.03;
-const FULL_DISTANCE = CONTAINER_WIDTH - BALL_SIZE;
+const POINTER_WIDTH  = font(4);
+const POINTER_HEIGHT = font(22);
+const FULL_DISTANCE  = CONTAINER_WIDTH - POINTER_WIDTH;
 
 // Configuración de la zona objetivo
 const TARGET_ZONE_PERCENTAGE = 0.1;
@@ -26,6 +38,9 @@ interface DrawBarProps {
 }
 
 const DrawBar: React.FC<DrawBarProps> = ({ levels, duration, onResult }) => {
+  const currentWeapon: number = useSelector((state: any) => state.weapons.currentWeapon);
+  const WeaponIcon = WEAPON_ICONS[currentWeapon] ?? SwordIcon;
+
   const [currentLevel, setCurrentLevel] = useState(1);
   const [targetZoneLeft, setTargetZoneLeft] = useState((CONTAINER_WIDTH - TARGET_ZONE_WIDTH) / 2);
   // Este estado controla si ya se inició la animación en el primer nivel
@@ -117,7 +132,7 @@ const DrawBar: React.FC<DrawBarProps> = ({ levels, duration, onResult }) => {
         <Animated.View style={[styles.ball, animatedStyle]} />
       </View>
       <TouchableOpacity onPress={handlePress} style={styles.button}>
-        <Text style={styles.buttonText}>ATACAR</Text>
+        <WeaponIcon width={120} height={120} overflow='hidden' />
       </TouchableOpacity>
     </View>
   );
@@ -131,41 +146,46 @@ const styles = StyleSheet.create({
   },
   levelText: {
     marginBottom: '3%',
-    fontSize: 18,
+    fontSize: font(18),
     fontWeight: 'bold',
+    color: '#C8A84B',
+    textShadowColor: '#6B2D0A',
+    textShadowRadius: 4,
   },
   bar: {
     width: CONTAINER_WIDTH,
-    height: '6%',
-    backgroundColor: '#ddd',
-    borderRadius: 5,
+    height: font(22),
+    backgroundColor: '#3D1A00',
+    borderRadius: 6,
+    borderWidth: 2,
+    borderColor: '#C8A84B',
     overflow: 'hidden',
     marginBottom: '5%',
+    shadowColor: '#C8A84B',
+    shadowOpacity: 0.4,
+    shadowRadius: 6,
   },
   targetZone: {
     position: 'absolute',
     height: '100%',
-    backgroundColor: 'rgba(121, 122, 121, 0.81)',
+    backgroundColor: 'rgba(200, 168, 75, 0.65)',
   },
   ball: {
-    width: BALL_SIZE,
-    height: BALL_SIZE,
-    borderRadius: BALL_SIZE / 2,
-    backgroundColor: 'black',
+    width: POINTER_WIDTH,
+    height: POINTER_HEIGHT,
+    borderRadius: 2,
+    backgroundColor: '#ff020f',
     position: 'absolute',
-    //top: '7%',
+    shadowColor: '#f05236',
+    shadowOpacity: 0.9,
+    shadowRadius: 4,
   },
   button: {
-    padding: '3%',
-    backgroundColor: 'black',
-    borderRadius: 5,
     marginTop: '20%',
-    top:'30%',
-  },
-  buttonText: {
-    color: '#fff',
-    fontWeight: 'bold',
-    fontSize: 20,
+    top: '30%',
+    backgroundColor: 'transparent',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
 
