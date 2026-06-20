@@ -1,14 +1,13 @@
 import React, { useState } from 'react';
-import { Modal, View, TouchableOpacity, Text, StyleSheet, Dimensions } from 'react-native';
-import { GrapesIcon, HealthPotionIcon, BigHealthPotionIcon, QuiverArrowIcon, BowIcon, DaggersIcon, SwordIcon, BombIcon, CrossIcon } from '../SvgExporter';
-import IconButton from '../functions/iconbutton';
+import { Modal, View, TouchableOpacity, Text, StyleSheet } from 'react-native';
+import { GrapesIcon, HealthPotionIcon, BigHealthPotionIcon, QuiverArrowIcon, BowIcon, DaggersIcon, SwordIcon, BombIcon, CrossIcon, MaiaIcon } from '../SvgExporter';
 import { decrementBigHealthPotion, decrementGrapes, decrementHealthPotion } from '../../redux/healingSlice';
 import { useDispatch, useSelector } from "react-redux";
 import { incrementMaiaCurrentHealth, incrementMaiaMana } from '../../redux/maiaSlice';
 import { useObjects, GameObject } from '../objects';
 import { font } from '../functions/fontsize';
+import HealthBar from '../healthbar';
 
-// Definir el tipo del estado de Redux
 interface RootState {
   healing: {
     grapes: number;
@@ -24,7 +23,6 @@ interface RootState {
   };
 }
 
-// Tipo extendido para incluir objetos curativos y otros
 interface ExtendedGameObject extends GameObject {
   type: 'healing' | 'weapon' | 'treasure' | 'key' | 'other';
   healingType?: 'grapes' | 'healthpotion' | 'bighealthpotion';
@@ -35,75 +33,47 @@ interface BagPackModalProps {
   onClose: () => void;
 }
 
+const SLOT_SIZE = font(62);
+const SLOT_GAP = font(6);
+const PANEL_PADDING = font(12);
+
+// Altura del contenido de la columna de armas: 3 slots apilados + 2 gaps
+const EQUIP_CONTENT_H = 3 * SLOT_SIZE + 2 * SLOT_GAP;
+// Espacio para el mini healthbar encima del retrato
+const MINI_HB_H = font(24);
+const MINI_HB_GAP = font(4);
+// Altura total del panel de equipo
+const EQUIP_PANEL_H = EQUIP_CONTENT_H + MINI_HB_H + MINI_HB_GAP + 2 * PANEL_PADDING;
+
+// Altura del panel de inventario: grid 4×4 + espacio reservado para descripción + botón usar
+const GRID_H = 4 * SLOT_SIZE + 3 * SLOT_GAP + font(10);
+const INV_PANEL_H = GRID_H + font(60) + font(50) + 2 * PANEL_PADDING;
+
 const BagPackModal: React.FC<BagPackModalProps> = ({ visible, onClose }) => {
   const [selectedItem, setSelectedItem] = useState<ExtendedGameObject | null>(null);
   const [page, setPage] = useState(0);
   const dispatch = useDispatch();
 
-  // Obtener estados desde Redux
   const healingState = useSelector((state: RootState) => state.healing);
   const maiaHealth = useSelector((state: RootState) => state.maia.maiahealth);
   const maiaCurrentHealth = useSelector((state: any) => state.maia.maiacurrenthealth);
   const maiaMana = useSelector((state: RootState) => state.maia.maiaMana);
   const currentWeapon = useSelector((state: RootState) => state.weapons.currentWeapon);
 
-  // Obtener objetos desde el hook
   const { treasures, keys, inventory } = useObjects();
 
-  // Crear lista completa de objetos incluyendo curativos
-  const createCompleteItemList = (): ExtendedGameObject[] => {
+  const arrowItem = inventory.find(item => item.id === 'arrows');
+  const arrowCount = (arrowItem && typeof arrowItem.state === 'number') ? arrowItem.state : 0;
+  const WeaponIcon = currentWeapon === 1 ? DaggersIcon : SwordIcon;
+
+  const createInventoryItemList = (): ExtendedGameObject[] => {
     const allItems: ExtendedGameObject[] = [];
 
-    // PRIORIDAD 1: Agregar arma actual basada en currentWeapon (espada/dagas primero)
-    if (currentWeapon === 1) {
-      allItems.push({
-        id: 'daggers',
-        name: 'Dagas',
-        description: 'Poderosas Dagas de combate, aumenta tu Daño a 3',
-        icon: DaggersIcon,
-        state: 1,
-        type: 'weapon'
-      } as ExtendedGameObject);
-    } else if (currentWeapon === 0) {
-      allItems.push({
-        id: 'sword',
-        name: 'Espada',
-        description: 'Espada de combate avanzada',
-        icon: SwordIcon,
-        state: 1,
-        type: 'weapon'
-      } as ExtendedGameObject);
-    }
-
-    // PRIORIDAD 2: Agregar arco (arma base)
-    allItems.push({
-      id: 'bow',
-      name: 'Arco',
-      description: 'Arma de combate a distancia básica',
-      icon: BowIcon,
-      state: 1,
-      type: 'weapon'
-    } as ExtendedGameObject);
-
-    // PRIORIDAD 3: Agregar flechas del inventario
-    const arrowItem = inventory.find(item => item.id === 'arrows');
-    if (arrowItem && typeof arrowItem.state === 'number' && arrowItem.state > 0) {
-      allItems.push({
-        ...arrowItem,
-        type: 'weapon'
-      } as ExtendedGameObject);
-    }
-
-    // PRIORIDAD 4: Agregar bomba del inventario
     const bombItem = inventory.find(item => item.id === 'bomb');
     if (bombItem && typeof bombItem.state === 'number' && bombItem.state > 0) {
-      allItems.push({
-        ...bombItem,
-        type: 'weapon'
-      } as ExtendedGameObject);
+      allItems.push({ ...bombItem, type: 'weapon' } as ExtendedGameObject);
     }
 
-    // PRIORIDAD 5: Agregar objetos curativos
     if (healingState.grapes > 0) {
       allItems.push({
         id: 'grapes',
@@ -116,12 +86,10 @@ const BagPackModal: React.FC<BagPackModalProps> = ({ visible, onClose }) => {
       });
     }
 
-    // Agregar pociones de curación del inventario
-    const healingInventory = inventory.filter(item => 
-      (item.id === 'healthpotion' || item.id === 'bighealthpotion') && 
+    const healingInventory = inventory.filter(item =>
+      (item.id === 'healthpotion' || item.id === 'bighealthpotion') &&
       typeof item.state === 'number' && item.state > 0
     );
-    
     healingInventory.forEach(item => {
       allItems.push({
         ...item,
@@ -130,51 +98,35 @@ const BagPackModal: React.FC<BagPackModalProps> = ({ visible, onClose }) => {
       } as ExtendedGameObject);
     });
 
-    // PRIORIDAD 6: Agregar tesoros con cantidad > 0
     treasures.forEach(treasure => {
       if (typeof treasure.state === 'number' && treasure.state > 0) {
-        allItems.push({
-          ...treasure,
-          type: 'treasure'
-        } as ExtendedGameObject);
+        allItems.push({ ...treasure, type: 'treasure' } as ExtendedGameObject);
       }
     });
 
-    // PRIORIDAD 7: Agregar llaves al final con estado true
     keys.forEach(key => {
       if (typeof key.state === 'boolean' && key.state) {
-        allItems.push({
-          ...key,
-          state: 1, // Convertir boolean a número para visualización
-          type: 'key'
-        } as ExtendedGameObject);
+        allItems.push({ ...key, state: 1, type: 'key' } as ExtendedGameObject);
       }
     });
 
     return allItems;
   };
 
-  const allItems = createCompleteItemList();
+  const allItems = createInventoryItemList();
 
   const COLS = 4;
   const ROWS = 4;
-  const itemsPerPage = COLS * ROWS; // 16
+  const itemsPerPage = COLS * ROWS;
   const totalPages = Math.ceil(allItems.length / itemsPerPage);
   const paginatedItems = allItems.slice(page * itemsPerPage, (page + 1) * itemsPerPage);
 
-  // Función para manejar la selección de objetos
   const handleItemSelect = (item: ExtendedGameObject) => {
-    if (selectedItem?.id === item.id) {
-      setSelectedItem(null);
-    } else {
-      setSelectedItem(item);
-    }
+    setSelectedItem(prev => prev?.id === item.id ? null : item);
   };
 
-  // Función para usar objetos curativos
   const handleUseHealing = () => {
     if (!selectedItem || selectedItem.type !== 'healing') return;
-
     switch (selectedItem.healingType) {
       case 'grapes':
         if (maiaCurrentHealth >= maiaHealth) return;
@@ -195,7 +147,6 @@ const BagPackModal: React.FC<BagPackModalProps> = ({ visible, onClose }) => {
     setSelectedItem(null);
   };
 
-  // Verificar si el objeto seleccionado es usable
   const isManaPotion = selectedItem?.healingType === 'healthpotion' || selectedItem?.healingType === 'bighealthpotion';
   const isGrapes = selectedItem?.healingType === 'grapes';
   const canUseSelected =
@@ -205,32 +156,19 @@ const BagPackModal: React.FC<BagPackModalProps> = ({ visible, onClose }) => {
     !(isManaPotion && maiaMana >= 3) &&
     !(isGrapes && maiaCurrentHealth >= maiaHealth);
 
-  // Funciones de navegación
   const handleNextPage = () => {
-    if ((page + 1) * itemsPerPage < allItems.length) {
-      setPage(page + 1);
-      setSelectedItem(null);
-    }
+    if ((page + 1) * itemsPerPage < allItems.length) { setPage(page + 1); setSelectedItem(null); }
   };
-
   const handlePrevPage = () => {
-    if (page > 0) {
-      setPage(page - 1);
-      setSelectedItem(null);
-    }
+    if (page > 0) { setPage(page - 1); setSelectedItem(null); }
   };
 
   const renderSlot = (item: ExtendedGameObject | null, index: number) => {
-    if (!item) {
-      return <View key={`empty-${index}`} style={styles.slot} />;
-    }
+    if (!item) return <View key={`empty-${index}`} style={styles.slot} />;
 
     const isSelected = selectedItem?.id === item.id;
     const shouldShowQuantity = !(
-      item.id === 'bow' ||
-      item.id === 'sword' ||
-      item.id === 'daggers' ||
-      item.type === 'key'
+      item.id === 'bow' || item.id === 'sword' || item.id === 'daggers' || item.type === 'key'
     );
 
     return (
@@ -240,78 +178,101 @@ const BagPackModal: React.FC<BagPackModalProps> = ({ visible, onClose }) => {
         onPress={() => handleItemSelect(item)}
       >
         <item.icon width={font(34)} height={font(34)} />
-        {shouldShowQuantity && (
-          <Text style={styles.slotQuantity}>{item.state}</Text>
-        )}
+        {shouldShowQuantity && <Text style={styles.slotQuantity}>{item.state}</Text>}
       </TouchableOpacity>
     );
   };
 
   const slots = Array.from({ length: itemsPerPage }, (_, i) => paginatedItems[i] ?? null);
 
+  const handleClose = () => { setSelectedItem(null); setPage(0); onClose(); };
+
   return (
     <Modal visible={visible} animationType="slide" transparent>
       <View style={styles.overlay}>
-        <View style={styles.modalContainer}>
-          <Text style={styles.headerText}></Text>
+        <View style={styles.mainWrapper}>
 
-          {/* Grilla 4x4 */}
-          <View style={styles.grid}>
-            {slots.map((item, i) => renderSlot(item, i))}
+          {/* Panel superior: personaje y equipo */}
+          <View style={styles.equipmentPanel}>
+
+            
+          {/* Columna izquierda: mini healthbar + retrato */}
+          <View style={styles.maiaFrame}>
+            <View style={styles.maiaColumn}>
+              <View style={styles.miniHealthBarWrapper}>
+                <View style={styles.miniHealthBarScale}>
+                  <HealthBar />
+                </View>
+              </View>
+            
+                <MaiaIcon width={font(100)} height={font(100)} />
+              </View>
+            </View>
+
+            {/* Columna central: arma actual, arco, flechas */}
+            <View style={styles.weaponColumn}>
+              <View style={styles.slot}>
+                <WeaponIcon width={font(34)} height={font(34)} />
+              </View>
+              <View style={styles.slot}>
+                <BowIcon width={font(34)} height={font(34)} />
+              </View>
+              <View style={styles.slot}>
+                <QuiverArrowIcon width={font(34)} height={font(34)} />
+                {arrowCount > 0 && <Text style={styles.slotQuantity}>{arrowCount}</Text>}
+              </View>
+            </View>
+
+            {/* Columna derecha: estadísticas */}
+            <View style={styles.statsColumn}>
+              <Text style={styles.statLabel}>Daño</Text>
+              <Text style={styles.statValue}>1</Text>
+              <Text style={styles.statLabel}>Nivel Mágico</Text>
+              <Text style={styles.statValue}>1</Text>
+              <Text style={styles.statLabel}>Hechizos</Text>
+              <Text style={styles.statValue}>1</Text>
+              <Text style={styles.statLabel}>Objetos</Text>
+              <Text style={styles.statValue}>5</Text>
+            </View>
+
+            <TouchableOpacity style={styles.closeButton} onPress={handleClose}>
+              <CrossIcon width={font(26)} height={font(26)} />
+            </TouchableOpacity>
           </View>
 
-          {/* Paginación — solo cuando hay más de 16 items */}
-          {totalPages > 1 && (
-            <View style={styles.paginationContainer}>
-              <TouchableOpacity
-                style={styles.paginationButton}
-                onPress={handlePrevPage}
-                disabled={page === 0}
-              >
-                <Text style={[styles.paginationButtonText, { color: page === 0 ? '#5a3a1a' : '#C8A84B' }]}>
-                  {"<<"}
-                </Text>
-              </TouchableOpacity>
-              <Text style={styles.pageIndicator}>{page + 1} / {totalPages}</Text>
-              <TouchableOpacity
-                style={styles.paginationButton}
-                onPress={handleNextPage}
-                disabled={page === totalPages - 1}
-              >
-                <Text style={[styles.paginationButtonText, { color: page === totalPages - 1 ? '#5a3a1a' : '#C8A84B' }]}>
-                  {">>"}
-                </Text>
-              </TouchableOpacity>
+          {/* Panel inferior: inventario */}
+          <View style={styles.inventoryPanel}>
+            <View style={styles.grid}>
+              {slots.map((item, i) => renderSlot(item, i))}
             </View>
-          )}
 
-          {/* Descripción del objeto seleccionado */}
-          {selectedItem && (
-            <View style={styles.descriptionContainer}>
-              <Text style={styles.descriptionText}>
-                {selectedItem.description || 'Sin descripción disponible'}
-              </Text>
-            </View>
-          )}
+            {totalPages > 1 && (
+              <View style={styles.paginationContainer}>
+                <TouchableOpacity style={styles.paginationButton} onPress={handlePrevPage} disabled={page === 0}>
+                  <Text style={[styles.paginationButtonText, { color: page === 0 ? '#5a3a1a' : '#C8A84B' }]}>{"<<"}</Text>
+                </TouchableOpacity>
+                <Text style={styles.pageIndicator}>{page + 1} / {totalPages}</Text>
+                <TouchableOpacity style={styles.paginationButton} onPress={handleNextPage} disabled={page === totalPages - 1}>
+                  <Text style={[styles.paginationButtonText, { color: page === totalPages - 1 ? '#5a3a1a' : '#C8A84B' }]}>{">>"}</Text>
+                </TouchableOpacity>
+              </View>
+            )}
 
-          {/* Botón Usar (solo para objetos curativos) */}
-          {canUseSelected && (
-            <TouchableOpacity style={styles.useButton} onPress={handleUseHealing}>
-              <Text style={styles.useButtonText}>Usar</Text>
-            </TouchableOpacity>
-          )}
+            {selectedItem && (
+              <View style={styles.descriptionContainer}>
+                <Text style={styles.descriptionText}>
+                  {selectedItem.description || 'Sin descripción disponible'}
+                </Text>
+              </View>
+            )}
 
-          <IconButton
-            Icon={CrossIcon}
-            width={font(28)}
-            height={font(28)}
-            style={{ top: font(10), right: font(10), zIndex: 10 }}
-            onPress={() => {
-              setSelectedItem(null);
-              setPage(0);
-              onClose();
-            }}
-          />
+            {canUseSelected && (
+              <TouchableOpacity style={styles.useButton} onPress={handleUseHealing}>
+                <Text style={styles.useButtonText}>Usar</Text>
+              </TouchableOpacity>
+            )}
+          </View>
+
         </View>
       </View>
     </Modal>
@@ -320,8 +281,17 @@ const BagPackModal: React.FC<BagPackModalProps> = ({ visible, onClose }) => {
 
 export default BagPackModal;
 
-const SLOT_SIZE = font(62);
-const SLOT_GAP = font(6);
+const panelStyle = {
+  backgroundColor: 'rgba(18, 7, 2, 0.97)',
+  borderRadius: 12,
+  padding: PANEL_PADDING,
+  borderWidth: 3,
+  borderColor: '#C8A84B',
+  shadowColor: '#C8A84B',
+  shadowOpacity: 0.5,
+  shadowRadius: 10,
+  elevation: 5,
+} as const;
 
 const styles = StyleSheet.create({
   overlay: {
@@ -330,26 +300,82 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  modalContainer: {
+  mainWrapper: {
     width: '90%',
-    backgroundColor: 'rgba(18, 7, 2, 0.97)',
-    borderRadius: 12,
-    padding: font(16),
-    borderWidth: 3,
-    borderColor: '#C8A84B',
-    shadowColor: '#C8A84B',
-    shadowOpacity: 0.5,
-    shadowRadius: 10,
-    elevation: 5,
+    gap: font(8),
   },
-  headerText: {
-    fontSize: font(22),
-    color: '#C8A84B',
+  equipmentPanel: {
+    ...panelStyle,
+    height: EQUIP_PANEL_H,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: font(12),
+  },
+  maiaColumn: {
+    flexDirection: 'column',
+    alignItems: 'center',
+    gap: MINI_HB_GAP,
+  },
+  miniHealthBarWrapper: {
+    width: font(86),
+    height: MINI_HB_H,
+    overflow: 'hidden',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  miniHealthBarScale: {
+    transform: [{ scale: 0.55 }],
+  },
+  maiaFrame: {
+    width: font(86),
+    height: EQUIP_CONTENT_H,
+    backgroundColor: '#6B2D0A',
+    borderRadius: 8,
+    borderWidth: 2,
+    borderColor: '#C8A84B',
+    justifyContent: 'center',
+    alignItems: 'center',
+    shadowColor: '#D4AF37',
+    shadowOpacity: 0.4,
+    shadowRadius: 3,
+  },
+  weaponColumn: {
+    flexDirection: 'column',
+    justifyContent: 'center',
+    gap: SLOT_GAP,
+    alignSelf: 'stretch',
+  },
+  statsColumn: {
+    flex: 1,
+    flexDirection: 'column',
+    justifyContent: 'space-around',
+    alignSelf: 'stretch',
+    paddingRight: font(28),
+    borderLeftWidth: 1,
+    borderLeftColor: 'rgba(200, 168, 75, 0.3)',
+    paddingLeft: font(10),
+  },
+  statLabel: {
+    color: 'rgba(200, 168, 75, 0.6)',
+    fontSize: font(9),
     fontWeight: 'bold',
-    marginBottom: font(12),
-    alignSelf: 'center',
-    textShadowColor: '#6B2D0A',
-    textShadowRadius: 4,
+    textTransform: 'uppercase',
+    letterSpacing: 0.5,
+  },
+  statValue: {
+    color: '#C8A84B',
+    fontSize: font(13),
+    fontWeight: 'bold',
+  },
+  closeButton: {
+    position: 'absolute',
+    top: font(8),
+    right: font(8),
+    padding: font(4),
+  },
+  inventoryPanel: {
+    ...panelStyle,
+    height: INV_PANEL_H,
   },
   grid: {
     flexDirection: 'row',
