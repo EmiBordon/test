@@ -26,16 +26,16 @@ const HealthBar = () => {
 
     if (current >= 3) {
       // Corazón completo (3 puntos de vida)
-      hearts.push(<HearthIcon width={font(20)} height={font(20)} key={i} />);
+      hearts.push(<HearthIcon width={font(20)} height={font(20)} overflow='hidden' key={i} />);
     } else if (current === 2) {
       // Corazón medio (2 puntos de vida)
-      hearts.push(<HearthMediumIcon width={font(20)} height={font(20)} key={i} />);
+      hearts.push(<HearthMediumIcon width={font(20)} height={font(20)}overflow='hidden' key={i} />);
     } else if (current === 1) {
       // Corazón bajo (1 punto de vida)
-      hearts.push(<HearthLowIcon width={font(20)} height={font(20)} key={i} />);
+      hearts.push(<HearthLowIcon width={font(20)} height={font(20)}overflow='hidden' key={i} />);
     } else {
       // Corazón vacío (0 puntos de vida)
-      hearts.push(<BrokenHearthIcon width={font(20)} height={font(20)} key={i} />);
+      hearts.push(<BrokenHearthIcon width={font(20)} height={font(20)}overflow='hidden' key={i} />);
     }
   }
 

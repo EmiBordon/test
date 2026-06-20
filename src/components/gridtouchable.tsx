@@ -34,9 +34,9 @@ const GridTouchable: React.FC<GridTouchableProps> = ({
               {
                 backgroundColor:
                   index === whiteSquare
-                    ? 'rgba(0, 0, 0, 0.93)'
+                    ? 'rgba(200, 168, 75, 0.9)'
                     : highlightedSquares.includes(index)
-                    ? 'rgba(88, 88, 88, 0.93)'
+                    ? 'rgba(107, 45, 10, 0.85)'
                     : 'rgba(0, 0, 0, 0)',
                 width: squareSize,
                 height: squareSize,
@@ -53,11 +53,17 @@ const styles = StyleSheet.create({
   overlay: {
     justifyContent: 'center',
     alignItems: 'center',
-    borderWidth: font(3),
-    position:'absolute',
-    backgroundColor: 'rgba(255, 255, 255, 0.66)',
-    top:'8%',
-    right:'1%'
+    borderWidth: 4,
+    borderColor: '#C8A84B',
+    position: 'absolute',
+    backgroundColor: 'rgba(18, 7, 2, 0.88)',
+    top: '10%',
+    right: '1%',
+    borderRadius: 6,
+    shadowColor: '#D4AF37',
+    shadowOpacity: 0.5,
+    shadowRadius: 4,
+    elevation: 4,
   },
   grid: {
     flexWrap: 'wrap',
@@ -67,8 +73,6 @@ const styles = StyleSheet.create({
   square: {
     padding: 0,
     margin: 0,
-    borderWidth: font(1),
-    borderColor: 'rgba(0, 0, 0, 0)',
     borderRadius: font(4),
   },
 });

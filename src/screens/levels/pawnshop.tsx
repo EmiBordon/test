@@ -3,7 +3,6 @@ import { View, StyleSheet, Image, BackHandler } from 'react-native';
 import { MaiaIcon, ShopGirlIcon, PawnShopBoyIcon } from '../../components/SvgExporter';
 import IconButton from '../../components/functions/iconbutton';
 import Inventory from '../../components/inventory';
-import Location from '../../components/functions/location';
 import ConversationChoiceModal from '../../components/modal/conversationchoicemodal';
 import { conversations, Conversation } from '../../components/functions/conversations';
 import { useSelector, useDispatch } from 'react-redux';
@@ -77,7 +76,6 @@ const PawnShopScreen = () => {
       mSquares={3}
       text="Joyeria"
       />
-      <Location />
 
       {modalVisible && (
         isShopModal ? (

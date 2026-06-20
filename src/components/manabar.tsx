@@ -14,7 +14,7 @@ interface RootState {
 const ManaBar = () => {
   const maiaMana = useSelector((state: RootState) => state.maia.maiaMana);
 
-  const iconProps = { width: font(45), height: font(45) };
+  const iconProps = { width: font(45), height: font(45),overflow:'hidden' };
 
   const renderIcon = () => {
     switch (maiaMana) {
@@ -28,7 +28,7 @@ const ManaBar = () => {
   return (
     <View style={styles.container}>
       <View style={styles.bookIconContainer}>
-        <ManaBookIcon width={font(45)} height={font(45)} />
+        <ManaBookIcon width={font(45)} height={font(45)} overflow='hidden' />
       </View>
       <View style={styles.manaIconContainer}>
         {renderIcon()}

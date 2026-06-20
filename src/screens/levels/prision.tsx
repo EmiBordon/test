@@ -18,7 +18,6 @@ import {
   TimIcon
 } from '../../components/SvgExporter';
 import Inventory from '../../components/inventory';
-import Location from '../../components/functions/location';
 import ConversationModal from '../../components/modal/conversationmodal';
 import ConversationChoiceModal from '../../components/modal/conversationchoicemodal';
 import { conversations, Conversation } from '../../components/functions/conversations';
@@ -357,7 +356,6 @@ const PrisionScreen = () => {
       text={locationName[currentLocationIndex].text}
       />
       <RewardManager />
-      <Location />
       {modal2Visible && (
         <ConversationChoiceModal
           visible={modal2Visible}

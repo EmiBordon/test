@@ -2,8 +2,8 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { font } from './fontsize';
-import { MenuIcon } from '../SvgExporter';
 import { useNavigation } from '@react-navigation/native';
+import MenuButton from './menubutton';
 
 const Location: React.FC = () => {
   const [showMenu, setShowMenu] = useState(false);
@@ -16,11 +16,7 @@ const Location: React.FC = () => {
 
   return (
     <>
-      <TouchableOpacity style={styles.menuButton} onPress={() => setShowMenu(!showMenu)}>
-        <View style={styles.circle}>
-          <MenuIcon width={font(25)} height={font(25)} fill='#D4AF37' />
-        </View>
-      </TouchableOpacity>
+      <MenuButton onPress={() => setShowMenu(!showMenu)} />
 
       {showMenu && (
         <View style={styles.menuContainer}>
@@ -41,26 +37,6 @@ const Location: React.FC = () => {
 };
 
 const styles = StyleSheet.create({
-  menuButton: {
-    position: 'absolute',
-    top: '1%',
-    left: '2%',
-    zIndex: 10,
-    padding: 5,
-  },
-  circle: {
-    backgroundColor: '#6B2D0A',
-    borderRadius: 15,
-    borderWidth: 2,
-    borderColor: 'black',
-    padding: 8,
-    justifyContent: 'center',
-    alignItems: 'center',
-    shadowColor: '#D4AF37',
-    shadowOpacity: 0.6,
-    shadowRadius: 4,
-    elevation: 4,
-  },
   menuContainer: {
     position: 'absolute',
     top: '8%',

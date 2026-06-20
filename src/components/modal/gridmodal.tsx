@@ -1,6 +1,7 @@
 import React from 'react';
 import { Modal, View, StyleSheet, TouchableOpacity, Text } from 'react-native';
 import { font } from '../functions/fontsize';
+import { MaiaHeadIcon } from '../SvgExporter';
 
 interface GridModalProps {
   visible: boolean;
@@ -41,15 +42,21 @@ const GridModal: React.FC<GridModalProps> = ({
                 {
                   backgroundColor:
                     index === whiteSquare
-                      ? 'rgba(0, 0, 0, 0.93)'
+                      ? 'rgba(200, 168, 75, 0.9)'
                       : highlightedSquares.includes(index)
-                      ? 'rgba(88, 88, 88, 0.93)'
+                      ? 'rgba(107, 45, 10, 0.85)'
                       : 'rgba(0, 0, 0, 0)',
                   width: squareSize,
                   height: squareSize,
+                  justifyContent: 'center',
+                  alignItems: 'center',
                 },
               ]}
-            />
+            >
+              {index === whiteSquare && (
+                <MaiaHeadIcon width={squareSize * 0.55} height={squareSize * 0.55} />
+              )}
+            </View>
           ))}
         </View>
       </TouchableOpacity>
@@ -63,21 +70,18 @@ const GridModal: React.FC<GridModalProps> = ({
 const styles = StyleSheet.create({
   overlay: {
     flex: 1,
-    // backgroundColor: 'rgba(207, 207, 207, 0.36)', // fondo negro semi-transparente
+    backgroundColor: 'rgba(10, 4, 1, 0.84)',
     justifyContent: 'center',
     alignItems: 'center',
   },
   grid: {
     flexWrap: 'wrap',
-    flexDirection: 'row',
-    backgroundColor: 'rgba(0, 0, 0, 0)',
+    flexDirection: 'row'
     
   },
   square: {
     padding: 0,
     margin: 0,
-    borderWidth: font(1),
-    borderColor: 'rgba(0, 0, 0, 0)',
     borderRadius: font(12),
   },
   locationContainer: {

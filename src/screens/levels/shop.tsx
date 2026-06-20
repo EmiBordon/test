@@ -3,7 +3,6 @@ import { View, StyleSheet, Image, BackHandler} from 'react-native';
 import { MaiaIcon, ShopGirlIcon } from '../../components/SvgExporter';
 import IconButton from '../../components/functions/iconbutton';
 import Inventory from '../../components/inventory';
-import Location from '../../components/functions/location';
 import ConversationChoiceModal from '../../components/modal/conversationchoicemodal';
 import ShopModal from '../../components/modal/shopmodal';
 import { conversations, Conversation } from '../../components/functions/conversations';
@@ -77,7 +76,6 @@ const ShopScreen = () => {
       mSquares={3}
       text="Tienda"
       />
-      <Location />
 
       {modalVisible && (
         isShopModal ? (

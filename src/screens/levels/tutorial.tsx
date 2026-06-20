@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, Pressable, Image, BackHandler } from 'react-native';
+import { View, StyleSheet, Pressable, Image, BackHandler, TouchableOpacity } from 'react-native';
 import IconButton from '../../components/functions/iconbutton';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import { MaiaIcon, MattIcon, DoorIcon, ChestCloseIcon, ArrowIcon } from '../../components/SvgExporter';
 import Inventory from '../../components/inventory';
-import Location from '../../components/functions/location';
 import ConversationModal from '../../components/modal/conversationmodal';
 import ConversationChoiceModal from '../../components/modal/conversationchoicemodal';
 import { conversations, Conversation } from '../../components/functions/conversations';
@@ -137,12 +136,12 @@ const TutorialScreen = () => {
       <IconButton Icon={CurrentIcon} width={width} height={height} style={iconStyle} onPress={handleIconPress} />
 
       <View style={styles.sideIcons}>
-        <Pressable style={styles.arrowButton} onPress={handlePrevIcon}>
-          <ArrowIcon style={styles.leftArrow} height={50} width={50} />
-        </Pressable>
-        <Pressable style={styles.arrowButton} onPress={handleNextIcon}>
-          <ArrowIcon height={50} width={50} />
-        </Pressable>
+        <TouchableOpacity style={styles.arrowButton} onPress={handlePrevIcon}>
+          <ArrowIcon style={styles.leftArrow} height={50} width={50} overflow='hidden' />
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.arrowButton} onPress={handleNextIcon}>
+          <ArrowIcon height={50} width={50} overflow='hidden' />
+        </TouchableOpacity>
       </View>
 
       <Inventory
@@ -154,7 +153,6 @@ const TutorialScreen = () => {
       mSquares={3}
       text="Casa"
       />
-      <Location />
 
       {modalVisible && (
         <ConversationChoiceModal 

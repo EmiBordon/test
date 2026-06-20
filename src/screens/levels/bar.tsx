@@ -4,7 +4,6 @@ import IconButton from '../../components/functions/iconbutton';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import { MaiaIcon, ArrowIcon, BarisIcon } from '../../components/SvgExporter';
 import Inventory from '../../components/inventory';
-import Location from '../../components/functions/location';
 import ConversationModal from '../../components/modal/conversationmodal';
 import { conversations,Conversation } from '../../components/functions/conversations';
 import { useSelector, useDispatch } from 'react-redux';
@@ -139,8 +138,6 @@ const BarScreen = () => {
       mSquares={3}
       text="Bar"
       />
-      <Location />
-      
       <RewardManager />
       <EmptyBoxManager />
       {modal2Visible && (
