@@ -30,9 +30,9 @@ const iconConfig: Record<number, {
   style: object;
 }> = {
   0: {
-    width: font(145),
-    height: font(145),
-    style: { top: '43%', left: '40%' },
+    width: font(180),
+    height: font(180),
+    style: { top: '43%', left: '20%' },
   },
   1: {
     width: font(145),

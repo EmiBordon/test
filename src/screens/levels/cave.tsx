@@ -307,7 +307,7 @@ const CaveScreen = () => {
     ],
     1: [
       { key: 'back', onPress: handlePrevImage,  top: font(550), left: font(54),  transform: [{ rotate: '90deg' }] },
-      { key: 'next', onPress: handleImagePress, top: font(234), right: font(204), transform: [{ rotate: '259deg' }] },
+      { key: 'next', onPress: handleImagePress, top: font(250), right: font(88), transform: [{ rotate: '90deg' }] },
       { key: 'side', onPress: handlePrevIcon,   top: font(334), left: font(64),  transform: [{ scaleX: 1 }] },
     ],
     2: [
