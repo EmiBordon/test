@@ -287,73 +287,77 @@ const PlanillaGrid: React.FC<PlanillaGridProps> = ({ visible, onClose }) => {
       <View style={styles.overlay}>
 
         {/* Contenido principal con fade-out */}
-        <Animated.View style={[styles.container, { opacity: contentOpacity }]}>
+        <Animated.View style={{ opacity: contentOpacity, alignItems: 'center', width: '95%' }}>
           {phase === 'drawing' && (
             <>
-              <IconButton
-                Icon={CrossIcon}
-                width={font(28)}
-                height={font(28)}
-                style={{ top: font(1), right: font(12), zIndex: 10 }}
-                onPress={onClose}
-              />
-
-              <View style={{ width: GRID_PX, height: GRID_PX, marginTop: font(28) }}>
-                <View style={StyleSheet.absoluteFillObject} pointerEvents="none">
-                  {renderLines()}
-                  {Array.from({ length: GRID_SIZE }, (_, row) => (
-                    <View key={row} style={styles.row}>
-                      {Array.from({ length: GRID_SIZE }, (_, col) => {
-                        const isCenter = row === CENTER && col === CENTER;
-                        const inPath = path.some(p => p.row === row && p.col === col);
-                        const isHead =
-                          path.length > 0 &&
-                          path[path.length - 1].row === row &&
-                          path[path.length - 1].col === col;
-                        const sz = isCenter ? CENTER_CIRCLE_SIZE : CIRCLE_SIZE;
-                        const level = Math.min(maiaManaLevel, 3);
-                        const isBlocked = BLOCKED_SETS[level].has(row * GRID_SIZE + col);
-
-                        return (
-                          <View
-                            key={col}
-                            style={[styles.cell, { width: CELL_SIZE, height: CELL_SIZE }]}
-                          >
-                            <View
-                              style={[
-                                styles.circle,
-                                { width: sz, height: sz, borderRadius: sz / 2 },
-                                isBlocked && styles.circleBlocked,
-                                !isBlocked && inPath && !isHead && styles.circleInPath,
-                                !isBlocked && isHead && styles.circleHead,
-                              ]}
-                            />
-                          </View>
-                        );
-                      })}
-                    </View>
-                  ))}
-                </View>
-
-                <View
-                  style={StyleSheet.absoluteFillObject}
-                  {...panResponder.panHandlers}
+              <View style={styles.container}>
+                <IconButton
+                  Icon={CrossIcon}
+                  width={font(28)}
+                  height={font(28)}
+                  style={{ top: font(1), right: font(12), zIndex: 10 }}
+                  onPress={onClose}
                 />
+
+                <View style={{ width: GRID_PX, height: GRID_PX, marginTop: font(28) }}>
+                  <View style={StyleSheet.absoluteFillObject} pointerEvents="none">
+                    {renderLines()}
+                    {Array.from({ length: GRID_SIZE }, (_, row) => (
+                      <View key={row} style={styles.row}>
+                        {Array.from({ length: GRID_SIZE }, (_, col) => {
+                          const isCenter = row === CENTER && col === CENTER;
+                          const inPath = path.some(p => p.row === row && p.col === col);
+                          const isHead =
+                            path.length > 0 &&
+                            path[path.length - 1].row === row &&
+                            path[path.length - 1].col === col;
+                          const sz = isCenter ? CENTER_CIRCLE_SIZE : CIRCLE_SIZE;
+                          const level = Math.min(maiaManaLevel, 3);
+                          const isBlocked = BLOCKED_SETS[level].has(row * GRID_SIZE + col);
+
+                          return (
+                            <View
+                              key={col}
+                              style={[styles.cell, { width: CELL_SIZE, height: CELL_SIZE }]}
+                            >
+                              <View
+                                style={[
+                                  styles.circle,
+                                  { width: sz, height: sz, borderRadius: sz / 2 },
+                                  isBlocked && styles.circleBlocked,
+                                  !isBlocked && inPath && !isHead && styles.circleInPath,
+                                  !isBlocked && isHead && styles.circleHead,
+                                ]}
+                              />
+                            </View>
+                          );
+                        })}
+                      </View>
+                    ))}
+                  </View>
+
+                  <View
+                    style={StyleSheet.absoluteFillObject}
+                    {...panResponder.panHandlers}
+                  />
+                </View>
+
+                <View style={styles.bottomArea}>
+                  <View style={styles.actionsRow}>
+                    <TouchableOpacity style={styles.actionButton} onPress={resetPath}>
+                      <RefreshIcon width={font(44)} height={font(44)} overflow='hidden' />
+                    </TouchableOpacity>
+                  </View>
+                  <View style={styles.manaBarContainer}>
+                    <ManaBar />
+                  </View>
+                </View>
               </View>
 
-              <View style={styles.bottomArea}>
-                <View style={styles.actionsRow}>
-                  <TouchableOpacity style={styles.actionButton} onPress={resetPath}>
-                    <RefreshIcon width={font(44)} height={font(44)} overflow='hidden' />
-                  </TouchableOpacity>
-                  <TouchableOpacity style={styles.actionButton} onPress={handleReveal}>
-                    {React.createElement(HAND_ICONS[Math.min(maiaManaLevel, 3)], { width: font(100), height: font(100), overflow:'hidden' })}
-                  </TouchableOpacity>
-                </View>
-                <View style={styles.manaBarContainer}>
-                  <ManaBar />
-                </View>
-              </View>
+              {/* Hand icon fuera del recuadro, centrado debajo */}
+              <TouchableOpacity style={styles.handButton} onPress={handleReveal}>
+                {React.createElement(HAND_ICONS[Math.min(maiaManaLevel, 3)], { width: font(120), height: font(120), overflow: 'hidden' })}
+              </TouchableOpacity>
             </>
           )}
         </Animated.View>
@@ -377,23 +381,25 @@ const PlanillaGrid: React.FC<PlanillaGridProps> = ({ visible, onClose }) => {
 const styles = StyleSheet.create({
   overlay: {
     flex: 1,
-    justifyContent: 'center',
+    justifyContent: 'flex-end',
     alignItems: 'center',
-    backgroundColor: 'rgba(255, 255, 255, 0.54)',
+    backgroundColor: 'rgba(8, 3, 1, 0.88)',
+    paddingBottom: font(0),
   },
   container: {
-    width: '95%',
-    backgroundColor: 'rgb(250, 223, 250)',
-    borderRadius: font(16),
-    paddingVertical: font(16),
+    width: '100%',
+    backgroundColor: 'rgba(192, 119, 84, 0.97)',
+    borderRadius: font(10),
+    paddingVertical: font(18),
     paddingHorizontal: CONTAINER_PADDING,
     alignItems: 'center',
-    top: font(100),
-    borderWidth: 1,
-    borderColor: '#4c1d95',
-    shadowColor: '#7c3aed',
-    shadowOpacity: 0.6,
-    shadowRadius: 20,
+    borderWidth: font(10),
+    borderColor: '#C8A84B',
+    shadowColor: '#D4AF37',
+    shadowOpacity: 0.7,
+    shadowRadius: 16,
+    elevation: 10,
+    
   },
   row: {
     flexDirection: 'row',
@@ -403,13 +409,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   circle: {
-    backgroundColor: '#190d4e',
-    shadowColor: '#6d28d9',
-    shadowOpacity: 0.4,
+    backgroundColor: '#2a1208',
+    shadowColor: '#C8A84B',
+    shadowOpacity: 0.25,
     shadowRadius: 4,
   },
   circleBlocked: {
-    backgroundColor: 'rgba(55, 42, 94, 0.35)',
+    backgroundColor: 'rgba(20, 8, 2, 0.4)',
   },
   circleInPath: {
     backgroundColor: '#5d00ff',
@@ -445,12 +451,19 @@ const styles = StyleSheet.create({
   },
   actionsRow: {
     flexDirection: 'row',
-    justifyContent: 'center',
-    gap: font(32),
+    justifyContent: 'flex-end',
+    width: '100%',
+    paddingRight: font(8),
     marginTop: font(4),
   },
   actionButton: {
     padding: font(8),
+  },
+  handButton: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: font(8),
+    padding: font(4),
   },
   revealLayer: {
     justifyContent: 'center',
@@ -460,9 +473,9 @@ const styles = StyleSheet.create({
     marginTop: font(16),
     fontSize: font(18),
     fontWeight: 'bold',
-    color: '#e9d5ff',
+    color: '#C8A84B',
     textAlign: 'center',
-    textShadowColor: '#a855f7',
+    textShadowColor: '#D4AF37',
     textShadowRadius: 8,
   },
 });

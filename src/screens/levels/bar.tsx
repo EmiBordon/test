@@ -1,36 +1,65 @@
 import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, Pressable, Image, BackHandler } from 'react-native';
+import { View, StyleSheet, Image, BackHandler } from 'react-native';
 import IconButton from '../../components/functions/iconbutton';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
-import { MaiaIcon, ArrowIcon, BarisIcon } from '../../components/SvgExporter';
+import { ArrowIcon, BarisIcon, QuestionMarkIcon } from '../../components/SvgExporter';
+import PlanillaGrid from '../../components/planillagrid';
 import Inventory from '../../components/inventory';
 import ConversationModal from '../../components/modal/conversationmodal';
-import { conversations,Conversation } from '../../components/functions/conversations';
+import { conversations, Conversation } from '../../components/functions/conversations';
 import { useSelector, useDispatch } from 'react-redux';
 import { setCharacter } from '../../redux/charactersSlice';
 import { setLocation } from '../../redux/locationsSlice';
-import Box from '../../components/functions/boxicon'; // <-- nuevo componente
-import SafeBox from '../../components/functions/safeboxicon';
+import Box from '../../components/functions/boxicon';
 import RewardManager from '../../components/functions/rewardmanager';
 import EmptyBoxManager from '../../components/functions/emptyboxmanager';
 import { incrementObjective } from '../../redux/objectivesSlice';
 import { font } from '../../components/functions/fontsize';
 
-
-const icons = [
-  { 
-    component: BarisIcon, 
-    height: font(145), 
-    width: font(145), 
-    style: { top: '43%', left: '40%' } 
-  },
-  { 
-    component: 'BoxIcon', // <-- indicamos con string porque el renderizado es diferente ahora
-    height: 100, 
-    width: 100, 
-    style: { top: '45%', left: '30%' } 
-  }
+// ── Imágenes de fondo por índice ──────────────────────────────────────────────
+const backgroundImages = [
+  require('../../images/bar.jpg'),
+  require('../../images/bardoor.jpg'),
 ];
+
+// ── Ícono por índice de imagen ────────────────────────────────────────────────
+// Editar aquí para ajustar posición y tamaño de cada ícono.
+const iconConfig: Record<number, {
+  width: number;
+  height: number;
+  style: object;
+}> = {
+  0: {
+    width: font(145),
+    height: font(145),
+    style: { top: '43%', left: '40%' },
+  },
+  1: {
+    width: font(145),
+    height: font(145),
+    style: { top: '65%', left: '65%' },
+  },
+};
+
+// ── Flechas de navegación por imagen ─────────────────────────────────────────
+// Editar aquí para cambiar posición/transform de cada flecha por imageIndex.
+type ArrowDef = {
+  key: string;
+  dir: 'next' | 'prev';
+  top: number | string;
+  left?: number | string;
+  right?: number | string;
+  transform?: object[];
+};
+
+const NAV_ARROWS: Record<number, ArrowDef[]> = {
+  0: [
+    { key: 'next', dir: 'next', top: '40%', right: '5%', transform: [{ rotate: '260deg' }] },
+  ],
+  1: [
+    { key: 'back', dir: 'prev', top: '55%', left: '5%', transform: [{ rotate: '240deg' }] },
+  ],
+};
 
 const BarScreen = () => {
   useFocusEffect(
@@ -40,113 +69,122 @@ const BarScreen = () => {
     }, [])
   );
 
-  const navigation = useNavigation();
-  const [currentIconIndex, setCurrentIconIndex] = useState(0);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [modal2Visible, setModal2Visible] = useState(false);
+  const [planillaVisible, setPlanillaVisible] = useState(false);
   const [conversationContent, setConversationContent] = useState<Conversation | null>(null);
-  const [currentSquare,setCurrentSquare ]= useState(7);
+  const [currentSquare, setCurrentSquare] = useState(7);
+
   const dispatch = useDispatch();
   const barisState = useSelector((state: any) => state.characters.baris);
 
-  const handleNextIcon = () => {
-    setCurrentIconIndex((prevIndex) => (prevIndex + 1) % icons.length);
+  const handleNextImage = () => {
+    setCurrentImageIndex(prev => Math.min(prev + 1, backgroundImages.length - 1));
   };
 
-  const handlePrevIcon = () => {
-    setCurrentIconIndex((prevIndex) => (prevIndex - 1 + icons.length) % icons.length);
+  const handlePrevImage = () => {
+    setCurrentImageIndex(prev => Math.max(prev - 1, 0));
   };
 
-  
-
- 
   const handleIconPress = () => {
-    const { component: CurrentIcon } = icons[currentIconIndex];
-    if (CurrentIcon === BarisIcon) {
-      if (barisState === 0) {
-        setConversationContent(conversations.barisconv1);
-        setModal2Visible(true);
-        dispatch(incrementObjective());
-        dispatch(setCharacter({ key: 'baris', value: 1 }));
-        dispatch(setLocation({ key: 'cave', value: 1 }));
-      } else if  (barisState === 1) {
-        setConversationContent(conversations.barisconv2);
-        setModal2Visible(true);
-      }else if (barisState === 2) {
-        setConversationContent(conversations.barisconv3);
-        setModal2Visible(true);
-      }
+    if (currentImageIndex !== 0) return;
+    if (barisState === 0) {
+      setConversationContent(conversations.barisconv1);
+      setModal2Visible(true);
+      dispatch(incrementObjective());
+      dispatch(setCharacter({ key: 'baris', value: 1 }));
+      dispatch(setLocation({ key: 'cave', value: 1 }));
+    } else if (barisState === 1) {
+      setConversationContent(conversations.barisconv2);
+      setModal2Visible(true);
+    } else if (barisState === 2) {
+      setConversationContent(conversations.barisconv3);
+      setModal2Visible(true);
     }
   };
-  
-  
-  const { component: CurrentIcon, height, width, style: iconStyle } = icons[currentIconIndex];
-  const handleImagePress = () => {
-    if (CurrentIcon !== BarisIcon) {
-      setConversationContent(conversations.barclose);
-      setModal2Visible(true);
-  }};
-  
-  const backgroundImage = (CurrentIcon === BarisIcon)
-    ? require('../../images/bar.jpg')
-    : require('../../images/bardoor.jpg');
 
-   useEffect(() => {
-     if (currentIconIndex === 0) {
-       setCurrentSquare(7);
-     }else {
-       setCurrentSquare(8);
-     }  
-     }, [currentIconIndex]); 
+  useEffect(() => {
+    setCurrentSquare(currentImageIndex === 0 ? 7 : 8);
+  }, [currentImageIndex]);
+
+  const cfg = iconConfig[currentImageIndex];
 
   return (
     <View style={styles.container}>
-      <Image source={backgroundImage} style={styles.backgroundImage} />
-      <Pressable style={styles.buttonImage} onPress={handleImagePress} />
-      {CurrentIcon === 'BoxIcon' ? (
-      <>
-      <Box
-       boxKey="barbox"
-        positionStyle={{ top: '45%', left: '25%' }}
+      <Image
+        source={backgroundImages[currentImageIndex]}
+        style={styles.backgroundImage}
+        resizeMode="cover"
       />
+
+      {/* Ícono de bar.jpg: BarisIcon */}
+      {currentImageIndex === 0 && (
+        <IconButton
+          Icon={BarisIcon}
+          width={cfg.width}
+          height={cfg.height}
+          style={cfg.style}
+          onPress={handleIconPress}
+        />
+      )}
+
+      {/* Íconos de bardoor.jpg: Box + QuestionMarkIcon */}
+      {currentImageIndex === 1 && (
+        <>
+          <Box
+            boxKey="barbox"
+            positionStyle={cfg.style}
+          />
+          <IconButton
+            Icon={QuestionMarkIcon}
+            width={font(70)}
+            height={font(70)}
+            style={{ top: '15%', left: '43%' }}
+            onPress={() => setPlanillaVisible(true)}
+          />
         </>
-        ) : (
-      <IconButton Icon={CurrentIcon} width={width} height={height} style={iconStyle} onPress={handleIconPress} />
       )}
 
-        {currentIconIndex !== 0 &&(
-      <View style={styles.leftIcons}>
-          <Pressable style={styles.arrowButton} onPress={handlePrevIcon}>
-          <ArrowIcon style={styles.leftArrow} height={font(45)} width={font(45)} />
-        </Pressable>
-      </View>
-        )}
-      {currentIconIndex === 0 &&(
-      <View style={styles.rightIcons}>
-        <Pressable style={styles.arrowButton} onPress={handleNextIcon}>
-          <ArrowIcon height={font(45)} width={font(45)} />
-        </Pressable>
-      </View>
-      )}
-
+      {/* Flechas de navegación */}
+      {(NAV_ARROWS[currentImageIndex] ?? []).map(arrow => (
+        <IconButton
+          key={arrow.key}
+          Icon={ArrowIcon}
+          width={font(45)}
+          height={font(45)}
+          style={{
+            top: arrow.top,
+            ...(arrow.left  !== undefined ? { left:  arrow.left  } : {}),
+            ...(arrow.right !== undefined ? { right: arrow.right } : {}),
+            ...(arrow.transform && arrow.transform.length > 0 ? { transform: arrow.transform } : {}),
+          }}
+          onPress={arrow.dir === 'next' ? handleNextImage : handlePrevImage}
+        />
+      ))}
 
       <Inventory
-      highlightedSquares={[7,8,5]}
-      whiteSquare={currentSquare}
-      minisSquares={16}
-      sSquares={55}
-      tSquares={9}
-      mSquares={3}
-      text="Bar"
+        highlightedSquares={[7, 8, 5]}
+        whiteSquare={currentSquare}
+        minisSquares={16}
+        sSquares={55}
+        tSquares={9}
+        mSquares={3}
+        text="Bar"
       />
       <RewardManager />
       <EmptyBoxManager />
+
       {modal2Visible && (
-        <ConversationModal 
-          visible={modal2Visible}  
+        <ConversationModal
+          visible={modal2Visible}
           conversation={conversationContent}
           onClose={() => setModal2Visible(false)}
         />
       )}
+      <PlanillaGrid
+        visible={planillaVisible}
+        onClose={() => setPlanillaVisible(false)}
+      />
     </View>
   );
 };
@@ -156,39 +194,7 @@ const styles = StyleSheet.create({
   backgroundImage: {
     ...StyleSheet.absoluteFillObject,
     width: '100%',
-    height: '40%',
-  },
-  buttonImage: { width: '100%', height: '40%' },
-  leftIcons: {
-    flexDirection: 'row',
-    position: 'absolute',
-    top: '50%',
-    left: 0, // Alinea el contenedor al borde derecho
-    paddingHorizontal: '2%',
-    justifyContent: 'flex-end', // Alinea los íconos a la derecha dentro del contenedor
-    width: 'auto', // O eliminá la propiedad 'width' si no hace falta ocupar todo el ancho
-  },
-  rightIcons: {
-    flexDirection: 'row',
-    position: 'absolute',
-    top: '50%',
-    right: 0, // Alinea el contenedor al borde derecho
-    paddingHorizontal: '2%',
-    justifyContent: 'flex-end', // Alinea los íconos a la derecha dentro del contenedor
-    width: 'auto', // O eliminá la propiedad 'width' si no hace falta ocupar todo el ancho
-  },
-  leftArrow: {
-    transform: [{ scaleX: -1 }],
-  },
-  arrowButton: {
-    width: font(45),
-    height: font(45),
-  },
-  maiaContainer: {
-    position: 'absolute',
-    bottom: '10%',
-    left: '50%',
-    transform: [{ translateX: -80 }],
+    height: '100%',
   },
 });
 

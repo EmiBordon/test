@@ -89,9 +89,6 @@ const Inventory: React.FC<InventoryProps> = ({
         tSquares={tSquares}
       />
 
-      <View style={styles.objectivesContainer}>
-        <Objectives />
-      </View>
 
       {/* Barra superior */}
       <View style={styles.topBar}>

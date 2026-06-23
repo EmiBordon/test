@@ -378,7 +378,7 @@ const CaveScreen = () => {
       {currentImageIndex === 0 && (
      <CodeBox 
       boxKey='cavebox1'
-      positionStyle={{ top: '60%', left: '52%' }}
+      positionStyle={{ top: '52%', left: '30%' }}
       code="028173456"
       />
      )}
