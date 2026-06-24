@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet } from 'react-native';
 import { useSelector } from 'react-redux';
 import { ManaBar0Icon, ManaBar1Icon, ManaBar2Icon, ManaBar3Icon, ManaBookIcon } from './SvgExporter';
 import { font } from './functions/fontsize';
@@ -31,6 +31,7 @@ const ManaBar = () => {
         <ManaBookIcon width={font(45)} height={font(45)} overflow='hidden' />
       </View>
       <View style={styles.manaIconContainer}>
+        <Text style={styles.manaText}>{maiaMana}</Text>
         {renderIcon()}
       </View>
     </View>
@@ -48,6 +49,16 @@ const styles = StyleSheet.create({
   },
   manaIconContainer: {
     transform: [{ rotate: '-90deg' }],
+  },
+  manaText: {
+    position: 'absolute',
+    bottom: font(2),
+    right: font(3),
+    color: '#fff',
+    fontSize: font(14),
+    fontFamily: 'MedievalSharp',
+    zIndex: 1,
+    transform: [{ rotate: '90deg' }],
   },
 });
 

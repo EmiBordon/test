@@ -64,7 +64,7 @@ const BagPackModal: React.FC<BagPackModalProps> = ({ visible, onClose }) => {
 
   const arrowItem = inventory.find(item => item.id === 'arrows');
   const arrowCount = (arrowItem && typeof arrowItem.state === 'number') ? arrowItem.state : 0;
-  const WeaponIcon = currentWeapon === 1 ? DaggersIcon : SwordIcon;
+  const WeaponIcon = currentWeapon === 1 ? SwordIcon : DaggersIcon;
 
   const createInventoryItemList = (): ExtendedGameObject[] => {
     const allItems: ExtendedGameObject[] = [];

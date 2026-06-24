@@ -46,7 +46,7 @@ const initialState: CharactersState = {
   tim: 0,
   shopgirlHealth: 3,
   barisHealth: 3,
-  germisHealth: 3,
+  germisHealth: 20,
   joxHealth: 3,
   gorjoxHealth: 3,
   riffHealth: 3,

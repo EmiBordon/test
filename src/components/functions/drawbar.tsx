@@ -14,11 +14,8 @@ import { font } from './fontsize';
 import { getRandomBarNumber } from './randombarnumber';
 
 const WEAPON_ICONS: Record<number, React.ComponentType<any>> = {
-  0: SwordIcon,
-  1: DaggersIcon,
-  2: PirateSwordIcon,
-  3: DoubleSwordIcon,
-  4: SuperSwordIcon,
+  0: DaggersIcon,
+  1: SwordIcon,
 };
 
 const { width } = Dimensions.get('window');
@@ -39,7 +36,7 @@ interface DrawBarProps {
 
 const DrawBar: React.FC<DrawBarProps> = ({ levels, duration, onResult }) => {
   const currentWeapon: number = useSelector((state: any) => state.weapons.currentWeapon);
-  const WeaponIcon = WEAPON_ICONS[currentWeapon] ?? SwordIcon;
+  const WeaponIcon = WEAPON_ICONS[currentWeapon] ?? DaggersIcon;
 
   const [currentLevel, setCurrentLevel] = useState(1);
   const [targetZoneLeft, setTargetZoneLeft] = useState((CONTAINER_WIDTH - TARGET_ZONE_WIDTH) / 2);

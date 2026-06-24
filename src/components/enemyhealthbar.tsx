@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet } from 'react-native';
 import { HearthIcon, HearthMediumIcon, HearthLowIcon, BrokenHearthIcon } from './SvgExporter';
 import { font } from './functions/fontsize';
 
@@ -8,53 +8,65 @@ interface EnemyHealthBarProps {
   enemyCurrentHealth: number;
 }
 
-const MAX_PER_ROW = 13; // cantidad máxima de corazones por fila
-
 const EnemyHealthBar: React.FC<EnemyHealthBarProps> = ({ enemyHealth, enemyCurrentHealth }) => {
-  const totalHearts = Math.ceil(enemyHealth / 3); // Cada corazón representa 3 puntos
-  const heartIcons = [];
+  const percentage = enemyHealth > 0 ? enemyCurrentHealth / enemyHealth : 0;
+  const barWidth = `${Math.max(0, Math.min(100, percentage * 100))}%`;
 
-  for (let i = 0; i < totalHearts; i++) {
-    const heartPosition = i * 3;
-    const current = enemyCurrentHealth - heartPosition;
-
-    if (current >= 3) {
-      // Corazón completo (3 puntos de vida)
-      heartIcons.push(<HearthIcon width={font(25)} height={font(25)} key={i} />);
-    } else if (current === 2) {
-      // Corazón medio (2 puntos de vida)
-      heartIcons.push(<HearthMediumIcon width={font(25)} height={font(25)} key={i} />);
-    } else if (current === 1) {
-      // Corazón bajo (1 punto de vida)
-      heartIcons.push(<HearthLowIcon width={font(25)} height={font(25)} key={i} />);
+  const HeartComponent = () => {
+    if (enemyCurrentHealth <= 0) {
+      return <BrokenHearthIcon width={font(28)} height={font(28)} overflow='hidden' />;
+    } else if (percentage < 0.3) {
+      return <HearthLowIcon width={font(28)} height={font(28)} overflow='hidden' />;
+    } else if (percentage < 0.7) {
+      return <HearthMediumIcon width={font(28)} height={font(28)} overflow='hidden' />;
     } else {
-      // Corazón vacío (0 puntos de vida)
-      heartIcons.push(<BrokenHearthIcon width={font(25)} height={font(25)} key={i} />);
+      return <HearthIcon width={font(28)} height={font(28)} overflow='hidden' />;
     }
-  }
+  };
 
-  // Agrupar íconos en filas
-  const rows = [];
-  for (let i = 0; i < heartIcons.length; i += MAX_PER_ROW) {
-    const row = heartIcons.slice(i, i + MAX_PER_ROW);
-    rows.push(
-      <View key={`row-${i}`} style={styles.row}>
-        {row}
+  return (
+    <View style={styles.container}>
+      <HeartComponent />
+      <View style={styles.barWrapper}>
+        <Text style={styles.healthText}>{enemyCurrentHealth}</Text>
+        <View style={styles.barBackground}>
+          <View style={[styles.barFill, { width: barWidth as any }]} />
+        </View>
       </View>
-    );
-  }
-
-  return <View style={styles.container}>{rows}</View>;
+    </View>
+  );
 };
 
 const styles = StyleSheet.create({
   container: {
-    padding: 8,
-    alignItems: 'center',
-  },
-  row: {
     flexDirection: 'row',
-    marginVertical: 2,
+    alignItems: 'center',
+    gap: font(6),
+  },
+  barWrapper: {
+    width: font(60),
+    gap: font(2),
+  },
+  healthText: {
+    alignSelf: 'flex-end',
+    color: '#fff',
+    fontSize: font(13),
+    fontFamily: 'MedievalSharp',
+    lineHeight: font(13),
+  },
+  barBackground: {
+    width: '100%',
+    height: font(8),
+    backgroundColor: '#4a0a0a',
+    borderRadius: font(4),
+    overflow: 'hidden',
+    borderWidth: 1,
+    borderColor: '#7a1a1a',
+  },
+  barFill: {
+    height: '100%',
+    backgroundColor: '#cc1a1a',
+    borderRadius: font(4),
   },
 });
 

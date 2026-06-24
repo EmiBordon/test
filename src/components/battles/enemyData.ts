@@ -26,7 +26,7 @@ export const enemies: Enemy[] = [
 
   {
     name: "Germis",
-    health: 3,
+    health: 20,
     initialdamage: 2,
     victoryMessage: "Estuviste por darle el golpe final a Germis, pero huyó...",
     defeatMessage: "Germis te venció...vuelve a intentarlo",

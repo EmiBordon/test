@@ -15,11 +15,8 @@ import {
 } from '../SvgExporter';
 
 const WEAPON_ICONS: Record<number, React.ComponentType<any>> = {
-  0: SwordIcon,
-  1: DaggersIcon,
-  2: DoubleSwordIcon,
-  3: PirateSwordIcon,
-  4: SuperSwordIcon,
+  0: DaggersIcon,
+  1: SwordIcon,
 };
 import {
   decrementCharacterHealth,
