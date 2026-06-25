@@ -32,6 +32,7 @@ import IconButton from '../../components/functions/iconbutton';
 import RewardManager from '../../components/functions/rewardmanager';
 import { font } from '../../components/functions/fontsize';
 import EmptyBoxManager from '../../components/functions/emptyboxmanager';
+import DamageOverlay from '../../components/functions/damageoverlay';
 import SimpleBattle from '../../components/battles/SimpleBattle';
 import ShakyIcon, { ShakyIconRef } from '../../components/characters/shakymatticon';
 
@@ -486,6 +487,7 @@ const CaveScreen = () => {
       />
       <RewardManager />
       <EmptyBoxManager />
+      <DamageOverlay />
       {modal2Visible && (
         <ConversationChoiceModal
           visible={modal2Visible}

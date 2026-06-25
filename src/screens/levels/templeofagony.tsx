@@ -11,6 +11,7 @@ import ConversationOffModal from '../../components/modal/conversationoffmodal';
 import { godofagonyChoice } from '../../components/functions/conversationsoffchoice';
 import { conversationsoff } from '../../components/functions/conversationsoff';
 import { healMaiaFull, incrementMaiaMana, decrementMaiaCurrentHealth } from '../../redux/maiaSlice';
+import DamageOverlay from '../../components/functions/damageoverlay';
 
 const TempleOfAgonyScreen = () => {
   useFocusEffect(
@@ -22,31 +23,40 @@ const TempleOfAgonyScreen = () => {
 
   const dispatch = useDispatch();
   const maiaCurrentHealth = useSelector((state: any) => state.maia.maiacurrenthealth);
+  const maiaMana = useSelector((state: any) => state.maia.maiaMana);
 
   const [choiceModalVisible, setChoiceModalVisible] = useState(false);
-  const [declineModalVisible, setDeclineModalVisible] = useState(false);
+  const [offModalVisible, setOffModalVisible] = useState(false);
+  const [offModalConversation, setOffModalConversation] = useState(conversationsoff.agonydeclinemana);
   const [blocking, setBlocking] = useState(false);
 
-  const closeChoiceModal = () => {
+  const openOffModal = (conversation: typeof offModalConversation) => {
     setChoiceModalVisible(false);
-    if (maiaCurrentHealth === 1) {
-      setBlocking(true);
-      setTimeout(() => {
-        setBlocking(false);
-        setDeclineModalVisible(true);
-      }, 10);
-    }
+    setOffModalConversation(conversation);
+    setBlocking(true);
+    setTimeout(() => {
+      setBlocking(false);
+      setOffModalVisible(true);
+    }, 10);
   };
 
   const handleMana = () => {
-    if (maiaCurrentHealth > 1) {
+    if (maiaCurrentHealth === 1) {
+      openOffModal(conversationsoff.agonydeclinemana);
+    } else if (maiaMana === 3) {
+      openOffModal(conversationsoff.agonydeclinemana2);
+    } else {
       dispatch(incrementMaiaMana(1));
       dispatch(decrementMaiaCurrentHealth(maiaCurrentHealth - 1));
     }
   };
 
   const handleLife = () => {
-    dispatch(healMaiaFull());
+    if (maiaCurrentHealth === 1) {
+      dispatch(healMaiaFull());
+    } else {
+      openOffModal(conversationsoff.agonydeclinelife);
+    }
   };
 
   const conversation = godofagonyChoice(handleMana, handleLife);
@@ -79,17 +89,19 @@ const TempleOfAgonyScreen = () => {
         </TouchableWithoutFeedback>
       )}
 
+      <DamageOverlay />
+
       <ConversationOffChoiceModal
         visible={choiceModalVisible}
-        onClose={closeChoiceModal}
+        onClose={() => setChoiceModalVisible(false)}
         conversation={conversation}
         allowClosing={true}
       />
 
       <ConversationOffModal
-        visible={declineModalVisible}
-        onClose={() => setDeclineModalVisible(false)}
-        conversation={conversationsoff.agonydeclinemana}
+        visible={offModalVisible}
+        onClose={() => setOffModalVisible(false)}
+        conversation={offModalConversation}
       />
     </View>
   );
