@@ -14,6 +14,7 @@ import { resetLocations } from '../../redux/locationsSlice';
 import { resetObjects } from '../../redux/objectsSlice';
 import { resetProcessedRewards } from '../../redux/rewardSlice';
 import { resetObjectives } from '../../redux/objectivesSlice';
+import { resetSpells } from '../../redux/spellSlice';
 
 const ResetButton = () => {
   const dispatch = useDispatch();
@@ -33,7 +34,8 @@ const ResetButton = () => {
     dispatch(resetObjects());
     dispatch(resetProcessedRewards());
     dispatch(resetObjectives());
-    };
+    dispatch(resetSpells());
+  };
 
   return (
     <TouchableOpacity style={styles.button} onPress={handleReset}>

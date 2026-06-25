@@ -2,8 +2,8 @@ import React, { useState, useRef } from "react";
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 
-
-import { FountainIcon, PillsIcon, CoinsIcon } from "../components/SvgExporter";
+import { MaiaTitleIcon } from "../components/SvgExporter";
+import { font } from "../components/functions/fontsize";
 import ResetButton from "../components/functions/resetbutton";
 import ManaBar from "../components/manabar";
 import {
@@ -12,10 +12,13 @@ import {
   incrementMaiaManaLevel,
   decrementMaiaManaLevel,
 } from "../redux/maiaSlice";
-// Importamos nuestro CodeModal y DiceModal
-import CodeModal from "../components/modal/codemodal";
-import DiceModal from "../components/modal/dicemodal";
-import PlanillaGrid from "../components/planillagrid";
+import {
+  enableLifeSpell,
+  disableLifeSpell,
+  enableIceSpell,
+  disableIceSpell,
+  resetSpells,
+} from "../redux/spellSlice";
 
 interface HomeScreenProps {
   navigation: any;
@@ -23,26 +26,18 @@ interface HomeScreenProps {
 
 const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
   const dispatch = useDispatch();
-  const [modalVisible, setModalVisible] = useState<boolean>(false);
-  const [codeModalVisible, setCodeModalVisible] = useState<boolean>(false);
-  const [diceModalVisible, setDiceModalVisible] = useState<boolean>(false);
-  const [planillaVisible, setPlanillaVisible] = useState<boolean>(false);
   const [showResetButton, setShowResetButton] = useState(false);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
 
-  // Obtenemos los estados que queremos guardar/restaurar
   const maiaMana = useSelector((state: any) => state.maia.maiaMana);
   const maiaManaLevel = useSelector((state: any) => state.maia.maiaManaLevel);
-
-  const healing = useSelector((state: any) => state.healing);
-  const maia = useSelector((state: any) => state.maia);
-  const weapons = useSelector((state: any) => state.weapons);
-  const backup = useSelector((state: any) => state.backup);
+  const lifeSpell = useSelector((state: any) => state.spell.lifeSpell);
+  const iceSpell = useSelector((state: any) => state.spell.iceSpell);
 
   const handleLongPressIn = () => {
     timerRef.current = setTimeout(() => {
       setShowResetButton(true);
-    }, 800); // 3 segundos
+    }, 800);
   };
 
   const handleLongPressOut = () => {
@@ -54,30 +49,18 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      <Text style={styles.title}>Maia y La Fuente</Text>
-      <FountainIcon height={"25%"} />
-      <TouchableOpacity
-        style={styles.button}
-        onPress={() => {navigation.replace("Tutorial");}}
-        onPressIn={handleLongPressIn}
-        onPressOut={handleLongPressOut}
-      >
-        <Text style={styles.buttonText}>Jugar Demo</Text>
-      </TouchableOpacity>
+      <MaiaTitleIcon width={"90%"} style={styles.titleIcon} />
 
-      <TouchableOpacity
-        style={[styles.button, styles.diceButton]}
-        onPress={() => setDiceModalVisible(true)}
-      >
-        <Text style={styles.buttonText}>Probar Dado</Text>
-      </TouchableOpacity>
-
-      <TouchableOpacity
-        style={[styles.button, styles.planillaButton]}
-        onPress={() => setPlanillaVisible(true)}
-      >
-        <Text style={styles.buttonText}>Probar Planilla</Text>
-      </TouchableOpacity>
+      <View style={styles.buttonsContainer}>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => { navigation.replace("Tutorial"); }}
+          onPressIn={handleLongPressIn}
+          onPressOut={handleLongPressOut}
+        >
+          <Text style={styles.buttonText}>Jugar Demo</Text>
+        </TouchableOpacity>
+      </View>
 
       {/* --- TEST: Mana --- */}
       <View style={styles.testSection}>
@@ -104,17 +87,36 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
         </View>
       </View>
 
+      {/* --- TEST: Spells --- */}
+      <View style={styles.testSection}>
+        <Text style={styles.testLabel}>Hechizos</Text>
+
+        <View style={styles.testRow}>
+          <Text style={styles.testLabel}>Life Spell</Text>
+          <TouchableOpacity
+            style={[styles.spellToggle, lifeSpell && styles.spellToggleActive]}
+            onPress={() => dispatch(lifeSpell ? disableLifeSpell() : enableLifeSpell())}
+          >
+            <Text style={styles.testBtnText}>{lifeSpell ? "ON" : "OFF"}</Text>
+          </TouchableOpacity>
+        </View>
+
+        <View style={styles.testRow}>
+          <Text style={styles.testLabel}>Ice Spell</Text>
+          <TouchableOpacity
+            style={[styles.spellToggle, iceSpell && styles.spellToggleActive]}
+            onPress={() => dispatch(iceSpell ? disableIceSpell() : enableIceSpell())}
+          >
+            <Text style={styles.testBtnText}>{iceSpell ? "ON" : "OFF"}</Text>
+          </TouchableOpacity>
+        </View>
+
+        <TouchableOpacity style={styles.resetSpellsBtn} onPress={() => dispatch(resetSpells())}>
+          <Text style={styles.testLabel}>Reset Hechizos</Text>
+        </TouchableOpacity>
+      </View>
+
       {showResetButton && <ResetButton />}
-
-      <DiceModal
-        visible={diceModalVisible}
-        onClose={() => setDiceModalVisible(false)}
-      />
-
-      <PlanillaGrid
-        visible={planillaVisible}
-        onClose={() => setPlanillaVisible(false)}
-      />
     </ScrollView>
   );
 };
@@ -123,81 +125,98 @@ const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
     alignItems: "center",
-    backgroundColor: "#fff",
-    paddingBottom: 40,
+    backgroundColor: "#554451",
+    paddingTop: "5%",
+    paddingBottom: font(40),
   },
-  title: {
-    fontSize: 30,
-    fontWeight: "bold",
-    color: "#000",
-    marginBottom: "10%",
-    marginTop: "20%",
-    fontFamily: "serif",
+  titleIcon: {
+    marginBottom: font(10),
+  },
+  buttonsContainer: {
+    alignItems: "center",
+    gap: font(10),
   },
   button: {
-    marginTop: "5%",
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    borderWidth: 3,
-    borderColor: "#000",
-    borderRadius: 10,
-    backgroundColor: "transparent",
-  },
-  diceButton: {
-    marginTop: "3%",
-    borderColor: "#4CAF50",
-    backgroundColor: "rgba(76, 175, 80, 0.1)",
-  },
-  planillaButton: {
-    marginTop: "3%",
-    borderColor: "#4A90D9",
-    backgroundColor: "rgba(74, 144, 217, 0.1)",
+    paddingVertical: font(10),
+    paddingHorizontal: font(28),
+    borderWidth: font(2),
+    borderColor: "#C8A84B",
+    borderRadius: font(6),
+    backgroundColor: "rgba(92, 50, 30, 0.85)",
   },
   buttonText: {
-    color: "#000",
+    color: "#E8D5A3",
     fontWeight: "bold",
-    fontSize: 20,
+    fontSize: font(20),
+    fontFamily: "serif",
+    letterSpacing: font(1),
   },
   testSection: {
-    marginTop: "5%",
+    marginTop: font(16),
     alignItems: "center",
-    gap: 6,
-    borderWidth: 1,
-    borderColor: "#aaa",
-    borderRadius: 10,
-    padding: 10,
-    backgroundColor: "rgba(100, 100, 255, 0.05)",
+    gap: font(6),
+    borderWidth: font(1),
+    borderColor: "#C8A84B",
+    borderRadius: font(8),
+    padding: font(12),
+    backgroundColor: "rgba(92, 50, 30, 0.4)",
+    width: "85%",
   },
   testLabel: {
     fontWeight: "bold",
-    fontSize: 14,
-    color: "#333",
+    fontSize: font(14),
+    color: "#E8D5A3",
+    fontFamily: "serif",
   },
   testRow: {
     flexDirection: "row",
     alignItems: "center",
-    gap: 16,
+    gap: font(16),
   },
   testBtn: {
-    width: 36,
-    height: 36,
-    borderWidth: 2,
-    borderColor: "#000",
-    borderRadius: 8,
+    width: font(36),
+    height: font(36),
+    borderWidth: font(2),
+    borderColor: "#C8A84B",
+    borderRadius: font(6),
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "white",
+    backgroundColor: "rgba(92, 50, 30, 0.7)",
   },
   testBtnText: {
-    fontSize: 22,
+    fontSize: font(16),
     fontWeight: "bold",
-    lineHeight: 26,
+    color: "#E8D5A3",
   },
   testValue: {
-    fontSize: 22,
+    fontSize: font(22),
     fontWeight: "bold",
-    minWidth: 30,
+    minWidth: font(30),
     textAlign: "center",
+    color: "#E8D5A3",
+  },
+  spellToggle: {
+    paddingVertical: font(6),
+    paddingHorizontal: font(16),
+    borderWidth: font(2),
+    borderColor: "#C8A84B",
+    borderRadius: font(6),
+    backgroundColor: "rgba(92, 50, 30, 0.7)",
+    minWidth: font(60),
+    alignItems: "center",
+  },
+  spellToggleActive: {
+    borderColor: "#A6DBDF",
+    backgroundColor: "rgba(40, 90, 95, 0.6)",
+  },
+  resetSpellsBtn: {
+    marginTop: font(4),
+    paddingVertical: font(6),
+    paddingHorizontal: font(16),
+    borderWidth: font(1),
+    borderColor: "#C8A84B",
+    borderRadius: font(6),
+    backgroundColor: "rgba(92, 50, 30, 0.5)",
   },
 });
 

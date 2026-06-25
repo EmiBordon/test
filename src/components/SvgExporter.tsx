@@ -141,6 +141,7 @@ import HandThreeRingsSvg from '../assets/handthreerings.svg';
 import SuperRingSvg from '../assets/superring.svg';
 import RefreshSvg from '../assets/refresh.svg';
 import LifeRunicSvg from '../assets/liferunic.svg';
+import LifeRunicCodeSvg from '../assets/liferuniccode.svg';
 import KeyRunicSvg from '../assets/keyrunic.svg';
 import CrossRunicSvg from '../assets/crossrunic.svg';
 import ManaBar0Svg from '../assets/manabar0.svg';
@@ -153,6 +154,7 @@ import MapDoorSvg from '../assets/mapdoor.svg';
 import QuestionMarkSvg from '../assets/questionmark.svg';
 import GodofAgonySvg from '../assets/godofagony.svg';
 import TempleofAgonySvg from '../assets/templeofagony.svg';
+import MaiaTitleSvg from '../assets/maiatitle.svg';
 
 const ArrowIcon = (props: any) => <ArrowSvg {...props} />;
 const MapArrowIcon = (props: any) => <MapArrowSvg {...props} />;
@@ -299,6 +301,7 @@ const SuperRingIcon = (props: any) => <SuperRingSvg {...props} />;
 const RefreshIcon = (props: any) => <RefreshSvg {...props} />;
 const KeyRunicIcon = (props: any) => <KeyRunicSvg {...props} />;
 const LifeRunicIcon = (props: any) => <LifeRunicSvg {...props} />;
+const LifeRunicCodeIcon = (props: any) => <LifeRunicCodeSvg {...props} />;
 const CrossRunicIcon = (props: any) => <CrossRunicSvg {...props} />;
 const ManaBar0Icon = (props: any) => <ManaBar0Svg {...props} />;
 const ManaBar1Icon = (props: any) => <ManaBar1Svg {...props} />;
@@ -308,9 +311,11 @@ const ManaBookIcon = (props: any) => <ManaBookSvg {...props} />;
 const QuestionMarkIcon = (props: any) => <QuestionMarkSvg {...props} />;
 const GodofAgonyIcon = (props: any) => <GodofAgonySvg {...props} />;
 const TempleofAgonyIcon = (props: any) => <TempleofAgonySvg {...props} />;
+const MaiaTitleIcon = (props: any) => <MaiaTitleSvg {...props} />;
 
 
 export { 
+  MaiaTitleIcon,
   ArrowIcon, 
   ChestOpenIcon, 
   ChestCloseIcon, 
@@ -454,6 +459,7 @@ export {
   RefreshIcon,
   KeyRunicIcon,
   LifeRunicIcon,
+  LifeRunicCodeIcon,
   CrossRunicIcon,
   ManaBar0Icon,
   ManaBar1Icon,

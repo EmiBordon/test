@@ -10,11 +10,12 @@ import {
   Animated,
 } from 'react-native';
 import { font } from './functions/fontsize';
-import { CrossIcon, RefreshIcon, HandIcon, HandOneRingIcon, HandTwoRingsIcon, HandThreeRingsIcon } from './SvgExporter';
+import { CrossIcon, RefreshIcon, HandIcon, HandOneRingIcon, HandTwoRingsIcon, HandThreeRingsIcon, ArrowIcon, ManaBookIcon } from './SvgExporter';
 import IconButton from './functions/iconbutton';
 import { useSelector, useDispatch } from 'react-redux';
 import ManaBar from './manabar';
 import { resolveSpell } from './functions/spellEffects';
+import spellList, { SpellEntry } from './functions/spellList';
 
 const GRID_SIZE = 9;
 const CENTER = Math.floor(GRID_SIZE / 2);
@@ -62,6 +63,10 @@ const PlanillaGrid: React.FC<PlanillaGridProps> = ({ visible, onClose }) => {
   const dispatch = useDispatch();
   const maiaManaLevel = useSelector((state: any) => state.maia.maiaManaLevel);
   const maiaMana = useSelector((state: any) => state.maia.maiaMana);
+  const lifeSpell = useSelector((state: any) => state.spell.lifeSpell);
+  const iceSpell = useSelector((state: any) => state.spell.iceSpell);
+  const [view, setView] = useState<'grid' | 'book' | 'spell'>('grid');
+  const [selectedSpell, setSelectedSpell] = useState<SpellEntry | null>(null);
   const [path, setPath] = useState<Point[]>([{ row: CENTER, col: CENTER }]);
   const [isDragging, setIsDragging] = useState(false);
   const [fingerPos, setFingerPos] = useState<{ x: number; y: number } | null>(null);
@@ -88,6 +93,8 @@ const PlanillaGrid: React.FC<PlanillaGridProps> = ({ visible, onClose }) => {
       setPhase('drawing');
       setSpellIcon(null);
       setRevealMessage(null);
+      setView('grid');
+      setSelectedSpell(null);
       contentOpacity.setValue(1);
       revealOpacity.setValue(0);
     }
@@ -240,7 +247,7 @@ const PlanillaGrid: React.FC<PlanillaGridProps> = ({ visible, onClose }) => {
 
   const handleReveal = () => {
     const sequence = pathRef.current.map(p => getValue(p.row, p.col));
-    const { Icon, effect, noMana } = resolveSpell(sequence, maiaMana);
+    const { Icon, effect, noMana } = resolveSpell(sequence, maiaMana, { lifeSpell, iceSpell });
     setSpellIcon(() => Icon);
     setRevealMessage(noMana ? 'No tienes suficiente Maná' : null);
     if (!noMana && effect) effect(dispatch);
@@ -288,7 +295,7 @@ const PlanillaGrid: React.FC<PlanillaGridProps> = ({ visible, onClose }) => {
 
         {/* Contenido principal con fade-out */}
         <Animated.View style={{ opacity: contentOpacity, alignItems: 'center', width: '95%' }}>
-          {phase === 'drawing' && (
+          {phase === 'drawing' && view === 'grid' && (
             <>
               <View style={styles.container}>
                 <IconButton
@@ -354,10 +361,101 @@ const PlanillaGrid: React.FC<PlanillaGridProps> = ({ visible, onClose }) => {
                 </View>
               </View>
 
-              {/* Hand icon fuera del recuadro, centrado debajo */}
-              <TouchableOpacity style={styles.handButton} onPress={handleReveal}>
-                {React.createElement(HAND_ICONS[Math.min(maiaManaLevel, 3)], { width: font(120), height: font(120), overflow: 'hidden' })}
-              </TouchableOpacity>
+              {/* Hand icon centrado con arrow a la izquierda */}
+              <View style={styles.handRow}>
+                <TouchableOpacity style={styles.sideArrow} onPress={() => setView('book')}>
+                  <ArrowIcon width={font(48)} height={font(48)} style={{ transform: [{ scaleX: -1 }] }} />
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.handButton} onPress={handleReveal}>
+                  {React.createElement(HAND_ICONS[Math.min(maiaManaLevel, 3)], { width: font(120), height: font(120), overflow: 'hidden' })}
+                </TouchableOpacity>
+                <View style={styles.sideArrow} />
+              </View>
+            </>
+          )}
+
+          {phase === 'drawing' && view === 'book' && (
+            <>
+              <View style={styles.bookContainer}>
+                <IconButton
+                  Icon={CrossIcon}
+                  width={font(28)}
+                  height={font(28)}
+                  style={{ top: font(1), right: font(12), zIndex: 10 }}
+                  onPress={onClose}
+                />
+                {(() => {
+                  const spellFlags: Record<string, boolean> = { lifeSpell, iceSpell };
+                  const available = spellList.filter(s => spellFlags[s.flagKey]);
+                  if (available.length === 0) {
+                    return (
+                      <View style={styles.bookEmptyContainer}>
+                        <Text style={styles.spellListTitle}>Hechizos</Text>
+                        <Text style={styles.bookEmptyText}>No tienes ningun hechizo</Text>
+                      </View>
+                    );
+                  }
+                  return (
+                    <View style={styles.spellListContainer}>
+                      <Text style={styles.spellListTitle}>Hechizos</Text>
+                      {available.slice(0, 6).map((spell) => (
+                        <TouchableOpacity
+                          key={spell.flagKey}
+                          style={styles.spellListItem}
+                          onPress={() => { setSelectedSpell(spell); setView('spell'); }}
+                        >
+                          {React.createElement(spell.icon, { width: font(36), height: font(36), overflow: 'hidden' })}
+                          <Text style={styles.spellListName}>{spell.name}</Text>
+                        </TouchableOpacity>
+                      ))}
+                    </View>
+                  );
+                })()}
+              </View>
+              <View style={styles.handRow}>
+                <View style={styles.sideArrow} />
+                <View style={styles.handButton}>
+                  <ManaBookIcon width={font(120)} height={font(120)} overflow='hidden' />
+                </View>
+                <TouchableOpacity style={styles.sideArrow} onPress={() => setView('grid')}>
+                  <ArrowIcon width={font(48)} height={font(48)} />
+                </TouchableOpacity>
+              </View>
+            </>
+          )}
+
+          {phase === 'drawing' && view === 'spell' && selectedSpell && (
+            <>
+              <View style={styles.bookContainer}>
+                <IconButton
+                  Icon={CrossIcon}
+                  width={font(28)}
+                  height={font(28)}
+                  style={{ top: font(1), right: font(12), zIndex: 10 }}
+                  onPress={onClose}
+                />
+                <TouchableOpacity
+                  style={styles.spellBackArrow}
+                  onPress={() => { setSelectedSpell(null); setView('book'); }}
+                >
+                  <ArrowIcon width={font(40)} height={font(40)} style={{ transform: [{ scaleX: -1 }] }} />
+                </TouchableOpacity>
+                <View style={styles.spellDetailContainer}>
+                  <Text style={styles.spellDetailName}>{selectedSpell.name}</Text>
+                  {React.createElement(selectedSpell.icon, { width: font(100), height: font(100), overflow: 'hidden' })}
+                  {React.createElement(selectedSpell.code, { width: font(160), height: font(80), overflow: 'hidden' })}
+                  <Text style={styles.spellDetailDesc}>{selectedSpell.description}</Text>
+                </View>
+              </View>
+              <View style={styles.handRow}>
+                <View style={styles.sideArrow} />
+                <View style={styles.handButton}>
+                  <ManaBookIcon width={font(120)} height={font(120)} overflow='hidden' />
+                </View>
+                <TouchableOpacity style={styles.sideArrow} onPress={() => setView('grid')}>
+                  <ArrowIcon width={font(48)} height={font(48)} />
+                </TouchableOpacity>
+              </View>
             </>
           )}
         </Animated.View>
@@ -459,11 +557,104 @@ const styles = StyleSheet.create({
   actionButton: {
     padding: font(8),
   },
-  handButton: {
+  handRow: {
+    flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
     marginTop: font(8),
+    width: '95%',
+  },
+  sideArrow: {
+    width: font(56),
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  handButton: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
     padding: font(4),
+  },
+  bookContainer: {
+    width: '100%',
+    height: CELL_SIZE * GRID_SIZE + font(132),
+    backgroundColor: 'rgba(192, 119, 84, 0.97)',
+    borderRadius: font(10),
+    borderWidth: font(10),
+    borderColor: '#C8A84B',
+    shadowColor: '#D4AF37',
+    shadowOpacity: 0.7,
+    shadowRadius: 16,
+    elevation: 10,
+    paddingVertical: font(18),
+    paddingHorizontal: CONTAINER_PADDING,
+    alignItems: 'center',
+  },
+  bookEmptyContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  bookEmptyText: {
+    color: '#E8D5A3',
+    fontSize: font(16),
+    fontFamily: 'serif',
+    textAlign: 'center',
+  },
+  spellListContainer: {
+    width: '100%',
+    marginTop: font(8),
+    gap: font(6),
+  },
+  spellListTitle: {
+    color: '#C8A84B',
+    fontSize: font(18),
+    fontFamily: 'serif',
+    fontWeight: 'bold',
+    textAlign: 'center',
+    marginBottom: font(4),
+  },
+  spellListItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: font(12),
+    paddingVertical: font(8),
+    paddingHorizontal: font(10),
+    borderWidth: font(1),
+    borderColor: '#C8A84B',
+    borderRadius: font(6),
+    backgroundColor: 'rgba(92, 50, 30, 0.5)',
+  },
+  spellListName: {
+    color: '#E8D5A3',
+    fontSize: font(16),
+    fontFamily: 'serif',
+    fontWeight: 'bold',
+  },
+  spellBackArrow: {
+    alignSelf: 'flex-start',
+    marginTop: font(4),
+    marginLeft: font(4),
+    padding: font(4),
+  },
+  spellDetailContainer: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: font(10),
+  },
+  spellDetailName: {
+    color: '#E8D5A3',
+    fontSize: font(22),
+    fontFamily: 'serif',
+    fontWeight: 'bold',
+  },
+  spellDetailDesc: {
+    color: '#E8D5A3',
+    fontSize: font(14),
+    fontFamily: 'serif',
+    textAlign: 'center',
+    marginTop: font(4),
   },
   revealLayer: {
     justifyContent: 'center',

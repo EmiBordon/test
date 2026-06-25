@@ -18,6 +18,7 @@ import objectsReducer from './objectsSlice'
 import backupReducer from './backupSlice'; 
 import rewardReducer from './rewardSlice';
 import objectivesReducer from './objectivesSlice';
+import spellReducer from './spellSlice';
 
 // Configuración de persist
 const persistConfig = {
@@ -37,6 +38,7 @@ const persistConfig = {
     'objects',
     'rewards',
     'objectives',
+    'spell',
   ],
   // No incluimos 'backup' ya que es un snapshot temporal y no debe persistir
 };
@@ -56,6 +58,7 @@ const rootReducer = combineReducers({
   objects:objectsReducer,
   rewards:rewardReducer, 
   objectives:objectivesReducer,
+  spell: spellReducer,
 });
 
 // Reducer persistente
