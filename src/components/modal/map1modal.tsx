@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Modal, View, TouchableOpacity, Text, StyleSheet, Dimensions, Alert, Image } from "react-native";
 import {
   HouseIcon, PrisionIcon, StoreIcon, RestaurantIcon, BigHouseIcon, CaveIcon,
-  CrossIcon, PawnShopIcon, MapArrowIcon, MapDoorIcon
+  CrossIcon, PawnShopIcon, MapArrowIcon, MapDoorIcon, TempleofAgonyIcon
 } from "../SvgExporter";
 import { font } from "../functions/fontsize";
 import IconButton from "../functions/iconbutton";
@@ -18,6 +18,7 @@ const LOCATION_ICONS = [
   { key: "cave",       Component: CaveIcon,       size: font(60),  text: "Cueva",   top: "30%", left: "12%", tx: -30, ty: -30, route: "Cave",     mapId: 1 as MapId },
   { key: "pawnShop",   Component: PawnShopIcon,   size: font(55),  text: "Joyeria", top: "14%", left: "65%", tx: -30, ty: -30, route: "PawnShop", mapId: 1 as MapId },
   { key: "bigHouse",   Component: BigHouseIcon,   size: font(105), text: "Mansión", top: "47%", left: "82%", tx: -50, ty: -50, route: null,       mapId: 4 as MapId },
+  { key: "templeofAgony",   Component: TempleofAgonyIcon,   size: font(70), text: "Templo de la Agonia", top: "95%", left: "13%", tx: -50, ty: -50, route: "TempleOfAgony", mapId: 3 as MapId },
 ];
 
 // Iconos de navegación entre mapas por página

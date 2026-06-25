@@ -151,6 +151,8 @@ import ManaBookSvg from '../assets/manabook.svg';
 import MapArrowSvg from '../assets/maparrow.svg';
 import MapDoorSvg from '../assets/mapdoor.svg';
 import QuestionMarkSvg from '../assets/questionmark.svg';
+import GodofAgonySvg from '../assets/godofagony.svg';
+import TempleofAgonySvg from '../assets/templeofagony.svg';
 
 const ArrowIcon = (props: any) => <ArrowSvg {...props} />;
 const MapArrowIcon = (props: any) => <MapArrowSvg {...props} />;
@@ -304,6 +306,8 @@ const ManaBar2Icon = (props: any) => <ManaBar2Svg {...props} />;
 const ManaBar3Icon = (props: any) => <ManaBar3Svg {...props} />;
 const ManaBookIcon = (props: any) => <ManaBookSvg {...props} />;
 const QuestionMarkIcon = (props: any) => <QuestionMarkSvg {...props} />;
+const GodofAgonyIcon = (props: any) => <GodofAgonySvg {...props} />;
+const TempleofAgonyIcon = (props: any) => <TempleofAgonySvg {...props} />;
 
 
 export { 
@@ -458,5 +462,7 @@ export {
   ManaBookIcon,
   MapArrowIcon,
   MapDoorIcon,
-  QuestionMarkIcon
+  QuestionMarkIcon,
+  GodofAgonyIcon,
+  TempleofAgonyIcon,
 };

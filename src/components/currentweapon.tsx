@@ -12,8 +12,18 @@ type WeaponType = {
 
 // Mapeo de armas con tipo seguro
 const weaponData: Record<number, WeaponType> = {
-  0: { name: "Dagas", damage: 3, icon: <DaggersIcon width={50} height={50} /> },
-  1: { name: "Espada de madera", damage: 1, icon: <SwordIcon width={50} height={50} /> },
+  0: { name: "Dagas", damage: 15, icon: <DaggersIcon width={50} height={50} /> },
+  1: { name: "Espada de madera", damage: 30, icon: <SwordIcon width={50} height={50} /> },
+};
+
+export const rollWeaponDamage = (weaponIndex: number): number => {
+  if (weaponIndex === 0) {
+    return Math.random() < 0.9 ? 15 : 23;
+  }
+  if (weaponIndex === 1) {
+    return Math.random() < 0.7 ? 30 : 47;
+  }
+  return 1;
 };
 
 const CurrentWeaponIcon = () => {

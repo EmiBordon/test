@@ -14,6 +14,7 @@ import BarScreen from './src/screens/levels/bar';
 import ShopScreen from './src/screens/levels/shop';
 import PawnShopScreen from './src/screens/levels/pawnshop';
 import PrisionScreen from './src/screens/levels/prision';
+import TempleOfAgonyScreen from './src/screens/levels/templeofagony';
 import { RootStackParamList } from './src/components/battles/types';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -66,6 +67,11 @@ export default function App() {
             <Stack.Screen
               name="Prision"
               component={PrisionScreen}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="TempleOfAgony"
+              component={TempleOfAgonyScreen}
               options={{ headerShown: false }}
             />
           </Stack.Navigator>

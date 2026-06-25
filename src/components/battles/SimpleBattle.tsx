@@ -35,6 +35,7 @@ import PlanillaGrid from '../planillagrid';
 import { enemies } from './enemyData';
 import { getCurrentPhase } from './enemyLogic';
 import { font } from '../functions/fontsize';
+import { rollWeaponDamage } from '../currentweapon';
 import ShakyIcon, { ShakyIconRef } from '../characters/shakymatticon';
 
 interface SimpleBattleProps {
@@ -48,7 +49,6 @@ interface SimpleBattleProps {
   onMaiaDamaged?: () => void;
 }
 
-const weaponDamageMap: Record<number, number> = { 0: 1, 1: 2, 2: 3, 3: 4, 4: 10 };
 
 const SimpleBattle: React.FC<SimpleBattleProps> = ({
   enemyName,
@@ -87,7 +87,6 @@ const SimpleBattle: React.FC<SimpleBattleProps> = ({
 
   const currentEnemy = enemies.find(e => e.name === enemyName) ?? enemies[0];
   const currentPhase = getCurrentPhase(currentEnemy, enemyCurrentHealth);
-  const damage = weaponDamageMap[currentWeapon] ?? 1;
 
   const killOrAdvance = (delta: number, nextState: number) => {
     const newHealth = Math.max(0, enemyCurrentHealth - delta);
@@ -106,7 +105,7 @@ const SimpleBattle: React.FC<SimpleBattleProps> = ({
   const handleSwordResult = (result: boolean) => {
     setShowDrawBar(false);
     if (result) {
-      killOrAdvance(damage, 1);
+      killOrAdvance(rollWeaponDamage(currentWeapon), 1);
     } else {
       dispatch(setCharacter({ key: enemyKey, value: 1 }));
     }
@@ -115,7 +114,7 @@ const SimpleBattle: React.FC<SimpleBattleProps> = ({
   const handleBowResult = (result: boolean) => {
     setShowShootingCircle(false);
     dispatch(decrementArrows(1));
-    if (result) killOrAdvance(1, 0);
+    if (result) killOrAdvance(5, 0);
   };
 
   const handleShieldResult = (result: boolean) => {
