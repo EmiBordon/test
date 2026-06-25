@@ -34,6 +34,7 @@ interface Point {
 interface PlanillaGridProps {
   visible: boolean;
   onClose: () => void;
+  initialView?: 'grid' | 'book';
 }
 
 const HAND_ICONS = [HandIcon, HandOneRingIcon, HandTwoRingsIcon, HandThreeRingsIcon];
@@ -59,7 +60,7 @@ const BLOCKED_SETS: Record<number, Set<number>> = {
   3: new Set<number>(),
 };
 
-const PlanillaGrid: React.FC<PlanillaGridProps> = ({ visible, onClose }) => {
+const PlanillaGrid: React.FC<PlanillaGridProps> = ({ visible, onClose, initialView = 'grid' }) => {
   const dispatch = useDispatch();
   const maiaManaLevel = useSelector((state: any) => state.maia.maiaManaLevel);
   const maiaMana = useSelector((state: any) => state.maia.maiaMana);
@@ -93,7 +94,7 @@ const PlanillaGrid: React.FC<PlanillaGridProps> = ({ visible, onClose }) => {
       setPhase('drawing');
       setSpellIcon(null);
       setRevealMessage(null);
-      setView('grid');
+      setView(initialView);
       setSelectedSpell(null);
       contentOpacity.setValue(1);
       revealOpacity.setValue(0);

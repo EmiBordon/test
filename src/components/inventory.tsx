@@ -71,6 +71,7 @@ const Inventory: React.FC<InventoryProps> = ({
   const [notesModalVisible, setNotesModalVisible] = useState<boolean>(false);
   const [gridModalVisible, setGridModalVisible] = useState<boolean>(false);
   const [planillaVisible, setPlanillaVisible] = useState<boolean>(false);
+  const [planillaBookVisible, setPlanillaBookVisible] = useState<boolean>(false);
   const [showMenu, setShowMenu] = useState<boolean>(false);
 
   const handleGoHome = () => {
@@ -133,7 +134,7 @@ const Inventory: React.FC<InventoryProps> = ({
           <MapIcon width={font(40)} height={font(40)} overflow='hidden' />
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.slot} onPress={() => setNotesModalVisible(true)}>
+        <TouchableOpacity style={styles.slot} onPress={() => setPlanillaBookVisible(true)}>
           <NoteBookIcon width={font(38)} height={font(38)} overflow='hidden' />
         </TouchableOpacity>
 
@@ -167,6 +168,11 @@ const Inventory: React.FC<InventoryProps> = ({
         <PlanillaGrid
           visible={planillaVisible}
           onClose={() => setPlanillaVisible(false)}
+        />
+        <PlanillaGrid
+          visible={planillaBookVisible}
+          onClose={() => setPlanillaBookVisible(false)}
+          initialView="book"
         />
       </View>
     </>
