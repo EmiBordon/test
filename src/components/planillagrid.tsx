@@ -335,6 +335,7 @@ const PlanillaGrid: React.FC<PlanillaGridProps> = ({ visible, onClose, initialVi
                                   isBlocked && styles.circleBlocked,
                                   !isBlocked && inPath && !isHead && styles.circleInPath,
                                   !isBlocked && isHead && styles.circleHead,
+                                  !isDragging && path.length > 1 && !inPath && styles.circleFaded,
                                 ]}
                               />
                             </View>
@@ -515,6 +516,10 @@ const styles = StyleSheet.create({
   },
   circleBlocked: {
     backgroundColor: 'rgba(20, 8, 2, 0.4)',
+  },
+  circleFaded: {
+    backgroundColor: 'rgba(192, 119, 84, 0.97)',
+    shadowOpacity: 0,
   },
   circleInPath: {
     backgroundColor: '#5d00ff',
