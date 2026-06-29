@@ -2,45 +2,38 @@ import React, { useState, useEffect } from "react";
 import { Modal, View, TouchableOpacity, Text, StyleSheet, Dimensions, Alert, Image } from "react-native";
 import {
   HouseIcon, PrisionIcon, StoreIcon, RestaurantIcon, BigHouseIcon, CaveIcon,
-  CrossIcon, PawnShopIcon, MapArrowIcon, MapDoorIcon, TempleofAgonyIcon
+  CrossIcon, PawnShopIcon, MapArrowIcon, MapDoorIcon, TempleofAgonyIcon,PointIcon
 } from "../SvgExporter";
 import { font } from "../functions/fontsize";
 import IconButton from "../functions/iconbutton";
 
-type MapId = 1 | 2 | 3 | 4;
+type MapId = 2 | 3 | 4;
 
 // Iconos de ubicación — cada uno indica en qué mapa aparece con mapId
 const LOCATION_ICONS = [
-  { key: "house",      Component: HouseIcon,      size: font(55),  text: "Casa",    top: "85%", left: "9%",  tx: -30, ty: -30, route: "Tutorial", mapId: 1 as MapId },
-  { key: "prison",     Component: PrisionIcon,    size: font(60),  text: "Prisión", top: "58%", left: "85%", tx: -30, ty: -30, route: "Prision",  mapId: 1 as MapId },
-  { key: "store",      Component: StoreIcon,      size: font(50),  text: "Tienda",  top: "67%", left: "45%", tx: -30, ty: -30, route: "Shop",     mapId: 1 as MapId },
-  { key: "restaurant", Component: RestaurantIcon, size: font(55),  text: "Bar",     top: "40%", left: "33%", tx: -30, ty: -30, route: "Bar",      mapId: 1 as MapId },
-  { key: "cave",       Component: CaveIcon,       size: font(60),  text: "Cueva",   top: "30%", left: "12%", tx: -30, ty: -30, route: "Cave",     mapId: 1 as MapId },
-  { key: "pawnShop",   Component: PawnShopIcon,   size: font(55),  text: "Joyeria", top: "14%", left: "65%", tx: -30, ty: -30, route: "PawnShop", mapId: 1 as MapId },
-  { key: "bigHouse",   Component: BigHouseIcon,   size: font(105), text: "Mansión", top: "47%", left: "82%", tx: -50, ty: -50, route: null,       mapId: 4 as MapId },
-  { key: "templeofAgony",   Component: TempleofAgonyIcon,   size: font(70), text: "Templo de la Agonia", top: "95%", left: "13%", tx: -50, ty: -50, route: "TempleOfAgony", mapId: 3 as MapId },
+  { key: "house",      Component: PointIcon,  size: font(25),  text: "Casa",    top: "80%", left: "68%",  tx: -30, ty: -30, route: "Tutorial", mapId: 2 as MapId },
+  { key: "store",      Component: PointIcon,   size: font(20),  text: "Tienda",  top: "67%", left: "55%", tx: -30, ty: -30, route: "Shop",     mapId: 2 as MapId },
+  { key: "restaurant", Component: PointIcon,  size: font(20),  text: "Bar",     top: "93%", left: "45%", tx: -30, ty: -30, route: "Bar",      mapId: 3 as MapId },
+  { key: "cave",       Component: PointIcon, size: font(20),  text: "Cueva",   top: "48%", left: "32%", tx: -30, ty: -30, route: "Cave",     mapId: 3 as MapId },
+  { key: "pawnShop",   Component: PointIcon,   size: font(20),  text: "Joyeria", top: "14%", left: "65%", tx: -30, ty: -30, route: "PawnShop", mapId: 2 as MapId },
+  { key: "templeofAgony", Component: PointIcon, size: font(25),  text: "Templo de la Agonia", top: "21%", left: "28%", tx: -50, ty: -50, route: "TempleOfAgony", mapId: 3 as MapId },
 ];
 
 // Iconos de navegación entre mapas por página
 const MAP_NAV: Record<MapId, { key: string; Component: React.ComponentType<any>; size: number; top: string; left: string; tx: number; ty: number; rotate?: string; scaleX?: number; scaleY?: number; targetMap: MapId }[]> = {
-  1: [
-    { key: "to_2", Component: MapArrowIcon, size: font(65), top: "92%", left: "82%", tx: -20, ty: -20,scaleY: -1, rotate: "340deg", targetMap: 2 },
-  ],
   2: [
-    { key: "to_1", Component: MapArrowIcon, size: font(60), top: "84%", left: "8%",  tx: -20, ty: -20, rotate: "180deg", targetMap: 1 },
-    { key: "to_3", Component: MapArrowIcon, size: font(60), top: "45%", left: "86%", tx: -20, ty: -20, targetMap: 3 },
-    { key: "to_4", Component: MapDoorIcon,  size: font(50), top: "56%", left: "44%", tx: -25, ty: -25, targetMap: 4 },
+    { key: "to_3", Component: MapArrowIcon, size: font(65), top: "80%", left: "86%", tx: -20, ty: -20, targetMap: 3, scaleY: -1, rotate: "340deg" },
+    { key: "to_4", Component: MapArrowIcon, size: font(65), top: "6%",  left: "34%", tx: -25, ty: -25, targetMap: 4, rotate: "270deg" },
   ],
   3: [
-    { key: "to_2", Component: MapArrowIcon, size: font(60), top: "42%", left: "10%",  tx: -20, ty: -20, rotate: "180deg", targetMap: 2 },
+    { key: "to_2", Component: MapArrowIcon, size: font(65), top: "55%", left: "10%", tx: -20, ty: -20, rotate: "180deg", targetMap: 2 },
   ],
   4: [
-    { key: "to_2", Component: MapDoorIcon,  size: font(50), top: "88%", left: "48%", tx: -25, ty: -25, targetMap: 2 },
+    { key: "to_2", Component: MapArrowIcon, size: font(65), top: "90%", left: "48%", tx: -25, ty: -25, targetMap: 2, rotate: "90deg" },
   ],
 };
 
 const MAP_IMAGES: Record<MapId, any> = {
-  1: require('../../images/map1.jpg'),
   2: require('../../images/map2.jpg'),
   3: require('../../images/map3.jpg'),
   4: require('../../images/map4.jpg'),
@@ -48,15 +41,15 @@ const MAP_IMAGES: Record<MapId, any> = {
 
 const Map1Modal = ({ visible, onClose, navigation }) => {
   const { height } = Dimensions.get("window");
-  const modalHeight = height * 0.7;
+  const modalHeight = height * 0.6;
 
-  const [currentMap, setCurrentMap] = useState<MapId>(1);
+  const [currentMap, setCurrentMap] = useState<MapId>(2);
   const [selected, setSelected] = useState<string | null>(null);
   const selectedItem = LOCATION_ICONS.find(i => i.key === selected);
 
   useEffect(() => {
     if (visible) {
-      setCurrentMap(1);
+      setCurrentMap(2);
       setSelected(null);
     }
   }, [visible]);
@@ -80,6 +73,16 @@ const Map1Modal = ({ visible, onClose, navigation }) => {
   return (
     <Modal visible={visible} animationType="slide" transparent>
       <View style={styles.overlay}>
+
+        {/* Nombre por encima del recuadro */}
+        <View style={styles.nameAbove}>
+          {selectedItem ? (
+            <Text style={styles.nameAboveText}>{selectedItem.text}</Text>
+          ) : (
+            <Text style={styles.nameAbovePlaceholder}> </Text>
+          )}
+        </View>
+
         <View style={[styles.modalContainer, { height: modalHeight }]}>
 
           <Image
@@ -88,37 +91,17 @@ const Map1Modal = ({ visible, onClose, navigation }) => {
             resizeMode="cover"
           />
 
-          {/* Prompt de viaje — visible en cualquier mapa cuando hay selección */}
-          {selectedItem && (
-            <View style={styles.promptBar}>
-              <Text style={styles.promptText}>¿Deseas viajar a {selectedItem.text}?</Text>
-              <View style={styles.btnRow}>
-                <TouchableOpacity style={styles.actionButton} onPress={handleGo}>
-                  <Text style={styles.actionButtonText}>Ir</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.actionButton} onPress={() => setSelected(null)}>
-                  <Text style={styles.actionButtonText}>Cancelar</Text>
-                </TouchableOpacity>
-              </View>
-            </View>
-          )}
-
           {/* Iconos de ubicación — filtrados por mapa actual */}
-          {LOCATION_ICONS.filter(i => i.mapId === currentMap).map(({ key, Component, size, text, top, left, tx, ty }) => (
+          {LOCATION_ICONS.filter(i => i.mapId === currentMap).map(({ key, Component, size, fill, top, left, tx, ty }) => (
             <IconButton
               key={key}
               Icon={Component}
               width={size}
               height={size}
               style={{ top, left, transform: [{ translateX: tx }, { translateY: ty }], zIndex: 20 }}
+              iconProps={{ fill }}
               onPress={() => setSelected(key)}
-            >
-              {selected === key && (
-                <View style={styles.nameTag}>
-                  <Text style={styles.nameText}>{text}</Text>
-                </View>
-              )}
-            </IconButton>
+            />
           ))}
 
           {/* Iconos de navegación entre mapas */}
@@ -152,6 +135,18 @@ const Map1Modal = ({ visible, onClose, navigation }) => {
           />
 
         </View>
+
+        {/* Botón VIAJAR por debajo del recuadro */}
+        <View style={styles.travelRow}>
+          {selectedItem ? (
+            <TouchableOpacity style={styles.travelButton} onPress={handleGo}>
+              <Text style={styles.travelButtonText}>VIAJAR</Text>
+            </TouchableOpacity>
+          ) : (
+            <View style={styles.travelButtonPlaceholder} />
+          )}
+        </View>
+
       </View>
     </Modal>
   );
@@ -160,66 +155,59 @@ const Map1Modal = ({ visible, onClose, navigation }) => {
 const styles = StyleSheet.create({
   overlay: {
     flex: 1,
-    backgroundColor: "rgba(0,0,0,0.5)",
+    backgroundColor: "rgba(0, 0, 0, 0.67)",
     justifyContent: "center",
     alignItems: "center",
   },
   modalContainer: {
     width: "95%",
     backgroundColor: "black",
-    borderRadius: 10,
+    borderRadius: font(15),
     overflow: "hidden",
     alignItems: "center",
-    borderWidth: 4,
+    borderWidth: font(4),
     borderColor: "black",
     justifyContent: "center",
   },
-  promptBar: {
-    position: "absolute",
-    top: "5%",
-    alignSelf: "center",
+  nameAbove: {
+    width: "95%",
     alignItems: "center",
-    zIndex: 30,
+    marginBottom: font(6),
+    height: font(18) + font(14),
+    justifyContent: "center",
   },
-  promptText: {
-    color: "white",
+  nameAboveText: {
+    color: "#C8A84B",
     fontSize: font(18),
     fontWeight: "bold",
-    backgroundColor: "rgba(0,0,0,0.7)",
-    paddingHorizontal: 10,
-    paddingVertical: 5,
-    borderRadius: 5,
+    backgroundColor: "rgba(18, 7, 2, 0.97)",
+    paddingHorizontal: font(14),
+    paddingVertical: font(5),
+    borderRadius: font(6),
+    borderWidth: font(1),
+    borderColor: "#C8A84B",
+    letterSpacing: font(1),
   },
-  btnRow: {
-    flexDirection: "row",
-    marginTop: 8,
+  travelRow: {
+    width: "95%",
+    alignItems: "center",
+    marginTop: font(6),
+    height: font(55) ,
+    justifyContent: "center",
   },
-  actionButton: {
-    backgroundColor: "black",
-    paddingHorizontal: 12,
-    paddingVertical: 8,
-    borderRadius: 5,
-    marginHorizontal: 10,
+  travelButton: {
+    backgroundColor: "#6B2D0A",
+    paddingHorizontal: font(40),
+    paddingVertical: font(10),
+    borderRadius: font(8),
+    borderWidth: font(2),
+    borderColor: "#C8A84B",
   },
-  actionButtonText: {
-    color: "white",
-    fontSize: font(15),
+  travelButtonText: {
+    color: "#C8A84B",
+    fontSize: font(20),
     fontWeight: "bold",
-  },
-  nameTag: {
-    position: "absolute",
-    bottom: "100%",
-    left: "55%",
-    transform: [{ translateX: -30 }],
-    backgroundColor: "black",
-    paddingHorizontal: font(2),
-    paddingVertical: font(3),
-    borderRadius: 5,
-  },
-  nameText: {
-    color: "white",
-    fontSize: font(13),
-    fontWeight: "bold",
+    letterSpacing: font(3),
   },
 });
 
