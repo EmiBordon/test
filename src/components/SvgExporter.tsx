@@ -158,6 +158,7 @@ import TempleofAgonySvg from '../assets/templeofagony.svg';
 import MaiaTitleSvg from '../assets/maiatitle.svg';
 import PointSvg from '../assets/point.svg';
 import PointMarkSvg from '../assets/pointmark.svg';
+import DamageSvg from '../assets/damage.svg';
 
 const ArrowIcon = (props: any) => <ArrowSvg {...props} />;
 const MapArrowIcon = (props: any) => <MapArrowSvg {...props} />;
@@ -318,6 +319,7 @@ const TempleofAgonyIcon = (props: any) => <TempleofAgonySvg {...props} />;
 const MaiaTitleIcon = (props: any) => <MaiaTitleSvg {...props} />;
 const PointIcon = (props: any) => <PointSvg {...props} />;
 const PointMarkIcon = (props: any) => <PointMarkSvg {...props} />;
+const DamageIcon = (props: any) => <DamageSvg {...props} />;
 
 export { 
   MaiaTitleIcon,
@@ -479,4 +481,5 @@ export {
   TempleofAgonyIcon,
   PointIcon,
   PointMarkIcon,
+  DamageIcon,
 };

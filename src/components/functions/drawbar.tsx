@@ -5,11 +5,11 @@ import Animated, {
   useSharedValue,
   useAnimatedStyle,
   withTiming,
+  withRepeat,
   cancelAnimation,
   Easing,
-  runOnJS,
 } from 'react-native-reanimated';
-import { SwordIcon, DaggersIcon, PirateSwordIcon, DoubleSwordIcon, SuperSwordIcon } from '../SvgExporter';
+import { SwordIcon, DaggersIcon, PirateSwordIcon, DoubleSwordIcon, SuperSwordIcon, DamageIcon } from '../SvgExporter';
 import { font } from './fontsize';
 import { getRandomBarNumber } from './randombarnumber';
 
@@ -19,14 +19,18 @@ const WEAPON_ICONS: Record<number, React.ComponentType<any>> = {
 };
 
 const { width } = Dimensions.get('window');
-const CONTAINER_WIDTH = width * 0.9; // Ancho de la barra
+const CONTAINER_WIDTH = width * 0.98; // Ancho de la barra
+const CONTAINER_HEIGHT = font(70); // Alto de la barra — ajustable a gusto
 const POINTER_WIDTH  = font(4);
-const POINTER_HEIGHT = font(22);
+const POINTER_HEIGHT = CONTAINER_HEIGHT - font(4);
 const FULL_DISTANCE  = CONTAINER_WIDTH - POINTER_WIDTH;
 
 // Configuración de la zona objetivo
-const TARGET_ZONE_PERCENTAGE = 0.1;
+const TARGET_ZONE_PERCENTAGE = 0.26;
 const TARGET_ZONE_WIDTH = CONTAINER_WIDTH * TARGET_ZONE_PERCENTAGE;
+
+// Velocidad del puntero: multiplicador aplicado a la duración recibida (menor = más rápido)
+const SPEED_FACTOR = 0.7;
 
 interface DrawBarProps {
   levels: number;
@@ -39,39 +43,34 @@ const DrawBar: React.FC<DrawBarProps> = ({ levels, duration, onResult }) => {
   const WeaponIcon = WEAPON_ICONS[currentWeapon] ?? DaggersIcon;
 
   const [currentLevel, setCurrentLevel] = useState(1);
-  const [targetZoneLeft, setTargetZoneLeft] = useState((CONTAINER_WIDTH - TARGET_ZONE_WIDTH) / 2);
+  // Posición de la zona objetivo de cada barra (una por nivel), calculada una única vez
+  const [targetZones] = useState<number[]>(() =>
+    Array.from({ length: levels }, (_, i) =>
+      i === 0
+        ? (CONTAINER_WIDTH - TARGET_ZONE_WIDTH) / 2
+        : (CONTAINER_WIDTH - TARGET_ZONE_WIDTH) / getRandomBarNumber()
+    )
+  );
+  const targetZoneLeft = targetZones[currentLevel - 1];
   // Este estado controla si ya se inició la animación en el primer nivel
   const [hasStartedFirstLevel, setHasStartedFirstLevel] = useState(false);
 
   const x = useSharedValue(0);
   const isMoving = useSharedValue(false);
 
-  // Worklet que anima la bola desde 0 hasta FULL_DISTANCE
+  // Worklet que anima la bola en loop de ida y vuelta hasta que se presione el botón
   function animateBall() {
     'worklet';
     isMoving.value = true;
-    x.value = withTiming(
-      FULL_DISTANCE,
-      { duration, easing: Easing.linear },
-      (isFinished) => {
-        if (isFinished && isMoving.value) {
-          isMoving.value = false;
-          runOnJS(onResult)(false);
-        }
-      }
+    x.value = withRepeat(
+      withTiming(FULL_DISTANCE, { duration: duration * SPEED_FACTOR, easing: Easing.linear }),
+      -1,
+      true
     );
   }
 
-  // Prepara la animación: en el nivel 1 se usa la zona central; para niveles mayores se asigna una posición aleatoria
+  // Reinicia la posición y arranca la animación de la barra del nivel actual
   const startAnimation = () => {
-    if (currentLevel === 1) {
-      setTargetZoneLeft((CONTAINER_WIDTH - TARGET_ZONE_WIDTH) / 2);
-    } else {
-      const factor = getRandomBarNumber(); // Valor entre 1.1 y 3.0 en pasos de 0.1
-      const newTargetZoneLeft = (CONTAINER_WIDTH - TARGET_ZONE_WIDTH) / factor;
-      setTargetZoneLeft(newTargetZoneLeft);
-    }
-    // Reiniciamos la posición y arrancamos la animación
     x.value = 0;
     animateBall();
   };
@@ -119,14 +118,25 @@ const DrawBar: React.FC<DrawBarProps> = ({ levels, duration, onResult }) => {
   }));
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.levelText}>
-        {currentLevel} / {levels}
+    <View style={styles.root}>
+      <View style={styles.container}>
+        <Text style={styles.levelText}>
+        ATAQUE!
       </Text>
-      <View style={styles.bar}>
-        {/* Zona objetivo */}
-        <View style={[styles.targetZone, { left: targetZoneLeft, width: TARGET_ZONE_WIDTH }]} />
-        <Animated.View style={[styles.ball, animatedStyle]} />
+        {targetZones.slice(0, currentLevel).map((zoneLeft, idx) => {
+          const levelNum = idx + 1;
+          const isCurrent = levelNum === currentLevel;
+          const isDone = levelNum < currentLevel;
+          return (
+            <View key={idx} style={[styles.bar, isDone && styles.barDone]}>
+              {/* Zona objetivo */}
+              <View style={[styles.targetZone, { left: zoneLeft, width: TARGET_ZONE_WIDTH }]}>
+                <DamageIcon width={POINTER_HEIGHT} height={POINTER_HEIGHT} />
+              </View>
+              {isCurrent && <Animated.View style={[styles.ball, animatedStyle]} />}
+            </View>
+          );
+        })}
       </View>
       <TouchableOpacity onPress={handlePress} style={styles.button}>
         <WeaponIcon width={120} height={120} overflow='hidden' />
@@ -136,36 +146,56 @@ const DrawBar: React.FC<DrawBarProps> = ({ levels, duration, onResult }) => {
 };
 
 const styles = StyleSheet.create({
+  root: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: 'transparent',
+  },
   container: {
-    padding: '6%',
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    paddingTop: '8%',
+    paddingHorizontal: '1%',
     alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0)',
+    backgroundColor: 'transparent',
   },
   levelText: {
     marginBottom: '3%',
-    fontSize: font(18),
+    fontSize: font(28),
     fontWeight: 'bold',
-    color: '#C8A84B',
-    textShadowColor: '#6B2D0A',
+    color: '#ff2828',
+    textShadowColor: '#2e2018',
     textShadowRadius: 4,
   },
   bar: {
     width: CONTAINER_WIDTH,
-    height: font(22),
-    backgroundColor: '#3D1A00',
+    height: CONTAINER_HEIGHT,
+    backgroundColor: '#8d634a',
     borderRadius: 6,
-    borderWidth: 2,
-    borderColor: '#C8A84B',
+    borderWidth: 4,
+    borderColor: '#5c360b',
     overflow: 'hidden',
     marginBottom: '5%',
     shadowColor: '#C8A84B',
     shadowOpacity: 0.4,
     shadowRadius: 6,
   },
+  barDone: {
+    opacity: 0.5,
+  },
   targetZone: {
     position: 'absolute',
     height: '100%',
-    backgroundColor: 'rgba(200, 168, 75, 0.65)',
+    backgroundColor: '#C8A84B',
+    borderWidth: 1,
+    borderColor: '#000000',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   ball: {
     width: POINTER_WIDTH,
@@ -178,8 +208,10 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
   },
   button: {
-    marginTop: '20%',
-    top: '30%',
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    bottom: '5%',
     backgroundColor: 'transparent',
     justifyContent: 'center',
     alignItems: 'center',
