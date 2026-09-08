@@ -1,10 +1,9 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { BoxIcon } from '../SvgExporter';
+import { BoxIcon, BrokenBoxIcon } from '../SvgExporter';
 import IconButton from './iconbutton';
-import ConversationChoiceModal from '../modal/conversationchoicemodal';
-import { conversations } from './conversations';
 import { setBoxFalse } from '../../redux/boxesSlice';
+import { markBoxAsOpening } from '../../redux/rewardSlice';
 import { boxesActions } from './boxesActions';
 import { font } from './fontsize';
 
@@ -16,31 +15,25 @@ interface BoxProps {
 const Box: React.FC<BoxProps> = ({ boxKey, positionStyle }) => {
   const dispatch = useDispatch();
   const boxState = useSelector((state: any) => state.boxes[boxKey]);
-  const [modalVisible, setModalVisible] = useState(false);
+  const opening = useSelector((state: any) => state.rewards.openingBoxes[boxKey]);
 
   const handlePress = () => {
-    if (boxState) setModalVisible(true);
-  };
-
-  const handleAccept = () => {
-    setModalVisible(false);
+    if (!boxState) return;
+    dispatch(markBoxAsOpening(boxKey));
     dispatch(setBoxFalse(boxKey));
     if (boxesActions[boxKey]) boxesActions[boxKey](dispatch);
   };
 
-  if (!boxState) return null;
+  if (!boxState && !opening) return null;
 
   return (
-    <>
-      <IconButton Icon={BoxIcon} width={font(70)} height={font(70)} style={positionStyle} onPress={handlePress} />
-
-      <ConversationChoiceModal
-        visible={modalVisible}
-        conversation={conversations.openbox}
-        onClose={() => setModalVisible(false)}
-        onAccept={handleAccept}
-      />
-    </>
+    <IconButton
+      Icon={opening ? BrokenBoxIcon : BoxIcon}
+      width={font(70)}
+      height={font(70)}
+      style={positionStyle}
+      onPress={handlePress}
+    />
   );
 };
 

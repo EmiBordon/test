@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Modal, View, TouchableOpacity, Text, StyleSheet, Dimensions, Alert, Image } from "react-native";
 import {
   HouseIcon, PrisionIcon, StoreIcon, RestaurantIcon, BigHouseIcon, CaveIcon,
-  CrossIcon, PawnShopIcon, MapArrowIcon, MapDoorIcon, TempleofAgonyIcon,PointIcon
+  CrossIcon, PawnShopIcon, MapArrowIcon, MapDoorIcon, TempleofAgonyIcon, PointIcon, PointMarkIcon
 } from "../SvgExporter";
 import { font } from "../functions/fontsize";
 import IconButton from "../functions/iconbutton";
@@ -11,7 +11,7 @@ type MapId = 2 | 3 | 4;
 
 // Iconos de ubicación — cada uno indica en qué mapa aparece con mapId
 const LOCATION_ICONS = [
-  { key: "house",      Component: PointIcon,  size: font(25),  text: "Casa",    top: "80%", left: "68%",  tx: -30, ty: -30, route: "Tutorial", mapId: 2 as MapId },
+  { key: "house",      Component: PointIcon,  size: font(25),  text: "Casa",    top: "81%", left: "68%",  tx: -30, ty: -30, route: "Tutorial", mapId: 2 as MapId },
   { key: "store",      Component: PointIcon,   size: font(20),  text: "Tienda",  top: "67%", left: "55%", tx: -30, ty: -30, route: "Shop",     mapId: 2 as MapId },
   { key: "restaurant", Component: PointIcon,  size: font(20),  text: "Bar",     top: "93%", left: "45%", tx: -30, ty: -30, route: "Bar",      mapId: 3 as MapId },
   { key: "cave",       Component: PointIcon, size: font(20),  text: "Cueva",   top: "48%", left: "32%", tx: -30, ty: -30, route: "Cave",     mapId: 3 as MapId },
@@ -87,15 +87,15 @@ const Map1Modal = ({ visible, onClose, navigation }) => {
 
           <Image
             source={MAP_IMAGES[currentMap]}
-            style={{ width: '100%', height: '100%' }}
+            style={{ width: font(350), height: font(490) }}
             resizeMode="cover"
           />
 
           {/* Iconos de ubicación — filtrados por mapa actual */}
-          {LOCATION_ICONS.filter(i => i.mapId === currentMap).map(({ key, Component, size, fill, top, left, tx, ty }) => (
+          {LOCATION_ICONS.filter(i => i.mapId === currentMap).map(({ key, size, fill, top, left, tx, ty }) => (
             <IconButton
               key={key}
-              Icon={Component}
+              Icon={selected === key ? PointMarkIcon : PointIcon}
               width={size}
               height={size}
               style={{ top, left, transform: [{ translateX: tx }, { translateY: ty }], zIndex: 20 }}
@@ -168,13 +168,15 @@ const styles = StyleSheet.create({
     borderWidth: font(4),
     borderColor: "black",
     justifyContent: "center",
+    top:font(80),
   },
   nameAbove: {
-    width: "95%",
+    width: "100%",
     alignItems: "center",
     marginBottom: font(6),
-    height: font(18) + font(14),
+    height: font(38),
     justifyContent: "center",
+    top:font(78),
   },
   nameAboveText: {
     color: "#C8A84B",
@@ -189,11 +191,12 @@ const styles = StyleSheet.create({
     letterSpacing: font(1),
   },
   travelRow: {
-    width: "95%",
+    width: font(400),
     alignItems: "center",
     marginTop: font(6),
-    height: font(55) ,
+    height: font(75) ,
     justifyContent: "center",
+    top:font(80),
   },
   travelButton: {
     backgroundColor: "#6B2D0A",

@@ -93,6 +93,7 @@ import GorjoxSvg from '../assets/gorjox.svg';
 import GorjoxFurySvg from '../assets/gorjoxfury.svg';
 import ChestSvg from '../assets/chest.svg';
 import BoxSvg from '../assets/box.svg';
+import BrokenBoxSvg from '../assets/brokenbox.svg';
 import QuestionSvg from '../assets/question.svg';
 import ShopGirlHeadSvg from '../assets/shopgirlhead.svg';
 import SignSvg from '../assets/sign.svg';
@@ -156,6 +157,7 @@ import GodofAgonySvg from '../assets/godofagony.svg';
 import TempleofAgonySvg from '../assets/templeofagony.svg';
 import MaiaTitleSvg from '../assets/maiatitle.svg';
 import PointSvg from '../assets/point.svg';
+import PointMarkSvg from '../assets/pointmark.svg';
 
 const ArrowIcon = (props: any) => <ArrowSvg {...props} />;
 const MapArrowIcon = (props: any) => <MapArrowSvg {...props} />;
@@ -253,6 +255,7 @@ const GorjoxIcon = (props: any) => <GorjoxSvg {...props} />;
 const GorjoxFuryIcon = (props: any) => <GorjoxFurySvg {...props} />;
 const ChestIcon = (props: any) => <ChestSvg {...props} />;
 const BoxIcon = (props: any) => <BoxSvg {...props} />;
+const BrokenBoxIcon = (props: any) => <BrokenBoxSvg {...props} />;
 const QuestionIcon = (props: any) => <QuestionSvg {...props} />;
 const ShopGirlHeadIcon = (props: any) => <ShopGirlHeadSvg {...props} />;
 const SignIcon = (props: any) => <SignSvg {...props} />;
@@ -314,6 +317,7 @@ const GodofAgonyIcon = (props: any) => <GodofAgonySvg {...props} />;
 const TempleofAgonyIcon = (props: any) => <TempleofAgonySvg {...props} />;
 const MaiaTitleIcon = (props: any) => <MaiaTitleSvg {...props} />;
 const PointIcon = (props: any) => <PointSvg {...props} />;
+const PointMarkIcon = (props: any) => <PointMarkSvg {...props} />;
 
 export { 
   MaiaTitleIcon,
@@ -399,6 +403,7 @@ export {
   GorjoxIcon,
   ChestIcon,
   BoxIcon,
+  BrokenBoxIcon,
   QuestionIcon,
   ShopGirlHeadIcon,
   SignIcon,
@@ -473,4 +478,5 @@ export {
   GodofAgonyIcon,
   TempleofAgonyIcon,
   PointIcon,
+  PointMarkIcon,
 };

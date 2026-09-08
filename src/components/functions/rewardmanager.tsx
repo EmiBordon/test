@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import NewItemModal from '../modal/newitemmodal';
 import { CoinsIcon, RubiIcon, DiamondIcon,QuiverArrowIcon, HealthPotionIcon, PocketWatchIcon } from '../SvgExporter';
-import { markRewardAsProcessed } from '../../redux/rewardSlice';
+import { markRewardAsProcessed, clearBoxAsOpening } from '../../redux/rewardSlice';
 import { BoxesState } from '../../redux/boxesSlice'; 
 import { RewardsState } from '../../redux/rewardSlice';
 
@@ -82,6 +82,7 @@ const RewardManager = () => {
 
   const handleClose = () => {
     setModalVisible(false);
+    if (currentReward) dispatch(clearBoxAsOpening(currentReward as keyof BoxesState));
     setRewardQueue(prev => prev.slice(1));
     setCurrentReward(null);
   };
