@@ -11,11 +11,16 @@ import {
   MapIcon,
   BagPackIcon,
   NoteBookIcon,
+  PerlBookIcon,
+  MoonBookIcon,
+  ObsidianBookIcon,
+  PrismBookIcon,
   CoinsIcon,
   HandIcon,
-  HandOneRingIcon,
-  HandTwoRingsIcon,
-  HandThreeRingsIcon,
+  PerlWandIcon,
+  MoonWandIcon,
+  ObsidianWandIcon,
+  PrismWandIcon,
 } from "../components/SvgExporter";
 import Map1Modal from "../components/modal/map1modal";
 import BagPackModal from "../components/modal/bagpackmodal";
@@ -61,8 +66,27 @@ const Inventory: React.FC<InventoryProps> = ({
   const maiaManaLevel = useSelector((state: any) => state.maia.maiaManaLevel);
   const coins = useSelector((state: RootState) => state.coins.coins);
 
-  const HAND_ICONS = [HandIcon, HandOneRingIcon, HandTwoRingsIcon, HandThreeRingsIcon];
-  const HandLevelIcon = HAND_ICONS[Math.min(maiaManaLevel ?? 1, 3)];
+  const getHandIcon = () => {
+    switch (maiaManaLevel) {
+      case 1: return PerlWandIcon;
+      case 2: return MoonWandIcon;
+      case 3: return ObsidianWandIcon;
+      case 4: return PrismWandIcon;
+      default: return HandIcon;
+    }
+  };
+  const HandLevelIcon = getHandIcon();
+
+  const getNoteBookIcon = () => {
+    switch (maiaManaLevel) {
+      case 1: return PerlBookIcon;
+      case 2: return MoonBookIcon;
+      case 3: return ObsidianBookIcon;
+      case 4: return PrismBookIcon;
+      default: return NoteBookIcon;
+    }
+  };
+  const NoteBookLevelIcon = getNoteBookIcon();
 
   const navigation = useNavigation<NavigationProp<any>>();
 
@@ -127,15 +151,15 @@ const Inventory: React.FC<InventoryProps> = ({
       {/* Barra de slots inferior */}
       <View style={styles.inventoryContainer}>
         <TouchableOpacity style={styles.slot} onPress={() => setBagPackModalVisible(true)}>
-          <BagPackIcon width={font(40)} height={font(40)} overflow='hidden' />
+          <BagPackIcon width={font(55)} height={font(55)} overflow='hidden' />
         </TouchableOpacity>
 
         <TouchableOpacity style={styles.slot} onPress={() => setMap1ModalVisible(true)}>
-          <MapIcon width={font(40)} height={font(40)} overflow='hidden' />
+          <MapIcon width={font(47)} height={font(47)} overflow='hidden' />
         </TouchableOpacity>
 
         <TouchableOpacity style={styles.slot} onPress={() => setPlanillaBookVisible(true)}>
-          <NoteBookIcon width={font(38)} height={font(38)} overflow='hidden' />
+          <NoteBookLevelIcon width={font(48)} height={font(48)} overflow='hidden' />
         </TouchableOpacity>
 
         <TouchableOpacity style={styles.slot} onPress={() => setPlanillaVisible(true)}>

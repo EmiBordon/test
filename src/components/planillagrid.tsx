@@ -10,7 +10,8 @@ import {
   Animated,
 } from 'react-native';
 import { font } from './functions/fontsize';
-import { CrossIcon, RefreshIcon, HandIcon, HandOneRingIcon, HandTwoRingsIcon, HandThreeRingsIcon, ArrowIcon, ManaBookIcon } from './SvgExporter';
+import { CrossIcon, RefreshIcon, HandIcon, ArrowIcon, ManaBookIcon, PerlWandIcon, MoonWandIcon, ObsidianWandIcon, PrismWandIcon, PerlManaIcon,
+   MoonManaIcon, ObsidianManaIcon, PrismManaIcon,PerlBookIcon,MoonBookIcon,ObsidianBookIcon,PrismBookIcon } from './SvgExporter';
 import IconButton from './functions/iconbutton';
 import { useSelector, useDispatch } from 'react-redux';
 import ManaBar from './manabar';
@@ -37,7 +38,108 @@ interface PlanillaGridProps {
   initialView?: 'grid' | 'book';
 }
 
-const HAND_ICONS = [HandIcon, HandOneRingIcon, HandTwoRingsIcon, HandThreeRingsIcon];
+const getHandIcon = (maiaManaLevel: number) => {
+  switch (maiaManaLevel) {
+    case 1: return PerlWandIcon;
+    case 2: return MoonWandIcon;
+    case 3: return ObsidianWandIcon;
+    case 4: return PrismWandIcon;
+    default: return HandIcon;
+  }
+};
+
+const getManaBookIcon = (maiaManaLevel: number) => {
+  switch (maiaManaLevel) {
+    case 1: return PerlManaIcon;
+    case 2: return MoonManaIcon;
+    case 3: return ObsidianManaIcon;
+    case 4: return PrismManaIcon;
+    default: return ManaBookIcon;
+  }
+};
+
+const getBookIcon = (maiaManaLevel: number) => {
+  switch (maiaManaLevel) {
+    case 1: return PerlBookIcon;
+    case 2: return MoonBookIcon;
+    case 3: return ObsidianBookIcon;
+    case 4: return PrismBookIcon;
+    default: return ManaBookIcon;
+  }
+};
+
+// Colores del trazo/círculos según el nivel de maná (maiaManaLevel).
+// Elegidos al azar como punto de partida: cambia los valores hex a gusto.
+const MANA_LEVEL_COLORS: Record<number, {
+  line: string;
+  lineShadow: string;
+  ghostLine: string;
+  pathFill: string;
+  pathBorder: string;
+  pathShadow: string;
+  headFill: string;
+  headBorder: string;
+  headShadow: string;
+}> = {
+  0: {
+    line: '#851de6',
+    lineShadow: '#c084fc',
+    ghostLine: '#c084fc',
+    pathFill: '#5d00ff',
+    pathBorder: '#a855f7',
+    pathShadow: '#c084fc',
+    headFill: '#5d00ff',
+    headBorder: '#a855f7',
+    headShadow: '#f0abfc',
+  },
+  1: {
+    line: '#1de6c4',
+    lineShadow: '#7dfff0',
+    ghostLine: '#7dfff0',
+    pathFill: '#00d1b2',
+    pathBorder: '#5ef2d6',
+    pathShadow: '#7dfff0',
+    headFill: '#00d1b2',
+    headBorder: '#5ef2d6',
+    headShadow: '#b6fff2',
+  },
+  2: {
+    line: '#e6851d',
+    lineShadow: '#ffc98a',
+    ghostLine: '#ffc98a',
+    pathFill: '#ff6a00',
+    pathBorder: '#ffb15e',
+    pathShadow: '#ffc98a',
+    headFill: '#ff6a00',
+    headBorder: '#ffb15e',
+    headShadow: '#ffe0b3',
+  },
+  3: {
+    line: '#e61d6b',
+    lineShadow: '#ff8ab8',
+    ghostLine: '#ff8ab8',
+    pathFill: '#ff005e',
+    pathBorder: '#ff5e9c',
+    pathShadow: '#ff8ab8',
+    headFill: '#ff005e',
+    headBorder: '#ff5e9c',
+    headShadow: '#ffc2dc',
+  },
+  4: {
+    line: '#3d1de6',
+    lineShadow: '#9c8aff',
+    ghostLine: '#9c8aff',
+    pathFill: '#3d00ff',
+    pathBorder: '#8a6bff',
+    pathShadow: '#9c8aff',
+    headFill: '#3d00ff',
+    headBorder: '#8a6bff',
+    headShadow: '#d4c8ff',
+  },
+};
+
+const getManaColors = (maiaManaLevel: number) =>
+  MANA_LEVEL_COLORS[maiaManaLevel] ?? MANA_LEVEL_COLORS[0];
 
 const BLOCKED_SETS: Record<number, Set<number>> = {
   0: new Set(Array.from({ length: 81 }, (_, i) => i)),
@@ -177,6 +279,7 @@ const PlanillaGrid: React.FC<PlanillaGridProps> = ({ visible, onClose, initialVi
 
   const renderLines = () => {
     const elements: React.ReactNode[] = [];
+    const colors = getManaColors(maiaManaLevel);
 
     for (let i = 0; i < path.length - 1; i++) {
       const c1 = getCellCenter(path[i].row, path[i].col);
@@ -192,11 +295,11 @@ const PlanillaGrid: React.FC<PlanillaGridProps> = ({ visible, onClose, initialVi
             position: 'absolute',
             width: length,
             height: font(3),
-            backgroundColor: '#851de6',
+            backgroundColor: colors.line,
             left: (c1.x + c2.x) / 2 - length / 2,
             top: (c1.y + c2.y) / 2 - font(1.5),
             transform: [{ rotate: `${angle}deg` }],
-            shadowColor: '#c084fc',
+            shadowColor: colors.lineShadow,
             shadowOpacity: 0.9,
             shadowRadius: 6,
           }}
@@ -218,7 +321,7 @@ const PlanillaGrid: React.FC<PlanillaGridProps> = ({ visible, onClose, initialVi
               position: 'absolute',
               width: length,
               height: font(2),
-              backgroundColor: '#c084fc',
+              backgroundColor: colors.ghostLine,
               left: (c1.x + fingerPos.x) / 2 - length / 2,
               top: (c1.y + fingerPos.y) / 2 - font(1),
               transform: [{ rotate: `${angle}deg` }],
@@ -322,6 +425,7 @@ const PlanillaGrid: React.FC<PlanillaGridProps> = ({ visible, onClose, initialVi
                           const sz = isCenter ? CENTER_CIRCLE_SIZE : CIRCLE_SIZE;
                           const level = Math.min(maiaManaLevel, 3);
                           const isBlocked = BLOCKED_SETS[level].has(row * GRID_SIZE + col);
+                          const manaColors = getManaColors(maiaManaLevel);
 
                           return (
                             <View
@@ -333,8 +437,21 @@ const PlanillaGrid: React.FC<PlanillaGridProps> = ({ visible, onClose, initialVi
                                   styles.circle,
                                   { width: sz, height: sz, borderRadius: sz / 2 },
                                   isBlocked && styles.circleBlocked,
-                                  !isBlocked && inPath && !isHead && styles.circleInPath,
-                                  !isBlocked && isHead && styles.circleHead,
+                                  !isBlocked && inPath && !isHead && {
+                                    backgroundColor: manaColors.pathFill,
+                                    borderColor: manaColors.pathBorder,
+                                    shadowColor: manaColors.pathShadow,
+                                    shadowOpacity: 0.8,
+                                    shadowRadius: 8,
+                                  },
+                                  !isBlocked && isHead && {
+                                    backgroundColor: manaColors.headFill,
+                                    borderColor: manaColors.headBorder,
+                                    borderWidth: 2,
+                                    shadowColor: manaColors.headShadow,
+                                    shadowOpacity: 1,
+                                    shadowRadius: 12,
+                                  },
                                   !isDragging && path.length > 1 && !inPath && styles.circleFaded,
                                 ]}
                               />
@@ -369,7 +486,7 @@ const PlanillaGrid: React.FC<PlanillaGridProps> = ({ visible, onClose, initialVi
                   <ArrowIcon width={font(48)} height={font(48)} style={{ transform: [{ scaleX: -1 }] }} />
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.handButton} onPress={handleReveal}>
-                  {React.createElement(HAND_ICONS[Math.min(maiaManaLevel, 3)], { width: font(120), height: font(120), overflow: 'hidden' })}
+                  {React.createElement(getHandIcon(maiaManaLevel), { width: font(120), height: font(120), overflow: 'hidden' })}
                 </TouchableOpacity>
                 <View style={styles.sideArrow} />
               </View>
@@ -417,7 +534,7 @@ const PlanillaGrid: React.FC<PlanillaGridProps> = ({ visible, onClose, initialVi
               <View style={styles.handRow}>
                 <View style={styles.sideArrow} />
                 <View style={styles.handButton}>
-                  <ManaBookIcon width={font(120)} height={font(120)} overflow='hidden' />
+                  {React.createElement(getBookIcon(maiaManaLevel), { width: font(120), height: font(120), overflow: 'hidden' })}
                 </View>
                 <TouchableOpacity style={styles.sideArrow} onPress={() => setView('grid')}>
                   <ArrowIcon width={font(48)} height={font(48)} />
@@ -452,7 +569,7 @@ const PlanillaGrid: React.FC<PlanillaGridProps> = ({ visible, onClose, initialVi
               <View style={styles.handRow}>
                 <View style={styles.sideArrow} />
                 <View style={styles.handButton}>
-                  <ManaBookIcon width={font(120)} height={font(120)} overflow='hidden' />
+                  {React.createElement(getBookIcon(maiaManaLevel), { width: font(120), height: font(120), overflow: 'hidden' })}
                 </View>
                 <TouchableOpacity style={styles.sideArrow} onPress={() => setView('grid')}>
                   <ArrowIcon width={font(48)} height={font(48)} />
@@ -520,21 +637,6 @@ const styles = StyleSheet.create({
   circleFaded: {
     backgroundColor: 'rgba(192, 119, 84, 0.97)',
     shadowOpacity: 0,
-  },
-  circleInPath: {
-    backgroundColor: '#5d00ff',
-    borderColor: '#a855f7',
-    shadowColor: '#c084fc',
-    shadowOpacity: 0.8,
-    shadowRadius: 8,
-  },
-  circleHead: {
-    backgroundColor: '#5d00ff',
-    borderColor: '#a855f7',
-    borderWidth: 2,
-    shadowColor: '#f0abfc',
-    shadowOpacity: 1,
-    shadowRadius: 12,
   },
   bottomArea: {
     width: '100%',

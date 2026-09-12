@@ -1,11 +1,12 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { useSelector } from 'react-redux';
-import { ManaBar0Icon, ManaBar1Icon, ManaBar2Icon, ManaBar3Icon, ManaBookIcon } from './SvgExporter';
+import { ManaBar0Icon, ManaBar1Icon, ManaBar2Icon, ManaBar3Icon, ManaBookIcon, PerlManaIcon, MoonManaIcon, ObsidianManaIcon, PrismManaIcon } from './SvgExporter';
 import { font } from './functions/fontsize';
 
 interface MaiaState {
   maiaMana: number;
+  maiaManaLevel: number;
 }
 interface RootState {
   maia: MaiaState;
@@ -13,6 +14,7 @@ interface RootState {
 
 const ManaBar = () => {
   const maiaMana = useSelector((state: RootState) => state.maia.maiaMana);
+  const maiaManaLevel = useSelector((state: RootState) => state.maia.maiaManaLevel);
 
   const iconProps = { width: font(45), height: font(45),overflow:'hidden' };
 
@@ -25,10 +27,20 @@ const ManaBar = () => {
     }
   };
 
+  const renderBookIcon = () => {
+    switch (maiaManaLevel) {
+      case 1: return <PerlManaIcon width={font(45)} height={font(45)} overflow='hidden' />;
+      case 2: return <MoonManaIcon width={font(45)} height={font(45)} overflow='hidden' />;
+      case 3: return <ObsidianManaIcon width={font(45)} height={font(45)} overflow='hidden' />;
+      case 4: return <PrismManaIcon width={font(45)} height={font(45)} overflow='hidden' />;
+      default: return <ManaBookIcon width={font(45)} height={font(45)} overflow='hidden' />;
+    }
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.bookIconContainer}>
-        <ManaBookIcon width={font(45)} height={font(45)} overflow='hidden' />
+        {renderBookIcon()}
       </View>
       <View style={styles.manaIconContainer}>
         <Text style={styles.manaText}>{maiaMana}</Text>

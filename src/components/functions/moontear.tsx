@@ -2,9 +2,11 @@
 import React, { useState, useEffect } from 'react';
 import {
   View,
+  Text,
   StyleSheet,
   TouchableOpacity,
   LayoutChangeEvent,
+  Dimensions,
 } from 'react-native';
 import Animated, {
   useSharedValue,
@@ -13,6 +15,13 @@ import Animated, {
   withTiming,
   runOnJS,
 } from 'react-native-reanimated';
+import { font } from './fontsize';
+
+const { width: SCREEN_WIDTH } = Dimensions.get('window');
+// Tamaños fijos en píxeles (no porcentajes) para que el ícono nunca pueda
+// terminar siendo más grande que el botón que lo contiene.
+const BUTTON_SIZE = SCREEN_WIDTH * 0.28;
+const BUTTON_ICON_SIZE = BUTTON_SIZE * 0.8;
 
 // Definición de las props para los componentes SVG
 export interface SVGIconProps {
@@ -126,7 +135,7 @@ const MoonTear: React.FC<MoonTearProps> = ({
     if (!containerSize) return;
     const availableWidth = containerSize.width;
     const availableHeight = containerSize.height;
-    const iconSize = availableWidth * 0.25;
+    const iconSize = availableWidth * 0.4;
     const newPattern: PatternItem[] = Array.from({ length: patternLength }, () => {
       const type = Math.floor(Math.random() * 2);
       const x = getRandomInRange(0, availableWidth - iconSize);
@@ -174,90 +183,130 @@ const MoonTear: React.FC<MoonTearProps> = ({
     }
   };
 
-  const computedIconSize = containerSize ? containerSize.width * 0.25 : 50;
+  const computedIconSize = containerSize ? containerSize.width * 0.4 : 70;
 
   return (
-    <View style={styles.container}>
-      <View style={[styles.animationArea, { width: '40%', aspectRatio: 1 }]} onLayout={onContainerLayout}>
-        {phase === 'showing' && containerSize && pattern.length > 0 && (
-          <AnimatedIcon
-            id={`${currentPatternIndex}`}
-            IconComponent={pattern[currentPatternIndex].type === 0 ? MoonIcon : TearIcon}
-            position={pattern[currentPatternIndex].position}
-            iconSize={computedIconSize}
-            difficulty={difficulty}
-            onAnimationEnd={handleAnimationEnd}
-          />
-        )}
-      </View>
+    <View style={styles.root}>
+      <View style={styles.top}>
+        <Text style={styles.title}>
+          {phase === 'showing' ? 'MEMORIZA' : phase === 'input' ? 'REPITE' : ''}
+        </Text>
 
-      {phase === 'input' && (
-        <>
-          <View style={styles.inputContainer}>
-            <TouchableOpacity style={styles.iconButton} onPress={() => handleUserInput(0)}>
-              <MoonIcon width={computedIconSize} height={computedIconSize} />
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.iconButton} onPress={() => handleUserInput(1)}>
-              <TearIcon width={computedIconSize} height={computedIconSize} />
-            </TouchableOpacity>
-          </View>
-
-          {/* Indicadores del patrón: rectángulos que se vuelven negros al acertar */}
+        {phase === 'input' ? (
+          /* Indicadores del patrón, centrados en pantalla: se iluminan en dorado al acertar */
           <View style={styles.progressContainer}>
             {pattern.map((_, index) => (
               <View
                 key={index}
                 style={[
                   styles.progressRect,
-                  { backgroundColor: index < userInput.length ? 'black' : 'white' },
+                  index < userInput.length && styles.progressRectDone,
                 ]}
               />
             ))}
           </View>
-        </>
+        ) : (
+          <View style={[styles.animationArea, { width: '72%', aspectRatio: 1 }]} onLayout={onContainerLayout}>
+            {phase === 'showing' && containerSize && pattern.length > 0 && (
+              <AnimatedIcon
+                id={`${currentPatternIndex}`}
+                IconComponent={pattern[currentPatternIndex].type === 0 ? MoonIcon : TearIcon}
+                position={pattern[currentPatternIndex].position}
+                iconSize={computedIconSize}
+                difficulty={difficulty}
+                onAnimationEnd={handleAnimationEnd}
+              />
+            )}
+          </View>
+        )}
+      </View>
+
+      {phase === 'input' && (
+        <View style={styles.bottomArea}>
+          <View style={styles.inputContainer}>
+            <TouchableOpacity style={styles.iconButton} onPress={() => handleUserInput(0)}>
+              <MoonIcon width={BUTTON_ICON_SIZE} height={BUTTON_ICON_SIZE} />
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.iconButton} onPress={() => handleUserInput(1)}>
+              <TearIcon width={BUTTON_ICON_SIZE} height={BUTTON_ICON_SIZE} />
+            </TouchableOpacity>
+          </View>
+        </View>
       )}
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
+  root: {
+    flex: 1,
+  },
+  top: {
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
   },
+  title: {
+    marginBottom: '4%',
+    fontSize: font(24),
+    fontWeight: 'bold',
+    color: '#C8A84B',
+    textShadowColor: '#2e2018',
+    textShadowRadius: 4,
+  },
   animationArea: {
     position: 'relative',
+    backgroundColor: 'transparent',
   },
   iconAnimatedContainer: {
     position: 'absolute',
     justifyContent: 'center',
     alignItems: 'center',
   },
+  bottomArea: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    bottom: '5%',
+    alignItems: 'center',
+  },
   inputContainer: {
     flexDirection: 'row',
-    width: '60%',
-    justifyContent: 'space-around',
-    marginTop: 20,
+    alignItems: 'center',
   },
   iconButton: {
-    width: '40%',
-    aspectRatio: 1,
+    width: BUTTON_SIZE,
+    height: BUTTON_SIZE,
     justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: '#8d634a',
+    borderRadius: BUTTON_SIZE / 2,
+    borderWidth: 3,
+    borderColor: '#000000',
+    marginHorizontal: BUTTON_SIZE * 0.15,
+    overflow: 'hidden',
+    shadowColor: '#C8A84B',
+    shadowOpacity: 0.4,
+    shadowRadius: 6,
   },
   progressContainer: {
     flexDirection: 'row',
+    flexWrap: 'wrap',
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: 20,
   },
   progressRect: {
-    width: '6%',
-    height: '600%',
-    borderWidth: 1,
-    borderColor: 'black',
-    marginHorizontal: 5,
+    width: font(24),
+    height: font(24),
+    borderRadius: 6,
+    borderWidth: 2,
+    borderColor: '#000000',
+    backgroundColor: '#3D1A00',
+    marginHorizontal: 8,
+    marginVertical: 8,
+  },
+  progressRectDone: {
+    backgroundColor: '#C8A84B',
   },
 });
 

@@ -159,6 +159,18 @@ import MaiaTitleSvg from '../assets/maiatitle.svg';
 import PointSvg from '../assets/point.svg';
 import PointMarkSvg from '../assets/pointmark.svg';
 import DamageSvg from '../assets/damage.svg';
+import PerlWandSvg from '../assets/perlwand.svg';
+import PerlBookSvg from '../assets/perlbook.svg';
+import PerlManaSvg from '../assets/perlmana.svg';
+import MoonWandSvg from '../assets/moonwand.svg';
+import MoonBookSvg from '../assets/moonbook.svg';
+import MoonManaSvg from '../assets/moonmana.svg';
+import ObsidianWandSvg from '../assets/obsidianwand.svg';
+import ObsidianBookSvg from '../assets/obsidianbook.svg';
+import ObsidianManaSvg from '../assets/obsidianmana.svg';
+import PrismWandSvg from '../assets/prismwand.svg';
+import PrismBookSvg from '../assets/prismbook.svg';
+import PrismManaSvg from '../assets/prismmana.svg';
 
 const ArrowIcon = (props: any) => <ArrowSvg {...props} />;
 const MapArrowIcon = (props: any) => <MapArrowSvg {...props} />;
@@ -320,8 +332,20 @@ const MaiaTitleIcon = (props: any) => <MaiaTitleSvg {...props} />;
 const PointIcon = (props: any) => <PointSvg {...props} />;
 const PointMarkIcon = (props: any) => <PointMarkSvg {...props} />;
 const DamageIcon = (props: any) => <DamageSvg {...props} />;
+const PerlWandIcon = (props: any) => <PerlWandSvg {...props} />;
+const PerlBookIcon = (props: any) => <PerlBookSvg {...props} />;
+const PerlManaIcon = (props: any) => <PerlManaSvg {...props} />;
+const MoonWandIcon = (props: any) => <MoonWandSvg {...props} />;
+const MoonBookIcon = (props: any) => <MoonBookSvg {...props} />;
+const MoonManaIcon = (props: any) => <MoonManaSvg {...props} />;
+const ObsidianWandIcon = (props: any) => <ObsidianWandSvg {...props} />;
+const ObsidianBookIcon = (props: any) => <ObsidianBookSvg {...props} />;
+const ObsidianManaIcon = (props: any) => <ObsidianManaSvg {...props} />;
+const PrismWandIcon = (props: any) => <PrismWandSvg {...props} />;
+const PrismBookIcon = (props: any) => <PrismBookSvg {...props} />;
+const PrismManaIcon = (props: any) => <PrismManaSvg {...props} />;
 
-export { 
+export {
   MaiaTitleIcon,
   ArrowIcon, 
   ChestOpenIcon, 
@@ -482,4 +506,16 @@ export {
   PointIcon,
   PointMarkIcon,
   DamageIcon,
+  PerlWandIcon,
+  PerlBookIcon,
+  PerlManaIcon,
+  MoonWandIcon,
+  MoonBookIcon,
+  MoonManaIcon,
+  ObsidianWandIcon,
+  ObsidianBookIcon,
+  ObsidianManaIcon,
+  PrismWandIcon,
+  PrismBookIcon,
+  PrismManaIcon,
 };
